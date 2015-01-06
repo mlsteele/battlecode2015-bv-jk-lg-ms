@@ -3,16 +3,16 @@ package miles;
 import battlecode.common.*;
 import java.util.*;
 
-public class RobotHQ extends Robot {
-    RobotHQ(RobotController rc) { super(rc); }
+public class RobotBeaver extends Robot {
+    RobotBeaver(RobotController rc) { super(rc); }
 
     @Override
     public void run() {
-        rc.setIndicatorString(0, "i am a RobotHQ");
+        rc.setIndicatorString(0, "i am a RobotBeaver");
 
         while(true) {
             if (rc.isCoreReady()) {
-                safeSpawn(Direction.NORTH, RobotType.BEAVER);
+                safeMove(Direction.NORTH);
             }
 
             rc.yield();

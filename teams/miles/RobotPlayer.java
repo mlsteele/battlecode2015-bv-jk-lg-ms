@@ -14,6 +14,10 @@ public class RobotPlayer {
                 r = new RobotHQ(rc);
                 r.run();
                 break;
+            case BEAVER:
+                r = new RobotBeaver(rc);
+                r.run();
+                break;
             default:
                 // Unimplemented robot type
                 rc.yield();
