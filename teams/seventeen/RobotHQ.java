@@ -24,6 +24,8 @@ public class RobotHQ extends Robot {
                 }
             } catch (GameActionException e) { }
 
+            shootBaddies();
+
             rc.yield();
         }
     }
