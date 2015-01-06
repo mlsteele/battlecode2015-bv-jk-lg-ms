@@ -11,4 +11,18 @@ public abstract class Robot {
     }
 
     abstract public void run();
+
+    protected boolean safeSpawn(Direction dir, RobotType rtype) {
+        if (rc.canSpawn(dir, rtype)) {
+            try {
+                rc.spawn(dir, rtype);
+                return true;
+            } catch (GameActionException e) {
+                e.printStackTrace();
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
 }

@@ -13,6 +13,10 @@ public class RobotHQ extends Robot {
         rc.setIndicatorString(0, "i am a RobotHQ");
 
         while(true) {
+            if (rc.isCoreReady()) {
+                safeSpawn(Direction.NORTH, RobotType.BEAVER);
+            }
+
             rc.yield();
         }
     }
