@@ -17,11 +17,12 @@ public class RobotBeaver extends Robot {
             rc.yield();
         }
 
+        // Main loop
         while(true) {
             rc.setIndicatorString(2, "supply: " + rc.getSupplyLevel());
 
             if (rc.isCoreReady()) {
-                safeMove(Direction.NORTH);
+                wander();
             }
 
             rc.yield();

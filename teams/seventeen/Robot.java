@@ -1,6 +1,7 @@
 package seventeen;
 
 import battlecode.common.*;
+import static battlecode.common.Direction.*;
 import java.util.*;
 
 // Base class for Robot minds.
@@ -8,9 +9,13 @@ import java.util.*;
 // Contains helper methods commonly useful to robots.
 public abstract class Robot {
     protected RobotController rc;
+    protected Random rand;
+    protected Direction forward;
 
     Robot(RobotController rc) {
         this.rc = rc;
+        rand = new Random(rc.getID());
+        forward = randomDirection();
     }
 
     abstract public void run();
@@ -24,6 +29,21 @@ public abstract class Robot {
             }
         }
         return best;
+    }
+
+    protected Direction randomDirection() {
+        switch (Math.abs(rand.nextInt()) % 8) {
+            case 0: return NORTH;
+            case 1: return NORTH_EAST;
+            case 2: return EAST;
+            case 3: return SOUTH_EAST;
+            case 4: return SOUTH;
+            case 5: return SOUTH_WEST;
+            case 6: return WEST;
+            case 7: return NORTH_WEST;
+        }
+        // This should never happen.
+        throw new RuntimeException("Something mod 8 is bigger than 7");
     }
 
     protected boolean safeSpawn(Direction dir, RobotType rtype) {
@@ -40,17 +60,33 @@ public abstract class Robot {
         }
     }
 
-    protected boolean safeMove(Direction dir) {
-        if (rc.canMove(dir)) {
+    // Tries to move dir.
+    // Returns whether successful.
+    // Assumes CoreReady
+    protected boolean moveForward() {
+        if (rc.canMove(forward)) {
             try {
-                rc.move(dir);
+                rc.move(forward);
                 return true;
             } catch (GameActionException e) {
                 e.printStackTrace();
                 return false;
             }
-        } else {
-            return false;
+        }
+        return false;
+    }
+
+    // Wander the field aimlessly.
+    // Assumes CoreReady
+    // TOOD(miles): If this gets used, please avoid walking into the line of fire.
+    protected void wander() {
+        // MapLocation target = rc.getLocation().add(forward);
+        for (int i = 0; i < 4; i++) {
+            if (moveForward()) {
+                return;
+            } else {
+                forward = forward.rotateRight().rotateRight();
+            }
         }
     }
 
