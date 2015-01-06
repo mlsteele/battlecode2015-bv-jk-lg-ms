@@ -11,6 +11,8 @@ public class RobotHQ extends Robot {
         rc.setIndicatorString(0, "i am a RobotHQ");
 
         while(true) {
+            shootBaddies();
+
             if (rc.isCoreReady()) {
                 safeSpawn(Direction.NORTH, RobotType.BEAVER);
             }
@@ -23,8 +25,6 @@ public class RobotHQ extends Robot {
                     rc.transferSupplies(RobotBeaver.STARTING_SUPPLY, supplyTargetLoc);
                 }
             } catch (GameActionException e) { }
-
-            shootBaddies();
 
             rc.yield();
         }
