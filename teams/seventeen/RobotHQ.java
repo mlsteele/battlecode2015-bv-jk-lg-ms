@@ -1,4 +1,4 @@
-package miles;
+package seventeen;
 
 import battlecode.common.*;
 import java.util.*;
