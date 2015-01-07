@@ -8,15 +8,16 @@ import java.util.*;
 public class RobotBeaver extends Robot {
     public static final int STARTING_SUPPLY = 1000;
 
-    private static final int BARRACKS_BUILD_DIST = 4;
+    private static final int BARRACKS_BUILD_DIST = 5;
 
-    private int distanceTraveled = 0;
+    private MapLocation hqLoc;
 
     RobotBeaver(RobotController rc) { super(rc); }
 
     @Override
     public void run() {
         rc.setIndicatorString(0, "i am a RobotBeaver");
+        hqLoc = rc.senseHQLocation();
 
         // Wait for supplies
         while (rc.getSupplyLevel() <= STARTING_SUPPLY / 2) {
@@ -27,17 +28,14 @@ public class RobotBeaver extends Robot {
         while(true) {
             rc.setIndicatorString(2, "supply: " + rc.getSupplyLevel());
 
-            if (rc.isCoreReady() && distanceTraveled >= BARRACKS_BUILD_DIST) {
+            int distanceFromHQ = rc.getLocation().distanceSquaredTo(hqLoc);
+            if (rc.isCoreReady() && distanceFromHQ >= BARRACKS_BUILD_DIST) {
                 buildBarracks();
             }
 
             if (rc.isCoreReady()) mine();
 
-            if (rc.isCoreReady()) {
-                if (wander()) {
-                    distanceTraveled += 1;
-                }
-            }
+            if (rc.isCoreReady()) wander();
 
             rc.yield();
         }
