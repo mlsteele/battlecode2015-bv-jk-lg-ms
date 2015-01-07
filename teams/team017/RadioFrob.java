@@ -6,10 +6,10 @@ import static battlecode.common.RobotType.*;
 import java.util.*;
 
 // Radio module to abstract away our radio protocol.
-// Caches slots of data.
-// Use 'load' methods to read from the broadcast stream (expensive).
-// Use 'get' methods to get cached data (will not cause a load, so be careful).
-// Use 'write' methods to change and broadcast.
+// Caches chunks of data.
+// 'load' methods read from the broadcast stream (expensive).
+// 'get' methods get cached data (will not cause a load, so be careful not to read old/unitialized data).
+// 'write' methods change information and broadcast it.
 public class RadioFrob {
     private static int RALLY_POINT_1_SLOT = 0;
 
