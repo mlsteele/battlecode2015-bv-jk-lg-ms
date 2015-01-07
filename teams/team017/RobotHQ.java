@@ -9,6 +9,12 @@ public class RobotHQ extends Robot {
     private static final int TIME_TO_ATTACK1 = 500;
     private static final int TIME_TO_ATTACK2 = 1000;
     private static final int MAX_BEAVER = 10;
+
+    // Supply-based order codes that HQ gives to beavers
+    public static final int ORDER_NONE = 0;
+    public static final int ORDER_BARRACKS = 1;
+    public static final int ORDER_MINERFACTORY = 2;
+
     private int spawned_beavers = 0;
     private boolean beaver_mining_spawned = false;
 
@@ -56,11 +62,15 @@ public class RobotHQ extends Robot {
                                 beaver_mining_spawned == false) {
                             //rc.setIndicatorString(0, "Spawning a miner beaver");
                             beaver_mining_spawned = true;
-                            rc.transferSupplies(RobotBeaver.STARTING_SUPPLY + RobotMinerFactory.STARTING_SUPPLY, supplyTargetLoc);
+                            rc.transferSupplies(
+                                    RobotBeaver.STARTING_SUPPLY + RobotMinerFactory.STARTING_SUPPLY + ORDER_MINERFACTORY,
+                                    supplyTargetLoc);
                         } else if (rc.getSupplyLevel() > RobotBarracks.STARTING_SUPPLY) {
-                            rc.transferSupplies(RobotBeaver.STARTING_SUPPLY + RobotBarracks.STARTING_SUPPLY, supplyTargetLoc);
+                            rc.transferSupplies(
+                                    RobotBeaver.STARTING_SUPPLY + RobotBarracks.STARTING_SUPPLY + ORDER_BARRACKS,
+                                    supplyTargetLoc);
                         } else {
-                            rc.transferSupplies(RobotBeaver.STARTING_SUPPLY, supplyTargetLoc);
+                            rc.transferSupplies(RobotBeaver.STARTING_SUPPLY + ORDER_NONE, supplyTargetLoc);
                         }
                     } catch (GameActionException e) {
                         e.printStackTrace();

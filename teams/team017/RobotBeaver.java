@@ -24,40 +24,44 @@ public class RobotBeaver extends Robot {
             rc.yield();
         }
         //rc.setIndicatorString(1,"ready");
+        
+        int orderCode = ((int) rc.getSupplyLevel()) % 100;
+        // I am on a mining factory mission
+        switch (orderCode) {
+            case (RobotHQ.ORDER_MINERFACTORY):
+                rc.setIndicatorString(1, "I am on a mining factory mission");
+                while (true) {
+                    rc.setIndicatorString(2, "supply: " + rc.getSupplyLevel());
 
-        if (rc.getSupplyLevel() >= RobotBarracks.STARTING_SUPPLY) {
-            // I am on a barracks mission. Go to build a barracks first
-            rc.setIndicatorString(1, "I am on a barracks mission");
-            while (true) {
-                rc.setIndicatorString(2, "supply: " + rc.getSupplyLevel());
+                    // TODO(jessk) Make sure no buildings are nearby before building here
+                    int distanceFromHQ = rc.getLocation().distanceSquaredTo(hqLoc);
+                    if (rc.isCoreReady()) {
+                        if (distanceFromHQ >= BUILDING_PADDING && buildThenSupply(MINERFACTORY)) break;
+                        wander();
+                    }
 
-                // TODO(jessk) Make sure no buildings are nearby before building here
-                int distanceFromHQ = rc.getLocation().distanceSquaredTo(hqLoc);
-                if (rc.isCoreReady()) {
-                    if (distanceFromHQ >= BUILDING_PADDING && buildBarracks()) break;
-                    wander();
+                    rc.yield();
                 }
+                rc.setIndicatorString(1, "Finished mining mission");
+                break;
+            case (RobotHQ.ORDER_BARRACKS):
+                rc.setIndicatorString(1, "I am on a barracks mission");
+                while (true) {
+                    rc.setIndicatorString(2, "supply: " + rc.getSupplyLevel());
 
-                rc.yield();
-            }
-            rc.setIndicatorString(1, "Finished barracks mission");
-        }
-        else if (rc.getSupplyLevel() >= RobotMinerFactory.STARTING_SUPPLY) {
-            // I am on a mining factory mission
-            rc.setIndicatorString(1, "I am on a mining factory mission");
-            while (true) {
-                rc.setIndicatorString(2, "supply: " + rc.getSupplyLevel());
+                    // TODO(jessk) Make sure no buildings are nearby before building here
+                    int distanceFromHQ = rc.getLocation().distanceSquaredTo(hqLoc);
+                    if (rc.isCoreReady()) {
+                        if (distanceFromHQ >= BUILDING_PADDING && buildBarracks()) break;
+                        wander();
+                    }
 
-                // TODO(jessk) Make sure no buildings are nearby before building here
-                int distanceFromHQ = rc.getLocation().distanceSquaredTo(hqLoc);
-                if (rc.isCoreReady()) {
-                    if (distanceFromHQ >= BUILDING_PADDING && buildThenSupply(MINERFACTORY)) break;
-                    wander();
+                    rc.yield();
                 }
-
-                rc.yield();
-            }
-            rc.setIndicatorString(1, "Finished mining mission");
+                rc.setIndicatorString(1, "Finished barracks mission");
+                break;
+            default:
+                break;
         }
 
 
