@@ -9,11 +9,13 @@ import java.util.*;
 // Contains helper methods commonly useful to robots.
 public abstract class Robot {
     protected RobotController rc;
+    protected RadioFrob rf;
     protected Random rand;
     protected Direction forward;
 
     Robot(RobotController rc) {
         this.rc = rc;
+        rf = new RadioFrob(rc);
         rand = new Random(rc.getID());
         forward = randomDirection();
     }

@@ -9,7 +9,6 @@ public class RobotSoldier extends Robot {
     RobotSoldier(RobotController rc) { super(rc); }
 
     public static final int STARTING_SUPPLY = 1000;
-    private static final int TIME_TO_ATTACK = 500;
 
     @Override
     public void run() {
@@ -24,23 +23,12 @@ public class RobotSoldier extends Robot {
         //    else rc.yield();
         //}
 
-        // Wait to attack all at once
-        // TODO(jessk): go to rally point
-        while (Clock.getRoundNum() < TIME_TO_ATTACK) {
-            if (rc.isCoreReady()) wander();
-            rc.yield();
-        }
-
         // Main loop
-        MapLocation enemy_hq = rc.senseEnemyHQLocation();
         while(true) {
-            rc.setIndicatorString(2, "supply: " + rc.getSupplyLevel());
-
+            rf.loadRally1();
+            rc.setIndicatorString(1, "rallying to " + rf.getRally1());
             shootBaddies();
-
-            if (rc.isCoreReady()) {
-                moveToward(enemy_hq);
-            }
+            if (rc.isCoreReady()) moveToward(rf.getRally1());
 
             rc.yield();
         }
