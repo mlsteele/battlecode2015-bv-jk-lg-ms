@@ -145,6 +145,8 @@ public abstract class Robot {
                     return false;
                 }
             }
+
+            rc.yield();
         }
     }
 
