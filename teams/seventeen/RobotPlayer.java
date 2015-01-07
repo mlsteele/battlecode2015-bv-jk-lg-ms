@@ -30,6 +30,10 @@ public class RobotPlayer {
             case SOLDIER:
                 r = new RobotSoldier(rc);
                 r.run();
+                break;
+            case BASHER:
+                r = new RobotBasher(rc);
+                r.run();
             default:
                 // Unimplemented robot type
                 rc.setIndicatorString(0, "having existential crisis.");

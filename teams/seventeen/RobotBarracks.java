@@ -13,7 +13,13 @@ public class RobotBarracks extends Robot {
         rc.setIndicatorString(0, "i am a RobotBarracks");
 
         while (true) {
-            if (rc.isCoreReady()) spawn(SOLDIER);
+            if (rc.isCoreReady()) {
+                if((rand.nextDouble() * 2) <= 1) {
+                    spawn(SOLDIER);
+                } else {
+                    spawn(BASHER);
+                }
+            }
 
             rc.yield();
         }
