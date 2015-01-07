@@ -34,6 +34,7 @@ public class RobotPlayer {
             case BASHER:
                 r = new RobotBasher(rc);
                 r.run();
+                break;
             default:
                 // Unimplemented robot type
                 rc.setIndicatorString(0, "having existential crisis.");
