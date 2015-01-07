@@ -1,4 +1,4 @@
-package seventeen;
+package team017;
 
 import battlecode.common.*;
 import static battlecode.common.Direction.*;
