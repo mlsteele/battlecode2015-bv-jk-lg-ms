@@ -29,8 +29,8 @@ public class RobotPlayer {
                 break;
             default:
                 // Unimplemented robot type
+                rc.setIndicatorString(0, "having existential crisis.");
                 while (true) {
-                    rc.setIndicatorString(0, "having existential crisis.");
                     rc.yield();
                 }
         }
