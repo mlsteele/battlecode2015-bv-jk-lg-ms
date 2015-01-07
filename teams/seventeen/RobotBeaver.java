@@ -1,6 +1,8 @@
 package seventeen;
 
 import battlecode.common.*;
+import static battlecode.common.Direction.*;
+import static battlecode.common.RobotType.*;
 import java.util.*;
 
 public class RobotBeaver extends Robot {
@@ -21,11 +23,21 @@ public class RobotBeaver extends Robot {
         while(true) {
             rc.setIndicatorString(2, "supply: " + rc.getSupplyLevel());
 
-            if (rc.isCoreReady()) {
-                wander();
-            }
+            if (rc.isCoreReady()) buildBarracks();
+            if (rc.isCoreReady()) wander();
 
             rc.yield();
+        }
+    }
+
+    private void buildBarracks() {
+        Direction dir = randomDirection();
+        if (rc.canBuild(dir, BARRACKS)) {
+            try {
+                rc.build(dir, BARRACKS);
+            } catch (GameActionException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

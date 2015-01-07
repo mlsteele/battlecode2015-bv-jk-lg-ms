@@ -77,17 +77,19 @@ public abstract class Robot {
     }
 
     // Wander the field aimlessly.
+    // Returns whether movement occurred.
     // Assumes CoreReady
     // TOOD(miles): If this gets used, please avoid walking into the line of fire.
-    protected void wander() {
+    protected boolean wander() {
         // MapLocation target = rc.getLocation().add(forward);
         for (int i = 0; i < 4; i++) {
             if (moveForward()) {
-                return;
+                return true;
             } else {
                 forward = forward.rotateRight().rotateRight();
             }
         }
+        return false;
     }
 
     protected boolean shootBaddies() {
