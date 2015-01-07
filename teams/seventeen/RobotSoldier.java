@@ -18,11 +18,11 @@ public class RobotSoldier extends Robot {
         // Go to HQ then wait for supplies
         MapLocation our_hq = rc.senseHQLocation();
         MapLocation wait_here_for_supplies = our_hq.add(0,1);
-        while (rc.getSupplyLevel() <= STARTING_SUPPLY / 2) {
-            if (rc.getLocation() != wait_here_for_supplies)
-                moveToward(wait_here_for_supplies);
-            else rc.yield();
-        }
+        //while (rc.getSupplyLevel() <= STARTING_SUPPLY / 2) {
+        //    if (rc.getLocation() != wait_here_for_supplies && rc.isCoreReady())
+        //        moveToward(wait_here_for_supplies);
+        //    else rc.yield();
+        //}
 
         // Wait to attack all at once
         // TODO(jessk): go to rally point
