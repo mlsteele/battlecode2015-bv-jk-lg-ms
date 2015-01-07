@@ -26,12 +26,9 @@ public class RobotMiner extends Robot {
             if (rc.isCoreReady()) {
                 if (rc.senseOre(rc.getLocation()) > 0) {
                     mine();
-                }
-                forward = optimalOreDirection();
-                try {
-                    rc.move(forward);
-                } catch (GameActionException e) {
-                    e.printStackTrace();
+                } else {
+                    forward = optimalOreDirection();
+                    moveForward();
                 }
             }
 
