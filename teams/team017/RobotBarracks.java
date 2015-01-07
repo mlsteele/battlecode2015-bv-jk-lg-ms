@@ -16,37 +16,30 @@ public class RobotBarracks extends Robot {
         rc.setIndicatorString(0, "i am a RobotBarracks");
 
         while (true) {
-            // Spawn a combatent
-            // Only if there is enough supply for them.
-            if (rc.isCoreReady()) {
-                Direction spawnDir = null;
-                int supplyAmount;
-                if((rand.nextDouble() * 2) <= 1) {
-                    supplyAmount = RobotSoldier.STARTING_SUPPLY;
-                    if (rc.getSupplyLevel() > supplyAmount)
-                        spawnDir = spawn(SOLDIER);
-                } else {
-                    supplyAmount = RobotBasher.STARTING_SUPPLY;
-                    if (rc.getSupplyLevel() > supplyAmount)
-                        spawnDir = spawn(BASHER);
-                }
+            if (rc.isCoreReady()) spawnCombatent();
 
-                // Supply the spawnling.
-                if (spawnDir != null) {
-                    // Wait one round for the robot to spawn.
-                    rc.yield();
-                    MapLocation supplyTargetLoc = rc.getLocation().add(spawnDir);
-
-                    try {
-                        rc.transferSupplies(supplyAmount, supplyTargetLoc);
-                    } catch (GameActionException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
+            // Supply any nearby spawnees that are waiting.
+            RobotInfo[] candidates = rc.senseNearbyRobots(
+                    rc.getLocation(),
+                    GameConstants.SUPPLY_TRANSFER_RADIUS_SQUARED,
+                    rc.getTeam());
+            supplyNearby(candidates, SOLDIER, RobotSoldier.STARTING_SUPPLY);
+            supplyNearby(candidates, BASHER, RobotBasher.STARTING_SUPPLY);
 
             rc.yield();
         }
     }
 
+    // Spawn a solider or basher if there is enough supply to start them.
+    private void spawnCombatent() {
+        if((rand.nextDouble() * 2) <= 1) {
+            supplyAmount = RobotSoldier.STARTING_SUPPLY;
+            if (rc.getSupplyLevel() > supplyAmount)
+                spawn(SOLDIER);
+        } else {
+            supplyAmount = RobotBasher.STARTING_SUPPLY;
+            if (rc.getSupplyLevel() > supplyAmount)
+                spawn(BASHER);
+        }
+    }
 }

@@ -156,4 +156,36 @@ public abstract class Robot {
             rc.yield();
         }
     }
+
+    // Give supplies to nearby robots who have no supplies.
+    // Attempt to transfer `supplyAmount` supplies to nearby robots of type `rtype` who have 0 supply.
+    // If candidates is null, they will be fetched automatically.
+    protected boolean supplyNearbyEmpty(RobotInfo[] candidates, RobotType rtype, int supplyAmount) {
+        if (rc.getSupplyLevel() < supplyAmount)
+            return;
+
+        if (candidates == null) {
+            candidates = rc.senseNearbyRobots(
+                rc.getLocation(),
+                GameConstants.SUPPLY_TRANSFER_RADIUS_SQUARED,
+                rc.getTeam());
+        }
+
+        for (RobotInfo r : candidates) {
+            // Only send to the correct type of bot.
+            if (r.type != rtype) break;
+            if (r.supplyLevel > 0) break;
+
+            try {
+                rc.transferSupplies(supplyAmount, r.location);
+            } catch (GameActionException e) {
+                e.printStackTrace();
+            }
+
+            // Abort when supplier run out of supplies.
+            if (rc.getSupplyLevel() < supplyAmount)
+                return;
+        }
+    }
+
 }
