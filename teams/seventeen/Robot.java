@@ -139,4 +139,11 @@ public abstract class Robot {
         }
         return false;
     }
+
+    // Idle until any supplies are received.
+    protected void waitForSupplies() {
+        while (rc.getSupplyLevel() < 1) {
+            rc.yield();
+        }
+    }
 }

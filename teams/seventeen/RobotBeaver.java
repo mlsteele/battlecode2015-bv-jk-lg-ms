@@ -12,9 +12,6 @@ public class RobotBeaver extends Robot {
     // Require this distance free space around buildings
     private static final int BUILDING_PADDING = 25;
 
-    // Give this to the barracks when you build it
-    public static final int SUPPLY_FOR_BARRACKS = 10000;
-
     private MapLocation hqLoc;
 
     @Override
@@ -28,7 +25,7 @@ public class RobotBeaver extends Robot {
         }
 
         // I am on a barracks mission. Go to build a barracks first
-        if (rc.getSupplyLevel() >= SUPPLY_FOR_BARRACKS) {
+        if (rc.getSupplyLevel() >= RobotBarracks.STARTING_SUPPLY) {
             rc.setIndicatorString(1, "I am on a barracks mission");
             while (true) {
                 rc.setIndicatorString(2, "supply: " + rc.getSupplyLevel());
@@ -79,7 +76,7 @@ public class RobotBeaver extends Robot {
                 MapLocation barracks_loc = rc.getLocation().add(dir);
                 // Wait one turn for the barracks to spawn.
                 rc.yield();
-                rc.transferSupplies(SUPPLY_FOR_BARRACKS, barracks_loc);
+                rc.transferSupplies(RobotBarracks.STARTING_SUPPLY, barracks_loc);
                 return true;
             } catch (GameActionException e) {
                 e.printStackTrace();

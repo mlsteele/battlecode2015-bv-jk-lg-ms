@@ -14,20 +14,13 @@ public class RobotSoldier extends Robot {
     public void run() {
         rc.setIndicatorString(0, "i am a RobotSoldier");
 
-        // Go to HQ then wait for supplies
-        MapLocation our_hq = rc.senseHQLocation();
-        MapLocation wait_here_for_supplies = our_hq.add(0,1);
-        //while (rc.getSupplyLevel() <= STARTING_SUPPLY / 2) {
-        //    if (rc.getLocation() != wait_here_for_supplies && rc.isCoreReady())
-        //        moveToward(wait_here_for_supplies);
-        //    else rc.yield();
-        //}
+        waitForSupplies();
 
         // Main loop
         while(true) {
-            rf.loadRally1();
-            rc.setIndicatorString(1, "rallying to " + rf.getRally1());
             shootBaddies();
+
+            rf.loadRally1();
             if (rc.isCoreReady()) moveToward(rf.getRally1());
 
             rc.yield();

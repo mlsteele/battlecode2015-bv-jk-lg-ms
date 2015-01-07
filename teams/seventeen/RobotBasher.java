@@ -15,30 +15,12 @@ public class RobotBasher extends Robot {
     public void run() {
         rc.setIndicatorString(0, "i am a RobotBasher");
 
-        // Go to HQ then wait for supplies
-        MapLocation our_hq = rc.senseHQLocation();
-        MapLocation wait_here_for_supplies = our_hq.add(0,1);
-        //while (rc.getSupplyLevel() <= STARTING_SUPPLY / 2) {
-        //    if (rc.getLocation() != wait_here_for_supplies && rc.isCoreReady())
-        //        moveToward(wait_here_for_supplies);
-        //    else rc.yield();
-        //}
-
-        // Wait to attack all at once
-        // TODO(jessk): go to rally point
-        while (Clock.getRoundNum() < TIME_TO_ATTACK) {
-            if (rc.isCoreReady()) wander();
-            rc.yield();
-        }
+        waitForSupplies();
 
         // Main loop
-        MapLocation enemy_hq = rc.senseEnemyHQLocation();
         while(true) {
-            rc.setIndicatorString(2, "supply: " + rc.getSupplyLevel());
-
-            if (rc.isCoreReady()) {
-                moveToward(enemy_hq);
-            }
+            rf.loadRally1();
+            if (rc.isCoreReady()) moveToward(rf.getRally1());
 
             rc.yield();
         }
