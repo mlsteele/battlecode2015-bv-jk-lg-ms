@@ -6,6 +6,9 @@ import static battlecode.common.RobotType.*;
 import java.util.*;
 
 public class RobotBeaver extends Robot {
+    RobotBeaver(RobotController rc) { super(rc); }
+
+    // How much supply the Beaver would like to have before he leaves to explore the world
     public static final int STARTING_SUPPLY = 1000;
 
     private static final int BARRACKS_BUILD_DIST = 5;
