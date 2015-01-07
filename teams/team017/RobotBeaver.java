@@ -19,12 +19,8 @@ public class RobotBeaver extends Robot {
         rc.setIndicatorString(0, "i am a RobotBeaver");
         hqLoc = rc.senseHQLocation();
 
-        // Wait for supplies
-        while (rc.getSupplyLevel() <= STARTING_SUPPLY / 2) {
-            rc.yield();
-        }
-        //rc.setIndicatorString(1,"ready");
-        
+        waitForSupplies();
+
         int orderCode = ((int) rc.getSupplyLevel()) % 100;
         // I am on a mining factory mission
         switch (orderCode) {

@@ -151,8 +151,10 @@ public abstract class Robot {
     }
 
     // Idle until any supplies are received.
+    // Also shoot.
     protected void waitForSupplies() {
         while (rc.getSupplyLevel() < 1) {
+            shootBaddies();
             rc.yield();
         }
     }

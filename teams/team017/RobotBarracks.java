@@ -34,11 +34,11 @@ public class RobotBarracks extends Robot {
     private void spawnCombatent() {
         if((rand.nextDouble() * 2) <= 1) {
             supplyAmount = RobotSoldier.STARTING_SUPPLY;
-            if (rc.getSupplyLevel() > supplyAmount)
+            if (rc.getSupplyLevel() >= supplyAmount)
                 spawn(SOLDIER);
         } else {
             supplyAmount = RobotBasher.STARTING_SUPPLY;
-            if (rc.getSupplyLevel() > supplyAmount)
+            if (rc.getSupplyLevel() >= supplyAmount)
                 spawn(BASHER);
         }
     }
