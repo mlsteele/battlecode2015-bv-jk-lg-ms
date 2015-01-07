@@ -2,6 +2,7 @@ package team017;
 
 import battlecode.common.*;
 import static battlecode.common.Direction.*;
+import static battlecode.common.RobotType.*;
 import java.util.*;
 
 // Base class for Robot minds.
@@ -154,8 +155,9 @@ public abstract class Robot {
     // Also shoot.
     protected void waitForSupplies() {
         rc.setIndicatorString(1, "waiting for supplies");
+        boolean shouldAttack = rc.getType() != BASHER;
         while (rc.getSupplyLevel() < 1) {
-            shootBaddies();
+            if (shouldAttack) shootBaddies();
             rc.yield();
         }
         rc.setIndicatorString(1, "recvd for supplies");
