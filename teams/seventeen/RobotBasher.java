@@ -36,8 +36,6 @@ public class RobotBasher extends Robot {
         while(true) {
             rc.setIndicatorString(2, "supply: " + rc.getSupplyLevel());
 
-            shootBaddies();
-
             if (rc.isCoreReady()) {
                 moveToward(enemy_hq);
             }

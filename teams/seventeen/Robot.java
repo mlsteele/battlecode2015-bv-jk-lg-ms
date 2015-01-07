@@ -81,7 +81,9 @@ public abstract class Robot {
                 } else {
                     forward = forward.rotateLeft();
                 }
-                rc.move(forward);
+                if (rc.canMove(forward)) {
+                    rc.move(forward);
+                }
                 return true;
             } catch (GameActionException e) {
                 e.printStackTrace();
