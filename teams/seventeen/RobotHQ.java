@@ -6,7 +6,8 @@ import static battlecode.common.RobotType.*;
 import java.util.*;
 
 public class RobotHQ extends Robot {
-    private static final int TIME_TO_ATTACK = 500;
+    private static final int TIME_TO_ATTACK1 = 500;
+    private static final int TIME_TO_ATTACK2 = 1000;
 
     RobotHQ(RobotController rc) { super(rc); }
 
@@ -21,7 +22,13 @@ public class RobotHQ extends Robot {
         while(true) {
             shootBaddies();
 
-            if (Math.abs(Clock.getRoundNum() - TIME_TO_ATTACK) <= 1) {
+            if (Math.abs(Clock.getRoundNum() - TIME_TO_ATTACK1) <= 1) {
+                // Rally at half point.
+                rf.writeRally1(avgLocations(rc.senseEnemyHQLocation(), rc.senseHQLocation()));
+                rc.setIndicatorString(1, "set rally1 to " + rf.getRally1());
+            }
+
+            if (Math.abs(Clock.getRoundNum() - TIME_TO_ATTACK2) <= 1) {
                 // Rally at the enemy HQ
                 rf.writeRally1(rc.senseEnemyHQLocation());
                 rc.setIndicatorString(1, "set rally1 to " + rf.getRally1());
@@ -51,5 +58,9 @@ public class RobotHQ extends Robot {
 
             rc.yield();
         }
+    }
+
+    private MapLocation avgLocations(MapLocation a, MapLocation b) {
+        return new MapLocation((a.x + b.x) / 2, (a.y + b.y) / 2);
     }
 }
