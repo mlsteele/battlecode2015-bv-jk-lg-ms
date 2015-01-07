@@ -1,6 +1,8 @@
 package seventeen;
 
 import battlecode.common.*;
+import static battlecode.common.Direction.*;
+import static battlecode.common.RobotType.*;
 import java.util.*;
 
 public class RobotHQ extends Robot {
@@ -25,21 +27,27 @@ public class RobotHQ extends Robot {
                 rc.setIndicatorString(1, "set rally1 to " + rf.getRally1());
             }
 
-            if (rc.isCoreReady()) {
-                safeSpawn(Direction.NORTH, RobotType.BEAVER);
-            }
+            // Spawn a beaver.
+            if (rc.isCoreReady() && rc.getSupplyLevel() > RobotBeaver.STARTING_SUPPLY) {
+                Direction spawnDir = spawn(BEAVER);
+                // Supply spawnling
+                if (spawnDir != null) {
+                    // Wait one round for the robot to spawn.
+                    rc.yield();
+                    MapLocation supplyTargetLoc = rc.getLocation().add(spawnDir);
 
-            // Supply spawnlings
-            try {
-                MapLocation supplyTargetLoc = rc.getLocation().add(Direction.NORTH);
-                RobotInfo   supplyTarget    = rc.senseRobotAtLocation(supplyTargetLoc);
-                if (supplyTarget != null && supplyTarget.supplyLevel < RobotBeaver.STARTING_SUPPLY / 2) {
-                    if (rc.getSupplyLevel() > 2*RobotBeaver.SUPPLY_FOR_BARRACKS)
-                        rc.transferSupplies(RobotBeaver.STARTING_SUPPLY + RobotBeaver.SUPPLY_FOR_BARRACKS, supplyTargetLoc);
-                    else
-                        rc.transferSupplies(RobotBeaver.STARTING_SUPPLY, supplyTargetLoc);
+                    try {
+                        // If it would be reasonable to supply a barracks, order one built.
+                        if (rc.getSupplyLevel() > 2*RobotBeaver.SUPPLY_FOR_BARRACKS) {
+                            rc.transferSupplies(RobotBeaver.STARTING_SUPPLY + RobotBeaver.SUPPLY_FOR_BARRACKS, supplyTargetLoc);
+                        } else {
+                            rc.transferSupplies(RobotBeaver.STARTING_SUPPLY, supplyTargetLoc);
+                        }
+                    } catch (GameActionException e) {
+                        e.printStackTrace();
+                    }
                 }
-            } catch (GameActionException e) { }
+            }
 
             rc.yield();
         }

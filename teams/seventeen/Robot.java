@@ -48,18 +48,25 @@ public abstract class Robot {
         throw new RuntimeException("Something mod 8 is bigger than 7");
     }
 
-    protected boolean safeSpawn(Direction dir, RobotType rtype) {
-        if (rc.canSpawn(dir, rtype)) {
-            try {
-                rc.spawn(dir, rtype);
-                return true;
-            } catch (GameActionException e) {
-                e.printStackTrace();
-                return false;
+    // Attempts to spawn a robot of rtype.
+    // Spawns at an arbitrary adjacent square.
+    // Returns the direction of spawn, or NULL if no spawn occurred.
+    // Assumes CoreReady
+    protected Direction spawn(RobotType rtype) {
+        Direction dir = randomDirection();
+        for (int i = 0; i < 8; i++) {
+            if (rc.canSpawn(dir, rtype)) {
+                try {
+                    rc.spawn(dir, rtype);
+                    return dir;
+                } catch (GameActionException e) {
+                    e.printStackTrace();
+                    return null;
+                }
             }
-        } else {
-            return false;
+            dir = dir.rotateLeft();
         }
+        return null;
     }
 
     // Tries to move dir.

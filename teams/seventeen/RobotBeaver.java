@@ -77,6 +77,7 @@ public class RobotBeaver extends Robot {
             try {
                 rc.build(dir, BARRACKS);
                 MapLocation barracks_loc = rc.getLocation().add(dir);
+                // Wait one turn for the barracks to spawn.
                 rc.yield();
                 rc.transferSupplies(SUPPLY_FOR_BARRACKS, barracks_loc);
                 return true;

@@ -25,14 +25,4 @@ public class RobotBarracks extends Robot {
         }
     }
 
-    private void spawn(RobotType rtype) {
-        Direction dir = randomDirection();
-        if (rc.canSpawn(dir, rtype)) {
-            try {
-                rc.spawn(dir, rtype);
-            } catch (GameActionException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 }
