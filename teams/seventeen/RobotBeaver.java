@@ -11,7 +11,7 @@ public class RobotBeaver extends Robot {
     // How much supply the Beaver would like to have before he leaves to explore the world
     public static final int STARTING_SUPPLY = 1000;
 
-    private static final int BARRACKS_BUILD_DIST = 5;
+    private static final int BARRACKS_BUILD_DISTSQ = 25;
 
     private MapLocation hqLoc;
 
@@ -30,7 +30,7 @@ public class RobotBeaver extends Robot {
             rc.setIndicatorString(2, "supply: " + rc.getSupplyLevel());
 
             int distanceFromHQ = rc.getLocation().distanceSquaredTo(hqLoc);
-            if (rc.isCoreReady() && distanceFromHQ >= BARRACKS_BUILD_DIST) {
+            if (rc.isCoreReady() && distanceFromHQ >= BARRACKS_BUILD_DISTSQ) {
                 buildBarracks();
             }
 
