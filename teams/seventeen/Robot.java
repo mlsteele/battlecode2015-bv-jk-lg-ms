@@ -76,6 +76,11 @@ public abstract class Robot {
         return false;
     }
 
+    protected boolean moveToward(MapLocation loc) {
+        forward = rc.getLocation().directionTo(loc);
+        return moveForward();
+    }
+
     // Wander the field aimlessly.
     // Returns whether movement occurred.
     // Assumes CoreReady

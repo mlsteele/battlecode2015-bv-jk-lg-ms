@@ -27,6 +27,9 @@ public class RobotPlayer {
                 r = new RobotBarracks(rc);
                 r.run();
                 break;
+            case SOLDIER:
+                r = new RobotSoldier(rc);
+                r.run();
             default:
                 // Unimplemented robot type
                 rc.setIndicatorString(0, "having existential crisis.");
