@@ -1,6 +1,8 @@
 package team017;
 
 import battlecode.common.*;
+import battlecode.common.GameActionException;
+
 import static battlecode.common.Direction.*;
 import static battlecode.common.RobotType.*;
 import java.util.*;
@@ -12,6 +14,7 @@ import java.util.*;
 // 'write' methods change information and broadcast it.
 public class RadioFrob {
     private static int RALLY_POINT_1_SLOT = 0;
+    private static int NUM_MINING_FACTORIES = 1;
 
     private RobotController rc;
     private MapLocation hqLoc; // Used for anchoring relative coordinates.
@@ -20,6 +23,16 @@ public class RadioFrob {
     RadioFrob(RobotController rc) {
         this.rc = rc;
         hqLoc = rc.senseHQLocation();
+    }
+
+    //TODO: Use caching later
+    public void writeIncMiningFacCount() {
+        try {
+            int mining_count = rc.readBroadcast(NUM_MINING_FACTORIES);
+            rc.broadcast(NUM_MINING_FACTORIES, mining_count++);
+        } catch (GameActionException e) {
+            e.printStackTrace();
+        }
     }
 
     // Load rally point 1
