@@ -114,6 +114,9 @@ public class RobotBeaver extends Robot {
             case MINERFACTORY:
                 supply = RobotMinerFactory.STARTING_SUPPLY;
                 break;
+            case TANKFACTORY:
+                supply = RobotTankFactory.STARTING_SUPPLY;
+                break;
             default:
                 supply = 0;
         }

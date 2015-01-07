@@ -43,6 +43,14 @@ public class RobotPlayer {
                 r = new RobotMinerFactory(rc);
                 r.run();
                 break;
+            case TANK:
+                r = new RobotTank(rc);
+                r.run();
+                break;
+            case TANKFACTORY:
+                r = new RobotTank(rc);
+                r.run();
+                break;
             default:
                 // Unimplemented robot type
                 rc.setIndicatorString(0, "having existential crisis.");
