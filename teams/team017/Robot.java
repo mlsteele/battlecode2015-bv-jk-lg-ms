@@ -153,16 +153,18 @@ public abstract class Robot {
     // Idle until any supplies are received.
     // Also shoot.
     protected void waitForSupplies() {
+        rc.setIndicatorString(1, "waiting for supplies");
         while (rc.getSupplyLevel() < 1) {
             shootBaddies();
             rc.yield();
         }
+        rc.setIndicatorString(1, "recvd for supplies");
     }
 
     // Give supplies to nearby robots who have no supplies.
     // Attempt to transfer `supplyAmount` supplies to nearby robots of type `rtype` who have 0 supply.
     // If candidates is null, they will be fetched automatically.
-    protected boolean supplyNearbyEmpty(RobotInfo[] candidates, RobotType rtype, int supplyAmount) {
+    protected void supplyNearbyEmpty(RobotInfo[] candidates, RobotType rtype, int supplyAmount) {
         if (rc.getSupplyLevel() < supplyAmount)
             return;
 
@@ -185,8 +187,9 @@ public abstract class Robot {
             }
 
             // Abort when supplier run out of supplies.
-            if (rc.getSupplyLevel() < supplyAmount)
+            if (rc.getSupplyLevel() < supplyAmount) {
                 return;
+            }
         }
     }
 

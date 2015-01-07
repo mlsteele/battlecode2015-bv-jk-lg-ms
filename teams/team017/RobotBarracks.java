@@ -23,8 +23,8 @@ public class RobotBarracks extends Robot {
                     rc.getLocation(),
                     GameConstants.SUPPLY_TRANSFER_RADIUS_SQUARED,
                     rc.getTeam());
-            supplyNearby(candidates, SOLDIER, RobotSoldier.STARTING_SUPPLY);
-            supplyNearby(candidates, BASHER, RobotBasher.STARTING_SUPPLY);
+            supplyNearbyEmpty(candidates, SOLDIER, RobotSoldier.STARTING_SUPPLY);
+            supplyNearbyEmpty(candidates, BASHER, RobotBasher.STARTING_SUPPLY);
 
             rc.yield();
         }
@@ -32,6 +32,7 @@ public class RobotBarracks extends Robot {
 
     // Spawn a solider or basher if there is enough supply to start them.
     private void spawnCombatent() {
+        int supplyAmount;
         if((rand.nextDouble() * 2) <= 1) {
             supplyAmount = RobotSoldier.STARTING_SUPPLY;
             if (rc.getSupplyLevel() >= supplyAmount)
