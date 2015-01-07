@@ -38,8 +38,8 @@ public class RobotHQ extends Robot {
 
                     try {
                         // If it would be reasonable to supply a barracks, order one built.
-                        if (rc.getSupplyLevel() > 2*RobotBeaver.SUPPLY_FOR_BARRACKS) {
-                            rc.transferSupplies(RobotBeaver.STARTING_SUPPLY + RobotBeaver.SUPPLY_FOR_BARRACKS, supplyTargetLoc);
+                        if (rc.getSupplyLevel() > 2*RobotBarracks.STARTING_SUPPLY) {
+                            rc.transferSupplies(RobotBeaver.STARTING_SUPPLY + RobotBarracks.STARTING_SUPPLY, supplyTargetLoc);
                         } else {
                             rc.transferSupplies(RobotBeaver.STARTING_SUPPLY, supplyTargetLoc);
                         }
