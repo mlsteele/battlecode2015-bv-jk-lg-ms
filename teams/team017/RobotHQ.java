@@ -9,6 +9,9 @@ public class RobotHQ extends Robot {
     private static final int TIME_TO_ATTACK1 = 500;
     private static final int TIME_TO_ATTACK2 = 1000;
     private static final int MAX_BEAVER = 10;
+    private static final int UPDATE_UNIT_COUNT_TIME = 10;
+    private static final int NUM_OF_UNIT_TYPES = RobotType.values().length;
+    int[] unitsOnField = new int[NUM_OF_UNIT_TYPES];
 
     // Supply-based order codes that HQ gives to beavers
     public static final int ORDER_NONE = 0;
@@ -27,9 +30,15 @@ public class RobotHQ extends Robot {
         // Tell all soldiers to rally at our first tower.
         rf.writeRally1(rc.senseTowerLocations()[0]);
         rc.setIndicatorString(1, "set rally1 to " + rf.getRally1());
- asd
+
         while(true) {
             shootBaddies();
+
+            // Updates the unit count. Happens every UPDATE_UNIT_COUNT_TIME mod times
+            if (Clock.getRoundNum()%UPDATE_UNIT_COUNT_TIME == 0) {
+                int[] cheese = updateUnitCount();
+                rc.setIndicatorString(0,Arrays.toString(cheese));
+            }
 
             if (Math.abs(Clock.getRoundNum() - TIME_TO_ATTACK1) <= 1) {
                 // Rally at half point.
@@ -82,11 +91,16 @@ public class RobotHQ extends Robot {
         }
     }
 
-    /*
+
     private int[] updateUnitCount() {
-        RobotIngo[] robots = rc.senseNearbyRobots(rc.getLocation(), Int.MAX_VALUE, rc.getTeam());
+        int[] unitsOnField = new int[NUM_OF_UNIT_TYPES];
+        RobotInfo[] robots = rc.senseNearbyRobots(rc.getLocation(), Integer.MAX_VALUE, rc.getTeam());
+        for (RobotInfo rob : robots) {
+            unitsOnField[rob.type.ordinal()]++;
+        }
+        return unitsOnField;
     }
-    */
+
 
     private MapLocation avgLocations(MapLocation a, MapLocation b) {
         return new MapLocation((a.x + b.x) / 2, (a.y + b.y) / 2);
