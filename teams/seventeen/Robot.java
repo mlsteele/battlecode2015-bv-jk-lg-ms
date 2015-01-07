@@ -72,8 +72,21 @@ public abstract class Robot {
                 e.printStackTrace();
                 return false;
             }
+        } else {
+            try {
+                if((rand.nextDouble() * 2) <= 1) {
+                    forward = forward.rotateRight();
+                } else {
+                    forward = forward.rotateLeft();
+                }
+                rc.move(forward);
+                return true;
+            } catch (GameActionException e) {
+                e.printStackTrace();
+                return false;
+            }
+
         }
-        return false;
     }
 
     protected boolean moveToward(MapLocation loc) {
