@@ -23,6 +23,10 @@ public class RobotPlayer {
                 r = new RobotBeaver(rc);
                 r.run();
                 break;
+            case BARRACKS:
+                r = new RobotBarracks(rc);
+                r.run();
+                break;
             default:
                 // Unimplemented robot type
                 while (true) {
