@@ -34,7 +34,10 @@ public class RobotHQ extends Robot {
                 MapLocation supplyTargetLoc = rc.getLocation().add(Direction.NORTH);
                 RobotInfo   supplyTarget    = rc.senseRobotAtLocation(supplyTargetLoc);
                 if (supplyTarget != null && supplyTarget.supplyLevel < RobotBeaver.STARTING_SUPPLY / 2) {
-                    rc.transferSupplies(RobotBeaver.STARTING_SUPPLY, supplyTargetLoc);
+                    if (rc.getSupplyLevel() > 2*RobotBeaver.SUPPLY_FOR_BARRACKS)
+                        rc.transferSupplies(RobotBeaver.STARTING_SUPPLY + RobotBeaver.SUPPLY_FOR_BARRACKS, supplyTargetLoc);
+                    else
+                        rc.transferSupplies(RobotBeaver.STARTING_SUPPLY, supplyTargetLoc);
                 }
             } catch (GameActionException e) { }
 

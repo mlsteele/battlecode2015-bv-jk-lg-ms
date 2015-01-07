@@ -1,9 +1,7 @@
 package seventeen;
 
 import battlecode.common.*;
-import static battlecode.common.Direction.*;
 import static battlecode.common.RobotType.*;
-import java.util.*;
 
 public class RobotBeaver extends Robot {
     RobotBeaver(RobotController rc) { super(rc); }
@@ -11,7 +9,11 @@ public class RobotBeaver extends Robot {
     // How much supply the Beaver would like to have before he leaves to explore the world
     public static final int STARTING_SUPPLY = 1000;
 
-    private static final int BARRACKS_BUILD_DISTSQ = 25;
+    // Require this distance free space around buildings
+    private static final int BUILDING_PADDING = 25;
+
+    // Give this to the barracks when you build it
+    public static final int SUPPLY_FOR_BARRACKS = 10000;
 
     private MapLocation hqLoc;
 
@@ -25,14 +27,29 @@ public class RobotBeaver extends Robot {
             rc.yield();
         }
 
-        // Main loop
+        // I am on a barracks mission. Go to build a barracks first
+        //if (rc.getSupplyLevel() >= SUPPLY_FOR_BARRACKS) {
+        if (true) {
+            rc.setIndicatorString(1, "I am on a barracks mission");
+            while (true) {
+                rc.setIndicatorString(2, "supply: " + rc.getSupplyLevel());
+
+                // TODO(jessk) Make sure no buildings are nearby before building here
+                int distanceFromHQ = rc.getLocation().distanceSquaredTo(hqLoc);
+                if (rc.isCoreReady()) {
+                    // if (distanceFromHQ >= BUILDING_PADDING && buildBarracks()) break;
+                    if (Clock.getRoundNum() > 300) break;
+                    // wander();
+                }
+
+                rc.yield();
+            }
+            rc.setIndicatorString(1, "Finished barracks mission");
+        }
+
+        // Main loop... mine & wander
         while(true) {
             rc.setIndicatorString(2, "supply: " + rc.getSupplyLevel());
-
-            int distanceFromHQ = rc.getLocation().distanceSquaredTo(hqLoc);
-            if (rc.isCoreReady() && distanceFromHQ >= BARRACKS_BUILD_DISTSQ) {
-                buildBarracks();
-            }
 
             if (rc.isCoreReady()) mine();
 
@@ -56,14 +73,17 @@ public class RobotBeaver extends Robot {
     }
 
     // Attempt to build a barracks.
-    private void buildBarracks() {
+    private boolean buildBarracks() {
         Direction dir = randomDirection();
         if (rc.canBuild(dir, BARRACKS)) {
             try {
                 rc.build(dir, BARRACKS);
+                rc.transferSupplies(SUPPLY_FOR_BARRACKS, rc.getLocation().add(dir));
+                return true;
             } catch (GameActionException e) {
                 e.printStackTrace();
             }
         }
+        return false;
     }
 }
