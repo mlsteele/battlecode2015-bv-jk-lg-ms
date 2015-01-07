@@ -122,13 +122,22 @@ public abstract class Robot {
     }
 
     protected boolean shootBaddies() {
-        if (rc.isWeaponReady()) {
+        // Keep scanning until either a hit or no enemies in sight.
+        // It's not good to shuffle around, causing further loading delay,
+        // when an enemy is in range.
+        while (true) {
             int range = rc.getType().attackRadiusSquared;
             Team enemy = rc.getTeam().opponent();
             RobotInfo[] enemies = rc.senseNearbyRobots(range, enemy);
-            // TODO(miles): What's the poitn of canAttackLocation?
-            if (enemies.length > 0) {
+
+            if (enemies.length == 0) {
+                // All clear.
+                return false;
+            }
+
+            if (rc.isWeaponReady()) {
                 try {
+                    // Note: canAttackLocation seems useless (see engine source)
                     rc.attackLocation(chooseTarget(enemies).location);
                     return true;
                 } catch (GameActionException e) {
@@ -137,7 +146,6 @@ public abstract class Robot {
                 }
             }
         }
-        return false;
     }
 
     // Idle until any supplies are received.
