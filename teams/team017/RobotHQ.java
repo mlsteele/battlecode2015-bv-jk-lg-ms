@@ -66,7 +66,7 @@ public class RobotHQ extends Robot {
 
 
                     try {
-                        // If it would be reasonable to supply a barracks, order one built.
+                        // If it would be reasonable to supply a structure, order one built.
                         if (rc.getSupplyLevel() > RobotMinerFactory.STARTING_SUPPLY &&
                                 beaver_mining_spawned == false) {
                             //rc.setIndicatorString(0, "Spawning a miner beaver");

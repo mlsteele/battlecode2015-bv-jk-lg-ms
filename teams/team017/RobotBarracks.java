@@ -16,11 +16,10 @@ public class RobotBarracks extends Robot {
         rc.setIndicatorString(0, "i am a RobotBarracks");
 
         while (true) {
-            if (rc.isCoreReady()) spawnCombatent();
+            if (rc.isCoreReady()) spawnCombatant();
 
             // Supply any nearby spawnees that are waiting.
             RobotInfo[] candidates = rc.senseNearbyRobots(
-                    rc.getLocation(),
                     GameConstants.SUPPLY_TRANSFER_RADIUS_SQUARED,
                     rc.getTeam());
             supplyNearbyEmpty(candidates, SOLDIER, RobotSoldier.STARTING_SUPPLY);
@@ -31,7 +30,7 @@ public class RobotBarracks extends Robot {
     }
 
     // Spawn a solider or basher if there is enough supply to start them.
-    private void spawnCombatent() {
+    private void spawnCombatant() {
         int supplyAmount;
         if((rand.nextDouble() * 2) <= 1) {
             supplyAmount = RobotSoldier.STARTING_SUPPLY;

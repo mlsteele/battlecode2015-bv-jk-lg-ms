@@ -172,15 +172,14 @@ public abstract class Robot {
 
         if (candidates == null) {
             candidates = rc.senseNearbyRobots(
-                rc.getLocation(),
                 GameConstants.SUPPLY_TRANSFER_RADIUS_SQUARED,
                 rc.getTeam());
         }
 
         for (RobotInfo r : candidates) {
             // Only send to the correct type of bot.
-            if (r.type != rtype) break;
-            if (r.supplyLevel > 0) break;
+            if (r.type != rtype) continue;
+            if (r.supplyLevel > 0) continue;
 
             try {
                 rc.transferSupplies(supplyAmount, r.location);
