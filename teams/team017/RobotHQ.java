@@ -27,7 +27,7 @@ public class RobotHQ extends Robot {
         // Tell all soldiers to rally at our first tower.
         rf.writeRally1(rc.senseTowerLocations()[0]);
         rc.setIndicatorString(1, "set rally1 to " + rf.getRally1());
-
+ asd
         while(true) {
             shootBaddies();
 
@@ -81,6 +81,12 @@ public class RobotHQ extends Robot {
             rc.yield();
         }
     }
+
+    /*
+    private int[] updateUnitCount() {
+        RobotIngo[] robots = rc.senseNearbyRobots(rc.getLocation(), Int.MAX_VALUE, rc.getTeam());
+    }
+    */
 
     private MapLocation avgLocations(MapLocation a, MapLocation b) {
         return new MapLocation((a.x + b.x) / 2, (a.y + b.y) / 2);
