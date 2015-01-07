@@ -25,8 +25,25 @@ public class RobotBeaver extends Robot {
         }
         //rc.setIndicatorString(1,"ready");
 
-        // I am on a mining factory mission
-        if (rc.getSupplyLevel() >= RobotMinerFactory.STARTING_SUPPLY) {
+        if (rc.getSupplyLevel() >= RobotBarracks.STARTING_SUPPLY) {
+            // I am on a barracks mission. Go to build a barracks first
+            rc.setIndicatorString(1, "I am on a barracks mission");
+            while (true) {
+                rc.setIndicatorString(2, "supply: " + rc.getSupplyLevel());
+
+                // TODO(jessk) Make sure no buildings are nearby before building here
+                int distanceFromHQ = rc.getLocation().distanceSquaredTo(hqLoc);
+                if (rc.isCoreReady()) {
+                    if (distanceFromHQ >= BUILDING_PADDING && buildBarracks()) break;
+                    wander();
+                }
+
+                rc.yield();
+            }
+            rc.setIndicatorString(1, "Finished barracks mission");
+        }
+        else if (rc.getSupplyLevel() >= RobotMinerFactory.STARTING_SUPPLY) {
+            // I am on a mining factory mission
             rc.setIndicatorString(1, "I am on a mining factory mission");
             while (true) {
                 rc.setIndicatorString(2, "supply: " + rc.getSupplyLevel());
@@ -43,23 +60,6 @@ public class RobotBeaver extends Robot {
             rc.setIndicatorString(1, "Finished mining mission");
         }
 
-        // I am on a barracks mission. Go to build a barracks first
-        if (rc.getSupplyLevel() >= RobotBarracks.STARTING_SUPPLY) {
-            rc.setIndicatorString(1, "I am on a barracks mission");
-            while (true) {
-                rc.setIndicatorString(2, "supply: " + rc.getSupplyLevel());
-
-                // TODO(jessk) Make sure no buildings are nearby before building here
-                int distanceFromHQ = rc.getLocation().distanceSquaredTo(hqLoc);
-                if (rc.isCoreReady()) {
-                    if (distanceFromHQ >= BUILDING_PADDING && buildBarracks()) break;
-                    wander();
-                }
-
-                rc.yield();
-            }
-            rc.setIndicatorString(1, "Finished barracks mission");
-        }
 
         // Main loop... mine & wander
         while(true) {
