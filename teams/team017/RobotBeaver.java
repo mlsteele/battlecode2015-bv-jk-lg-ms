@@ -75,15 +75,17 @@ public class RobotBeaver extends Robot {
 
     // Attempt to mine.
     // NOTE: this is beaver specific because of that constant.
-    private void mine() {
+    private boolean mine() {
         boolean shouldMine = rc.senseOre(rc.getLocation()) >= GameConstants.BEAVER_MINE_MAX;
         if (shouldMine && rc.canMine()) {
             try {
                 rc.mine();
+                return true;
             } catch (GameActionException e) {
                 e.printStackTrace();
             }
         }
+        return false;
     }
 
     // Attempt to build and then supply a building
