@@ -28,8 +28,7 @@ public class RobotBeaver extends Robot {
         }
 
         // I am on a barracks mission. Go to build a barracks first
-        //if (rc.getSupplyLevel() >= SUPPLY_FOR_BARRACKS) {
-        if (true) {
+        if (rc.getSupplyLevel() >= SUPPLY_FOR_BARRACKS) {
             rc.setIndicatorString(1, "I am on a barracks mission");
             while (true) {
                 rc.setIndicatorString(2, "supply: " + rc.getSupplyLevel());
@@ -37,9 +36,8 @@ public class RobotBeaver extends Robot {
                 // TODO(jessk) Make sure no buildings are nearby before building here
                 int distanceFromHQ = rc.getLocation().distanceSquaredTo(hqLoc);
                 if (rc.isCoreReady()) {
-                    // if (distanceFromHQ >= BUILDING_PADDING && buildBarracks()) break;
-                    if (Clock.getRoundNum() > 300) break;
-                    // wander();
+                    if (distanceFromHQ >= BUILDING_PADDING && buildBarracks()) break;
+                    wander();
                 }
 
                 rc.yield();
@@ -78,7 +76,9 @@ public class RobotBeaver extends Robot {
         if (rc.canBuild(dir, BARRACKS)) {
             try {
                 rc.build(dir, BARRACKS);
-                rc.transferSupplies(SUPPLY_FOR_BARRACKS, rc.getLocation().add(dir));
+                MapLocation barracks_loc = rc.getLocation().add(dir);
+                rc.yield();
+                rc.transferSupplies(SUPPLY_FOR_BARRACKS, barracks_loc);
                 return true;
             } catch (GameActionException e) {
                 e.printStackTrace();
