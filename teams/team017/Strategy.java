@@ -22,7 +22,7 @@ public enum Strategy {
             case HELIPAD:             return 10 * initialSupply(DRONE);
             case DRONE:               return 1000;
 
-            case TANKFACTORY:         return 5 * initialSupply(TANK);
+            case TANKFACTORY:         return 9 * initialSupply(TANK);
             case TANK:                return 4000;
 
             case AEROSPACELAB:        throw new NotImplementedException();
