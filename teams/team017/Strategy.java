@@ -14,6 +14,9 @@ public enum Strategy {;
     public static final int TASK_TANKFACTORY = 3;
     public static final int TASK_HELIPAD = 4;
 
+    // Miners don't request supply if team has excess ore.
+    public static final int TEAM_LOW_ORE = 1500;
+
     // Return to HQ to resupply if below this level.
     public static final int MINER_LOW_SUPPLY = 75;
     // Get this much from the HQ.
