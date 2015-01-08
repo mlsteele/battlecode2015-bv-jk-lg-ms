@@ -21,6 +21,7 @@ public class RobotHQ extends Robot {
 
     private int spawned_beavers = 0;
     private boolean beaver_mining_spawned = false;
+    private boolean beaver_barracks_spawned = false;
 
     RobotHQ(RobotController rc) { super(rc); }
 
@@ -39,8 +40,20 @@ public class RobotHQ extends Robot {
 
             // Spawn a beaver.
             if (rc.isCoreReady()) maybeSpawnBeaver();
-            int supplyAmount = determineBeaverSupplyAmount();
-            supplyNearbyEmpty(null, BEAVER, supplyAmount);
+
+            if (!beaver_mining_spawned) {
+                if (supplyForMinerFactory())
+                    beaver_mining_spawned = true;
+                else {
+                    rc.yield();
+                    continue;
+                }
+            }
+            else if (supplyForBarracks())
+                beaver_barracks_spawned = true;
+            else
+                supplyForWander();
+
 
             rc.yield();
         }
@@ -74,22 +87,7 @@ public class RobotHQ extends Robot {
         }
     }
 
-    // How much supply should a new beaver get?
-    // Determines the beaver's mission as well.
-    private int determineBeaverSupplyAmount() {
-        // If it would be reasonable to supply a structure, order one built.
-        int supplyLevel = (int)rc.getSupplyLevel();
-        // TODO(miles): build tank factory. But only if we satisfy prereqs.
-        if (supplyLevel > RobotMinerFactory.STARTING_SUPPLY && beaver_mining_spawned == false) {
-            beaver_mining_spawned = true;
-            return RobotBeaver.STARTING_SUPPLY + RobotMinerFactory.STARTING_SUPPLY + ORDER_MINERFACTORY;
-        } else if (supplyLevel > RobotBarracks.STARTING_SUPPLY) {
-            return RobotBeaver.STARTING_SUPPLY + RobotBarracks.STARTING_SUPPLY + ORDER_BARRACKS;
-        } else {
-            return RobotBeaver.STARTING_SUPPLY + ORDER_NONE;
-        }
-    }
-
+    // TODO(miles): build tank factory. But only if we satisfy prereqs.
 
     private int[] updateUnitCount() {
         int[] unitsOnField = new int[NUM_OF_UNIT_TYPES];
@@ -103,5 +101,46 @@ public class RobotHQ extends Robot {
 
     private MapLocation avgLocations(MapLocation a, MapLocation b) {
         return new MapLocation((a.x + b.x) / 2, (a.y + b.y) / 2);
+    }
+
+    private boolean supplyForMinerFactory() {
+        return supplyBeaver(RobotBeaver.STARTING_SUPPLY + RobotMinerFactory.STARTING_SUPPLY + ORDER_MINERFACTORY);
+    }
+
+    private boolean supplyForBarracks() {
+        return supplyBeaver(RobotBeaver.STARTING_SUPPLY + RobotBarracks.STARTING_SUPPLY + ORDER_BARRACKS);
+    }
+
+    private boolean supplyForWander() {
+        return supplyBeaver(RobotBeaver.STARTING_SUPPLY + ORDER_NONE);
+    }
+
+    // Give supplies to nearby robots who have no supplies.
+    // Attempt to transfer `supplyAmount` supplies to nearby robots of type `rtype` who have 0 supply.
+    // If candidates is null, they will be fetched automatically.
+    private boolean supplyBeaver(int supplyAmount) {
+        if (rc.getSupplyLevel() < supplyAmount)
+            return false;
+
+        RobotInfo[] candidates = rc.senseNearbyRobots(
+                    GameConstants.SUPPLY_TRANSFER_RADIUS_SQUARED,
+                    rc.getTeam());
+
+        for (RobotInfo r : candidates) {
+            // Only send to the correct type of bot.
+            if (r.type != RobotType.BEAVER) continue;
+            if (r.supplyLevel > 0) continue;
+
+            try {
+                rc.transferSupplies(supplyAmount, r.location);
+                return true;
+            } catch (GameActionException e) {
+                e.printStackTrace();
+                return false;
+            }
+
+        }
+
+        return false;
     }
 }
