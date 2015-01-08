@@ -12,6 +12,9 @@ public class Beaver extends Unit {
     // Require this distance free space around buildings
     private static final int BUILDING_PADDING = 25;
 
+    // Don't build farther away than this
+    private static final int MAX_DISTANCE_FROM_HQ = 100;
+
     private int currentJob = 0;
 
     @Override
@@ -71,16 +74,31 @@ public class Beaver extends Unit {
     }
 
     private void buildStructureMission(int orderCode) {
-        while (true) {
+        whileLoop: while (true) {
             // TODO(jessk) Make sure no buildings are nearby before building here
             int distanceFromHQ = rc.getLocation().distanceSquaredTo(hqLoc);
-            rc.setIndicatorString(2, "distanceFromHQ: " + distanceFromHQ);
             if (rc.isCoreReady()) {
-                if (distanceFromHQ >= BUILDING_PADDING && buildThenSupplyForCode(orderCode))
-                    return;
-                wander();
+                if (distanceFromHQ > MAX_DISTANCE_FROM_HQ) {
+                    moveToward(hqLoc);
+                } else {
+                    RobotInfo[] nearby = rc.senseNearbyRobots(BUILDING_PADDING);
+                    for (RobotInfo r : nearby) {
+                        if (r.type.isBuilding || r.team == rc.getTeam().opponent()) {
+                            // can't build here
+                            wander();
+                            rc.yield();
+                            continue whileLoop;
+                        }
+                    }
+                    // ok, we can build
+                    if (buildThenSupplyForCode(orderCode)) return;
+                    else {
+                        wander();
+                        rc.yield();
+                        continue whileLoop;
+                    }
+                }
             }
-
             rc.yield();
         }
     }
