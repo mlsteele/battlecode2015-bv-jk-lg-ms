@@ -35,6 +35,8 @@ public class Headquarters extends Structure {
         rf.writeRally1(rc.senseTowerLocations()[0]);
         rc.setIndicatorString(1, "set rally1 to " + rf.getRally1());
 
+        int missionIndex = 0;
+
         while(true) {
             shootBaddies();
 
@@ -43,18 +45,17 @@ public class Headquarters extends Structure {
             // Spawn a beaver.
             if (rc.isCoreReady()) maybeSpawnBeaver();
 
-            if (!beaver_mining_spawned) {
-                if (supplyForMinerFactory())
-                    beaver_mining_spawned = true;
-                else {
-                    rc.yield();
-                    continue;
-                }
+            switch (missionIndex) {
+                case 0:
+                    if (supplyForMinerFactory()) missionIndex++;
+                    break;
+                case 1:
+                case 2:
+                case 3:
+                    if (supplyForBarracks()) missionIndex++;
+                    break;
+                default: break;
             }
-            else if (supplyForBarracks())
-                beaver_barracks_spawned = true;
-            else
-                supplyForWander();
 
             rc.yield();
         }
