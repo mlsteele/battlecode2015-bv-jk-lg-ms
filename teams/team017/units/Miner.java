@@ -7,14 +7,14 @@ import static battlecode.common.Direction.*;
 
 import java.util.*;
 
-public class RobotMiner extends Robot {
-    RobotMiner(RobotController rc) { super(rc); }
+public class Miner extends Robot {
+    Miner(RobotController rc) { super(rc); }
 
     public static final int STARTING_SUPPLY = 2000;
 
     @Override
     public void run() {
-        rc.setIndicatorString(0, "I am a RobotMiner");
+        rc.setIndicatorString(0, "I am a Miner");
 
         waitForSupplies();
 

@@ -5,15 +5,15 @@ import static battlecode.common.Direction.*;
 import static battlecode.common.RobotType.*;
 import java.util.*;
 
-public class RobotBarracks extends Robot {
+public class Barracks extends Robot {
     // Given to the barracks when built.
     public static final int STARTING_SUPPLY = 10000;
 
-    RobotBarracks(RobotController rc) { super(rc); }
+    Barracks(RobotController rc) { super(rc); }
 
     @Override
     public void run() {
-        rc.setIndicatorString(0, "i am a RobotBarracks");
+        rc.setIndicatorString(0, "i am a Barracks");
 
         while (true) {
             if (rc.isCoreReady()) spawnCombatant();
@@ -22,8 +22,8 @@ public class RobotBarracks extends Robot {
             RobotInfo[] candidates = rc.senseNearbyRobots(
                     GameConstants.SUPPLY_TRANSFER_RADIUS_SQUARED,
                     rc.getTeam());
-            supplyNearbyEmpty(candidates, SOLDIER, RobotSoldier.STARTING_SUPPLY);
-            supplyNearbyEmpty(candidates, BASHER, RobotBasher.STARTING_SUPPLY);
+            supplyNearbyEmpty(candidates, SOLDIER, Soldier.STARTING_SUPPLY);
+            supplyNearbyEmpty(candidates, BASHER, Basher.STARTING_SUPPLY);
 
             rc.yield();
         }
@@ -33,11 +33,11 @@ public class RobotBarracks extends Robot {
     private void spawnCombatant() {
         int supplyAmount;
         if((rand.nextDouble() * 2) <= 1) {
-            supplyAmount = RobotSoldier.STARTING_SUPPLY;
+            supplyAmount = Soldier.STARTING_SUPPLY;
             if (rc.getSupplyLevel() >= supplyAmount)
                 spawn(SOLDIER);
         } else {
-            supplyAmount = RobotBasher.STARTING_SUPPLY;
+            supplyAmount = Basher.STARTING_SUPPLY;
             if (rc.getSupplyLevel() >= supplyAmount)
                 spawn(BASHER);
         }

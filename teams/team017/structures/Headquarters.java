@@ -5,7 +5,7 @@ import static battlecode.common.Direction.*;
 import static battlecode.common.RobotType.*;
 import java.util.*;
 
-public class RobotHQ extends Robot {
+public class Headquarters extends Robot {
     private static final int TIME_TO_ATTACK1 = 500;
     private static final int TIME_TO_ATTACK2 = 1000;
     private static final int MAX_BEAVER = 10;
@@ -23,11 +23,11 @@ public class RobotHQ extends Robot {
     private boolean beaver_mining_spawned = false;
     private boolean beaver_barracks_spawned = false;
 
-    RobotHQ(RobotController rc) { super(rc); }
+    Headquarters(RobotController rc) { super(rc); }
 
     @Override
     public void run() {
-        rc.setIndicatorString(0, "i am a RobotHQ");
+        rc.setIndicatorString(0, "i am an HQ");
 
         // Tell all soldiers to rally at our first tower.
         rf.writeRally1(rc.senseTowerLocations()[0]);
@@ -80,7 +80,7 @@ public class RobotHQ extends Robot {
     }
 
     private void maybeSpawnBeaver() {
-        if (rc.getSupplyLevel() >= RobotBeaver.STARTING_SUPPLY && spawned_beavers < MAX_BEAVER) {
+        if (rc.getSupplyLevel() >= Beaver.STARTING_SUPPLY && spawned_beavers < MAX_BEAVER) {
             if (spawn(BEAVER) != null)
                 spawned_beavers++;
         }
@@ -103,15 +103,15 @@ public class RobotHQ extends Robot {
     }
 
     private boolean supplyForMinerFactory() {
-        return supplyBeaver(RobotBeaver.STARTING_SUPPLY + RobotMinerFactory.STARTING_SUPPLY + ORDER_MINERFACTORY);
+        return supplyBeaver(Beaver.STARTING_SUPPLY + MinerFactory.STARTING_SUPPLY + ORDER_MINERFACTORY);
     }
 
     private boolean supplyForBarracks() {
-        return supplyBeaver(RobotBeaver.STARTING_SUPPLY + RobotBarracks.STARTING_SUPPLY + ORDER_BARRACKS);
+        return supplyBeaver(Beaver.STARTING_SUPPLY + Barracks.STARTING_SUPPLY + ORDER_BARRACKS);
     }
 
     private boolean supplyForWander() {
-        return supplyBeaver(RobotBeaver.STARTING_SUPPLY + ORDER_NONE);
+        return supplyBeaver(Beaver.STARTING_SUPPLY + ORDER_NONE);
     }
 
     private boolean supplyBeaver(int supplyAmount) {

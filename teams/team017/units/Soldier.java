@@ -5,14 +5,14 @@ import battlecode.common.MapLocation;
 
 import java.util.*;
 
-public class RobotSoldier extends Robot {
-    RobotSoldier(RobotController rc) { super(rc); }
+public class Soldier extends Robot {
+    Soldier(RobotController rc) { super(rc); }
 
     public static final int STARTING_SUPPLY = 1000;
 
     @Override
     public void run() {
-        rc.setIndicatorString(0, "i am a RobotSoldier");
+        rc.setIndicatorString(0, "i am a Soldier");
 
         waitForSupplies();
 

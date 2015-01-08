@@ -12,43 +12,43 @@ public class RobotPlayer {
         // Should never return.
         switch (rc.getType()) {
             case HQ:
-                r = new RobotHQ(rc);
+                r = new HQ(rc);
                 r.run();
                 break;
             case TOWER:
-                r = new RobotTower(rc);
+                r = new Tower(rc);
                 r.run();
                 break;
             case BEAVER:
-                r = new RobotBeaver(rc);
+                r = new Beaver(rc);
                 r.run();
                 break;
             case BARRACKS:
-                r = new RobotBarracks(rc);
+                r = new Barracks(rc);
                 r.run();
                 break;
             case SOLDIER:
-                r = new RobotSoldier(rc);
+                r = new Soldier(rc);
                 r.run();
                 break;
             case BASHER:
-                r = new RobotBasher(rc);
+                r = new Basher(rc);
                 r.run();
                 break;
             case MINER:
-                r = new RobotMiner(rc);
+                r = new Miner(rc);
                 r.run();
                 break;
             case MINERFACTORY:
-                r = new RobotMinerFactory(rc);
+                r = new MinerFactory(rc);
                 r.run();
                 break;
             case TANK:
-                r = new RobotTank(rc);
+                r = new Tank(rc);
                 r.run();
                 break;
             case TANKFACTORY:
-                r = new RobotTank(rc);
+                r = new Tank(rc);
                 r.run();
                 break;
             default:

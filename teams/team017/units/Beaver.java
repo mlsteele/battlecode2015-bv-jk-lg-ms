@@ -2,11 +2,10 @@ package team017;
 
 import battlecode.common.*;
 import battlecode.common.GameActionException;
-
 import static battlecode.common.RobotType.*;
 
-public class RobotBeaver extends Robot {
-    RobotBeaver(RobotController rc) { super(rc); }
+public class Beaver extends Robot {
+    Beaver(RobotController rc) { super(rc); }
 
     // How much supply the Beaver would like to have before he leaves to explore the world
     public static final int STARTING_SUPPLY = 1000;
@@ -19,7 +18,7 @@ public class RobotBeaver extends Robot {
 
     @Override
     public void run() {
-        rc.setIndicatorString(0, "i am a RobotBeaver");
+        rc.setIndicatorString(0, "i am a Beaver");
         hqLoc = rc.senseHQLocation();
         
         // Not your average loop.
@@ -34,12 +33,12 @@ public class RobotBeaver extends Robot {
             rc.setIndicatorString(1, "BEAVER mission " + orderCode);
             System.out.println("BEAVER mission " + orderCode);
             switch (orderCode) {
-                case (RobotHQ.ORDER_BARRACKS):
-                case (RobotHQ.ORDER_MINERFACTORY):
-                case (RobotHQ.ORDER_TANKFACTORY):
+                case (Headquarters.ORDER_BARRACKS):
+                case (Headquarters.ORDER_MINERFACTORY):
+                case (Headquarters.ORDER_TANKFACTORY):
                     buildStructureMission(orderCode);
                     break;
-                case (RobotHQ.ORDER_NONE):
+                case (Headquarters.ORDER_NONE):
                     System.out.println("BEAVER mission none");
                     while (true) {
                         rc.setIndicatorString(2, "supply: " + rc.getSupplyLevel());
@@ -82,11 +81,11 @@ public class RobotBeaver extends Robot {
 
     private boolean buildThenSupplyForCode(int orderCode) {
         switch (orderCode) {
-            case RobotHQ.ORDER_BARRACKS:
+            case Headquarters.ORDER_BARRACKS:
                 return buildThenSupply(BARRACKS);
-            case RobotHQ.ORDER_MINERFACTORY:
+            case Headquarters.ORDER_MINERFACTORY:
                 return buildThenSupply(MINERFACTORY);
-            case RobotHQ.ORDER_TANKFACTORY:
+            case Headquarters.ORDER_TANKFACTORY:
                 return buildThenSupply(TANKFACTORY);
             default:
                 System.out.println("error, invalid building code " + orderCode);
@@ -132,13 +131,13 @@ public class RobotBeaver extends Robot {
         int supply = 0;
         switch (rob) {
             case BARRACKS:
-                supply = RobotBarracks.STARTING_SUPPLY;
+                supply = Barracks.STARTING_SUPPLY;
                 break;
             case MINERFACTORY:
-                supply = RobotMinerFactory.STARTING_SUPPLY;
+                supply = MinerFactory.STARTING_SUPPLY;
                 break;
             case TANKFACTORY:
-                supply = RobotTankFactory.STARTING_SUPPLY;
+                supply = TankFactory.STARTING_SUPPLY;
                 break;
             default:
                 supply = 0;
