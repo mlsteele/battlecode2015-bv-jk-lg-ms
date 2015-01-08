@@ -41,21 +41,18 @@ public class RobotHQ extends Robot {
             // Spawn a beaver.
             if (rc.isCoreReady()) maybeSpawnBeaver();
 
-            // if (!beaver_mining_spawned) {
-                // if (supplyForMinerFactory())
-                    // beaver_mining_spawned = true;
-                // else {
-                    // rc.yield();
-                    // continue;
-                // }
-            // }
-            // else if (supplyForBarracks())
-                // beaver_barracks_spawned = true;
-            // else
-                // supplyForWander();
-
-            supplyForWander();
-
+            if (!beaver_mining_spawned) {
+                if (supplyForMinerFactory())
+                    beaver_mining_spawned = true;
+                else {
+                    rc.yield();
+                    continue;
+                }
+            }
+            else if (supplyForBarracks())
+                beaver_barracks_spawned = true;
+            else
+                supplyForWander();
 
             rc.yield();
         }

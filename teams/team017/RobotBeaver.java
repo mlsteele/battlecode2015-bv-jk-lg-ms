@@ -54,13 +54,27 @@ public class RobotBeaver extends Robot {
                     break;
                 default:
                     System.out.println("ERROR: BEAVER sent on invalid mission ("+orderCode+"), please debug");
-                    rc.yield();
+                    throw new RuntimeException("BLOW THE FUCK UP");
+                    // rc.yield();
             }
-            rc.setIndicatorString(1, "Finished mission " + orderCode);
 
             // Finished what it was doing
+            rc.setIndicatorString(1, "Finished mission " + orderCode);
             goToHQ();
-            dumpSuppliesToHQ();
+            throw new RuntimeException("BLOW THE FUCK UP");
+
+            // while (!rc.isCoreReady() && !rc.isWeaponReady()) {
+                // rc.yield();
+            // }
+
+
+            // Burn off left over supply.
+            // while (rc.getSupplyLevel() != 0) { }
+
+            // while (!rc.isCoreReady() && !rc.isWeaponReady()) { }
+            // dumpSuppliesToHQ();
+            // rc.yield();
+            // rc.yield();
         }
     }
 
