@@ -19,7 +19,7 @@ public enum Strategy {;
             case BEAVER:              return 1000;
 
             case MINERFACTORY:        return 10 * initialSupply(MINER);
-            case MINER:               return 3000;
+            case MINER:               return 1000;
 
             case BARRACKS:            return 10 * initialSupply(SOLDIER);
             case SOLDIER:             return 1000;

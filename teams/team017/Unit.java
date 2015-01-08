@@ -8,10 +8,12 @@ import java.util.*;
 // Subclass for units that move and shoot and stuff.
 public abstract class Unit extends Robot {
     protected Direction forward;
+    protected MapLocation hqLoc;
 
     Unit(RobotController rc) {
         super(rc);
         forward = randomDirection();
+        hqLoc = rc.senseHQLocation();
     }
 
     // Tries to move dir.
@@ -48,6 +50,24 @@ public abstract class Unit extends Robot {
         forward = rc.getLocation().directionTo(loc);
         return moveForward();
     }
+
+    // Return to the HQ.
+    // Blocking method.
+    protected void goToHQ() {
+        rc.setIndicatorString(1, "Going back to HQ");
+        while (true) {
+
+            if (rc.isCoreReady()) moveToward(hqLoc);
+
+            if (hqLoc.distanceSquaredTo(rc.getLocation()) <= GameConstants.SUPPLY_TRANSFER_RADIUS_SQUARED) {
+                rc.setIndicatorString(1, "Back at HQ");
+                return;
+            }
+
+            rc.yield();
+        }
+    }
+
 
     // Wander the field aimlessly.
     // Returns whether movement occurred.

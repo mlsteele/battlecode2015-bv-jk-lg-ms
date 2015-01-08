@@ -55,6 +55,9 @@ public class Headquarters extends Structure {
                 default: break;
             }
 
+            // Resupply miners that have run out and returned.
+            resupplyNearby(null, MINER, Miner.LOW_SUPPLY, Strategy.initialSupply(MINER));
+
             rc.yield();
         }
     }

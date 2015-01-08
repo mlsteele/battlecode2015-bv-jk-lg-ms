@@ -10,41 +10,61 @@ import java.util.*;
 public class Miner extends Unit {
     Miner(RobotController rc) { super(rc); }
 
+    // Return to HQ to resupply if below this level.
+    public static final int LOW_SUPPLY = 50;
+
     @Override
     public void run() {
         rc.setIndicatorString(0, "I am a Miner");
 
         waitForSupplies();
 
-        // Main loop
-        // Just hang out for now
         while (true) {
-            Direction forward = NORTH;
-
             if (rc.isCoreReady()) {
-                if (rc.senseOre(rc.getLocation()) > 0) {
-                    mine();
+                if (rc.getSupplyLevel() > LOW_SUPPLY) {
+                    pursueMining();
                 } else {
-                    forward = optimalOreDirection();
-                    moveForward();
+                    goToHQ();
                 }
             }
 
-            rc.setIndicatorString(0, "Best direction is " + optimalOreDirection());
             rc.yield();
         }
     }
 
+    private void pursueMining() {
+        if (rc.senseOre(rc.getLocation()) > 0) {
+            mineHere();
+        } else {
+            forward = optimalOreDirection();
+            moveForward();
+        }
+    }
+
+    // Returns true if mining occurred.
+    // Assumes there is ore
+    private boolean mineHere() {
+        try {
+            rc.mine();
+            return true;
+        } catch (GameActionException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    // Which direction's adjacent location has the most ore.
     public Direction optimalOreDirection() {
-        /* Directions: NORTH, NORTH_EAST, EAST, SOUTH_EAST, SOUTH, SOUTH_WEST, WEST, NORHT_WEST, NONE*/
-        Direction[] possibleDirs = {NORTH, NORTH_EAST, EAST, SOUTH_EAST, SOUTH,
-                                    SOUTH_WEST, WEST, NORTH_WEST};
+        Direction[] possibleDirs = {NORTH, NORTH_EAST, EAST, SOUTH_EAST,
+                                    SOUTH, SOUTH_WEST, WEST, NORTH_WEST};
 
         MapLocation curLocation = rc.getLocation();
         double bestOre = 0;
         Direction bestDirection = NORTH;
 
-        for (Direction d : possibleDirs) {
+        Direction d;
+        for (int i = rand.nextInt(8); i < 8; i++) {
+            d = possibleDirs[i];
             double ore = rc.senseOre(curLocation.add(d));
             if (ore > bestOre && rc.canMove(d)) {
                 bestOre = ore;
@@ -54,20 +74,4 @@ public class Miner extends Unit {
 
         return bestDirection;
     }
-
-    // returns true if can mine
-    // assumes there is ore
-    private boolean mine() {
-        if (rc.canMine()) {
-            try {
-                rc.mine();
-                return true;
-            } catch (GameActionException e) {
-                e.printStackTrace();
-                return false;
-            }
-        }
-        return false;
-    }
-
 }

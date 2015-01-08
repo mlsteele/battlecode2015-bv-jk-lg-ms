@@ -40,4 +40,28 @@ public abstract class Structure extends Robot {
         }
     }
 
+    // Top up nearby robots with supplies.
+    // Attempt to fill robots of type `rtype` so they have `supplyGoal` supplies.
+    // Will fill up only robots with <= lowSupplyThreshold supplies.
+    // If candidates is null, they will be fetched automatically.
+    protected void resupplyNearby(RobotInfo[] candidates, RobotType rtype, int lowSupplyThreshold, int supplyGoal) {
+        if (candidates == null) {
+            candidates = rc.senseNearbyRobots(
+                GameConstants.SUPPLY_TRANSFER_RADIUS_SQUARED,
+                rc.getTeam());
+        }
+
+        for (RobotInfo r : candidates) {
+            // Only send to the correct type of bot.
+            if (r.type != rtype) continue;
+            if (r.supplyLevel > lowSupplyThreshold) continue;
+
+            try {
+                rc.transferSupplies(supplyGoal - (int)r.supplyLevel, r.location);
+            } catch (GameActionException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }
