@@ -44,13 +44,14 @@ public class Headquarters extends Structure {
                     if (supplyForMinerFactory()) missionIndex++;
                     break;
                 case 1:
-                    if (supplyForHelipad()) missionIndex++;
-                    break;
-                case 2:
                     if (supplyForBarracks()) missionIndex++;
                     break;
+                case 2:
                 case 3:
                     if (supplyForTankFactory()) missionIndex++;
+                    break;
+                case 4:
+                    if (supplyForHelipad()) missionIndex++;
                     break;
                 default: break;
             }
