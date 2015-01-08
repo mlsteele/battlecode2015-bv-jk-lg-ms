@@ -23,13 +23,17 @@ public abstract class Robot {
 
     // Chooses the robot
     private static RobotInfo chooseTarget(RobotInfo[] enemies) {
-        RobotInfo best = enemies[0];
-        for (RobotInfo rob : enemies) {
-            if (rob.health < best.health) {
-                best = rob;
+        RobotInfo target = enemies[0];
+        double    targetScore = -1;
+        for (RobotInfo r : enemies) {
+            double damage_per_whatever = r.type.attackPower / r.type.attackDelay;
+            double score = damage_per_whatever; // 1060
+            if (score > targetScore) {
+                target = r;
+                targetScore = score;
             }
         }
-        return best;
+        return target;
     }
 
     protected Direction randomDirection() {
