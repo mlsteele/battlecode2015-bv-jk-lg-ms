@@ -15,10 +15,22 @@ public class Beaver extends Unit {
     private static final int BUILDING_PADDING = 25;
 
     private MapLocation hqLoc;
+    private int currentJob = 0;
 
     @Override
     public void run() {
-        rc.setIndicatorString(0, "i am a Beaver");
+        try {
+            int myJobSlot = rf.getBeaverJobSlot();
+            rf.clearBeaverJobSlot();
+            rf.myJobSlot = myJobSlot;
+
+            currentJob = rf.getJob();
+            rc.setIndicatorString(0, "i am Beaver : My job slot is " + myJobSlot + " and my job is : " + currentJob);
+        } catch (GameActionException e) {
+            e.printStackTrace();
+        }
+
+
         hqLoc = rc.senseHQLocation();
         
         // Not your average loop.

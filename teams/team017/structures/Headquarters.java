@@ -1,6 +1,8 @@
 package team017;
 
 import battlecode.common.*;
+import battlecode.common.GameActionException;
+
 import static battlecode.common.Direction.*;
 import static battlecode.common.RobotType.*;
 import java.util.*;
@@ -79,10 +81,28 @@ public class Headquarters extends Structure {
 
     }
 
+    private Direction smartSpawn(RobotType robot) {
+        if(robot == RobotType.BEAVER) {
+            try {
+                int beaverJobSlot = rf.assignBeaverJobSlot();
+                if (beaverJobSlot < 0) return null;
+                rc.setIndicatorString(2, "Creating beaver : slot = " + beaverJobSlot);
+                rf.setJob(spawned_beavers, beaverJobSlot);
+                return spawn(BEAVER);
+            } catch (GameActionException e) {
+                e.printStackTrace();
+                return null;
+            }
+        } else {
+            return spawn(robot);
+        }
+    }
+
     private void maybeSpawnBeaver() {
         if (rc.getSupplyLevel() >= Beaver.STARTING_SUPPLY && spawned_beavers < MAX_BEAVER) {
-            if (spawn(BEAVER) != null)
+            if (smartSpawn(BEAVER) != null) {
                 spawned_beavers++;
+            }
         }
     }
 

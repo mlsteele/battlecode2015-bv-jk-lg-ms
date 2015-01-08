@@ -15,17 +15,64 @@ import java.util.*;
 public class RadioFrob {
     private static int RALLY_POINT_1_SLOT = 0;
     private static int NUM_MINING_FACTORIES = 1;
+    private static int BEAVER_JOB_ASSIGNMENT_SLOT = 1000;
+    private static int BEAVER_JOB_BASE = BEAVER_JOB_ASSIGNMENT_SLOT + 1;
 
     private RobotController rc;
     private MapLocation hqLoc; // Used for anchoring relative coordinates.
     private MapLocation rallyPoint1;
+
+    private int freeBeaverJobSlot = 0;
+    public int myJobSlot = 0;
 
     RadioFrob(RobotController rc) {
         this.rc = rc;
         hqLoc = rc.senseHQLocation();
     }
 
-    //TODO: Use caching later
+    // Assigns a job to the beaver slot. Returns job assignment slot
+    // returns -1 if slot has not been claimed
+   public int assignBeaverJobSlot() throws GameActionException {
+       if (rc.readBroadcast(BEAVER_JOB_ASSIGNMENT_SLOT) != 0) {
+           return -1;
+       } else {
+           freeBeaverJobSlot++;
+           rc.broadcast(BEAVER_JOB_ASSIGNMENT_SLOT, freeBeaverJobSlot);
+           return freeBeaverJobSlot;
+       }
+   }
+
+    public int getBeaverJobSlot() throws GameActionException {
+        return rc.readBroadcast(BEAVER_JOB_ASSIGNMENT_SLOT);
+    }
+
+    public void clearBeaverJobSlot() throws GameActionException {
+        rc.broadcast(BEAVER_JOB_ASSIGNMENT_SLOT, 0);
+    }
+
+    public int getJob(int jobSlot) throws GameActionException{
+        return rc.readBroadcast(BEAVER_JOB_BASE + jobSlot);
+    }
+
+    // returns my job
+    public int getJob() throws GameActionException{
+        System.out.println("Attempting to get job with: " + myJobSlot);
+        return getJob(myJobSlot);
+    }
+
+    // sets a job for the given beaver job slot
+    public boolean setJob(int job, int jobSlot) throws GameActionException {
+        System.out.println("Setting job for " + jobSlot + " with " + job);
+        rc.broadcast(BEAVER_JOB_BASE + jobSlot, job);
+        return true;
+    }
+
+    // sets my job
+    public boolean setJob(int job) throws GameActionException {
+        return setJob(job, myJobSlot);
+    }
+
+    //TODO: Use caching later Dont think this is used lol
     public void writeIncMiningFacCount() {
         try {
             int mining_count = rc.readBroadcast(NUM_MINING_FACTORIES);
