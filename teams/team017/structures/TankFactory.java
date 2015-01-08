@@ -16,8 +16,7 @@ public class TankFactory extends Structure {
         rc.setIndicatorString(0, "I am a TankFactory");
 
         while (true) {
-            if (rc.isCoreReady() && rc.getSupplyLevel() > Tank.STARTING_SUPPLY)
-                spawn(TANK);
+            if (rc.isCoreReady() && rc.getSupplyLevel() > Tank.STARTING_SUPPLY) spawn(TANK);
 
             // Supply any nearby spawnees that are waiting.
             supplyNearbyEmpty(null, TANK, Tank.STARTING_SUPPLY);

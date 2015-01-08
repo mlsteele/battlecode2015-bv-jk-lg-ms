@@ -18,6 +18,8 @@ public class Tank extends Unit {
 
         // Main loop
         while(true) {
+            shootBaddies();
+
             rf.loadRally1();
             if (rc.isCoreReady()) moveToward(rf.getRally1());
 
