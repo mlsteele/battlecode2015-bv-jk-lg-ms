@@ -54,27 +54,14 @@ public class RobotBeaver extends Robot {
                     break;
                 default:
                     System.out.println("ERROR: BEAVER sent on invalid mission ("+orderCode+"), please debug");
-                    throw new RuntimeException("BLOW THE FUCK UP");
-                    // rc.yield();
             }
 
             // Finished what it was doing
             rc.setIndicatorString(1, "Finished mission " + orderCode);
             goToHQ();
-            throw new RuntimeException("BLOW THE FUCK UP");
-
-            // while (!rc.isCoreReady() && !rc.isWeaponReady()) {
-                // rc.yield();
-            // }
-
-
-            // Burn off left over supply.
-            // while (rc.getSupplyLevel() != 0) { }
-
-            // while (!rc.isCoreReady() && !rc.isWeaponReady()) { }
-            // dumpSuppliesToHQ();
-            // rc.yield();
-            // rc.yield();
+            dumpSuppliesToHQ();
+            // Just give up and die.
+            rc.disintegrate();
         }
     }
 
@@ -176,15 +163,12 @@ public class RobotBeaver extends Robot {
 
     private void dumpSuppliesToHQ() {
         rc.setIndicatorString(1, "Dumping supplies...");
-        while(true) {
-            try {
-                rc.transferSupplies(Integer.MAX_VALUE, hqLoc);
-                rc.setIndicatorString(1, "Dumped supplies.");
-                return;
-            } catch (GameActionException e) {
-                e.printStackTrace();
-            }
-            rc.yield();
+        try {
+            rc.transferSupplies(Integer.MAX_VALUE, hqLoc);
+            rc.setIndicatorString(1, "Dumped supplies.");
+            return;
+        } catch (GameActionException e) {
+            e.printStackTrace();
         }
     }
 }
