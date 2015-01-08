@@ -25,7 +25,7 @@ public class RobotPlayer {
 
     private static Robot resolveRobotType(RobotController rc) {
         switch (rc.getType()) {
-            case HQ: return new HQ(rc);
+            case HQ: return new Headquarters(rc);
             case TOWER: return new Tower(rc);
             case BEAVER: return new Beaver(rc);
             case BARRACKS: return new Barracks(rc);
