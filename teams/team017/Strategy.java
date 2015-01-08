@@ -14,6 +14,11 @@ public enum Strategy {;
     public static final int TASK_TANKFACTORY = 3;
     public static final int TASK_HELIPAD = 4;
 
+    // Return to HQ to resupply if below this level.
+    public static final int MINER_LOW_SUPPLY = 75;
+    // Get this much from the HQ.
+    public static final int MINER_RESUPPLY_FROM_HQ = 2000;
+
     public static int initialSupply(RobotType rtype) {
         switch (rtype) {
             case BEAVER:              return 1000;

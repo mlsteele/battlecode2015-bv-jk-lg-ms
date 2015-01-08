@@ -10,9 +10,6 @@ import java.util.*;
 public class Miner extends Unit {
     Miner(RobotController rc) { super(rc); }
 
-    // Return to HQ to resupply if below this level.
-    public static final int LOW_SUPPLY = 50;
-
     @Override
     public void run() {
         rc.setIndicatorString(0, "I am a Miner");
@@ -21,7 +18,7 @@ public class Miner extends Unit {
 
         while (true) {
             if (rc.isCoreReady()) {
-                if (rc.getSupplyLevel() > LOW_SUPPLY) {
+                if (rc.getSupplyLevel() > Strategy.MINER_LOW_SUPPLY) {
                     pursueMining();
                 } else {
                     goToHQ();
