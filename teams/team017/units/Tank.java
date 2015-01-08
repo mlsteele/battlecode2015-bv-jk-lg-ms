@@ -8,8 +8,6 @@ import java.util.*;
 public class Tank extends Unit {
     Tank(RobotController rc) { super(rc); }
 
-    public static final int STARTING_SUPPLY = 4000;
-
     @Override
     public void run() {
         rc.setIndicatorString(0, "i am a Tank");

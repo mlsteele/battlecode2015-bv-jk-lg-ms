@@ -6,9 +6,6 @@ import static battlecode.common.RobotType.*;
 import java.util.*;
 
 public class Barracks extends Structure {
-    // Given to the barracks when built.
-    public static final int STARTING_SUPPLY = 10000;
-
     Barracks(RobotController rc) { super(rc); }
 
     @Override
@@ -23,8 +20,8 @@ public class Barracks extends Structure {
                 RobotInfo[] candidates = rc.senseNearbyRobots(
                         GameConstants.SUPPLY_TRANSFER_RADIUS_SQUARED,
                         rc.getTeam());
-                supplyNearbyEmpty(candidates, SOLDIER, Soldier.STARTING_SUPPLY);
-                supplyNearbyEmpty(candidates, BASHER, Basher.STARTING_SUPPLY);
+                supplyNearbyEmpty(candidates, SOLDIER, Strategy.initialSupply(SOLDIER));
+                supplyNearbyEmpty(candidates, BASHER, Strategy.initialSupply(BASHER));
             }
 
             rc.yield();
@@ -35,11 +32,11 @@ public class Barracks extends Structure {
     private void spawnCombatant() {
         int supplyAmount;
         if((rand.nextDouble() * 2) <= 1) {
-            supplyAmount = Soldier.STARTING_SUPPLY;
+            supplyAmount = Strategy.initialSupply(SOLDIER);
             if (rc.getSupplyLevel() >= supplyAmount)
                 spawn(SOLDIER);
         } else {
-            supplyAmount = Basher.STARTING_SUPPLY;
+            supplyAmount = Strategy.initialSupply(BASHER);
             if (rc.getSupplyLevel() >= supplyAmount)
                 spawn(BASHER);
         }

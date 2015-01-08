@@ -7,8 +7,6 @@ import static battlecode.common.RobotType.*;
 public class Beaver extends Unit {
     Beaver(RobotController rc) { super(rc); }
 
-    // How much supply the Beaver would like to have before he leaves to explore the world
-    public static final int STARTING_SUPPLY = 1000;
     private static final int LOW_SUPPLY = 50;
 
     // Require this distance free space around buildings
@@ -143,13 +141,13 @@ public class Beaver extends Unit {
         int supply = 0;
         switch (rob) {
             case BARRACKS:
-                supply = Barracks.STARTING_SUPPLY;
+                supply = Strategy.initialSupply(BARRACKS);
                 break;
             case MINERFACTORY:
-                supply = MinerFactory.STARTING_SUPPLY;
+                supply = Strategy.initialSupply(MINERFACTORY);
                 break;
             case TANKFACTORY:
-                supply = TankFactory.STARTING_SUPPLY;
+                supply = Strategy.initialSupply(TANKFACTORY);
                 break;
             default:
                 supply = 0;

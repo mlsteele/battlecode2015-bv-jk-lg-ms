@@ -102,7 +102,7 @@ public class Headquarters extends Structure {
     }
 
     private void maybeSpawnBeaver() {
-        if (rc.getSupplyLevel() >= Beaver.STARTING_SUPPLY && spawned_beavers < MAX_BEAVER) {
+        if (rc.getSupplyLevel() >= Strategy.initialSupply(BEAVER) && spawned_beavers < MAX_BEAVER) {
             if (smartSpawn(BEAVER) != null) {
                 spawned_beavers++;
             }
@@ -125,21 +125,21 @@ public class Headquarters extends Structure {
 
     private boolean supplyForMinerFactory() {
         if (rc.getTeamOre() < MINERFACTORY.oreCost) return false;
-        return supplyBeaver(Beaver.STARTING_SUPPLY + MinerFactory.STARTING_SUPPLY + ORDER_MINERFACTORY);
+        return supplyBeaver(Strategy.initialSupply(BEAVER) + Strategy.initialSupply(MINERFACTORY) + ORDER_MINERFACTORY);
     }
 
     private boolean supplyForBarracks() {
         if (rc.getTeamOre() < BARRACKS.oreCost) return false;
-        return supplyBeaver(Beaver.STARTING_SUPPLY + Barracks.STARTING_SUPPLY + ORDER_BARRACKS);
+        return supplyBeaver(Strategy.initialSupply(BEAVER) + Strategy.initialSupply(BARRACKS) + ORDER_BARRACKS);
     }
 
     private boolean supplyForTankFactory() {
         if (rc.getTeamOre() < TANKFACTORY.oreCost) return false;
-        return supplyBeaver(Beaver.STARTING_SUPPLY + TankFactory.STARTING_SUPPLY + ORDER_TANKFACTORY);
+        return supplyBeaver(Strategy.initialSupply(BEAVER) + Strategy.initialSupply(TANKFACTORY) + ORDER_TANKFACTORY);
     }
 
     private boolean supplyForWander() {
-        return supplyBeaver(Beaver.STARTING_SUPPLY + ORDER_NONE);
+        return supplyBeaver(Strategy.initialSupply(BEAVER) + ORDER_NONE);
     }
 
     private boolean supplyBeaver(int supplyAmount) {

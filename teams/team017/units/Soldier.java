@@ -8,8 +8,6 @@ import java.util.*;
 public class Soldier extends Unit {
     Soldier(RobotController rc) { super(rc); }
 
-    public static final int STARTING_SUPPLY = 1000;
-
     @Override
     public void run() {
         rc.setIndicatorString(0, "i am a Soldier");

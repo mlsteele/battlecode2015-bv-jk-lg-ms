@@ -6,9 +6,6 @@ import static battlecode.common.RobotType.*;
 import java.util.*;
 
 public class TankFactory extends Structure {
-    // Given to the miner factory when built.
-    public static final int STARTING_SUPPLY = 20000;
-
     TankFactory(RobotController rc) { super(rc); }
 
     @Override
@@ -16,10 +13,10 @@ public class TankFactory extends Structure {
         rc.setIndicatorString(0, "I am a TankFactory");
 
         while (true) {
-            if (rc.isCoreReady() && rc.getSupplyLevel() > Tank.STARTING_SUPPLY) spawn(TANK);
+            if (rc.isCoreReady() && rc.getSupplyLevel() >= Strategy.initialSupply(TANK))
+                spawn(TANK);
 
-            // Supply any nearby spawnees that are waiting.
-            supplyNearbyEmpty(null, TANK, Tank.STARTING_SUPPLY);
+            supplyNearbyEmpty(null, TANK, Strategy.initialSupply(TANK));
 
             rc.yield();
         }
