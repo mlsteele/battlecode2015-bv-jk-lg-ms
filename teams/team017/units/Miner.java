@@ -23,12 +23,27 @@ public class Miner extends Unit {
                 if (miner_low_supply && team_low_ore) {
                     goToHQ();
                 } else {
+                    runAway();
                     pursueMining();
                 }
             }
 
             rc.yield();
         }
+    }
+
+    // If an enemy robot is nearby, go the other direction
+    private void runAway() {
+        int range = rc.getType().sensorRadiusSquared;
+        Team enemy = rc.getTeam().opponent();
+
+        RobotInfo[] enemies = rc.senseNearbyRobots(range, enemy);
+
+        // Move away from first bad guy.
+        // TODO you could move smarter than this
+        if (enemies.length > 0 && rc.isCoreReady())
+            moveToward(enemies[0].location.directionTo(rc.getLocation()));
+
     }
 
     private void pursueMining() {

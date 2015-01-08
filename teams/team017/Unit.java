@@ -47,7 +47,11 @@ public abstract class Unit extends Robot {
     }
 
     protected boolean moveToward(MapLocation loc) {
-        forward = rc.getLocation().directionTo(loc);
+        return moveToward(rc.getLocation().directionTo(loc));
+    }
+
+    protected boolean moveToward(Direction dir) {
+        forward = dir;
         return moveForward();
     }
 
