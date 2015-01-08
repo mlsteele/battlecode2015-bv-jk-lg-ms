@@ -22,46 +22,21 @@ public class RobotBeaver extends Robot {
         rc.setIndicatorString(0, "i am a RobotBeaver");
         hqLoc = rc.senseHQLocation();
         
+        // Not your average loop.
+        // This is NOT the inner loop.
         while (true) {
 
             waitForSupplies();
 
+            // Order code is which mission to pursue.
             int orderCode = ((int) rc.getSupplyLevel()) % 100;
-            // I am on a mining factory mission
+
             switch (orderCode) {
                 case (RobotHQ.ORDER_MINERFACTORY):
-                    System.out.println("BEAVER mission ORDER_MINERFACTORY");
-                    rc.setIndicatorString(1, "I am on a mining factory mission");
-                    while (true) {
-                        rc.setIndicatorString(2, "supply: " + rc.getSupplyLevel());
-
-                        // TODO(jessk) Make sure no buildings are nearby before building here
-                        int distanceFromHQ = rc.getLocation().distanceSquaredTo(hqLoc);
-                        if (rc.isCoreReady()) {
-                            if (distanceFromHQ >= BUILDING_PADDING && buildThenSupply(MINERFACTORY)) break;
-                            wander();
-                        }
-
-                        rc.yield();
-                    }
-                    rc.setIndicatorString(1, "Finished mining mission");
+                    buildStructureMission(RobotHQ.ORDER_BARRACKS);
                     break;
                 case (RobotHQ.ORDER_BARRACKS):
-                    System.out.println("BEAVER mission ORDER_BARRACKS");
-                    rc.setIndicatorString(1, "I am on a barracks mission");
-                    while (true) {
-                        rc.setIndicatorString(2, "supply: " + rc.getSupplyLevel());
-
-                        // TODO(jessk) Make sure no buildings are nearby before building here
-                        int distanceFromHQ = rc.getLocation().distanceSquaredTo(hqLoc);
-                        if (rc.isCoreReady()) {
-                            if (distanceFromHQ >= BUILDING_PADDING && buildBarracks()) break;
-                            wander();
-                        }
-
-                        rc.yield();
-                    }
-                    rc.setIndicatorString(1, "Finished barracks mission");
+                    buildStructureMission(RobotHQ.ORDER_BARRACKS);
                     break;
                 default:
                     System.out.println("BEAVER mission none");
@@ -81,7 +56,36 @@ public class RobotBeaver extends Robot {
             // Finished what it was doing
             goToHQ();
             dumpSuppliesToHQ();
+        }
+    }
 
+    private void buildStructureMission(int orderCode) {
+        System.out.println("BEAVER mission " + orderCode);
+        rc.setIndicatorString(1, "BEAVER mission " + orderCode);
+        while (true) {
+            rc.setIndicatorString(2, "supply: " + rc.getSupplyLevel());
+
+            // TODO(jessk) Make sure no buildings are nearby before building here
+            int distanceFromHQ = rc.getLocation().distanceSquaredTo(hqLoc);
+            if (rc.isCoreReady()) {
+                if (distanceFromHQ >= BUILDING_PADDING && buildThenSupplyForCode(orderCode)) break;
+                wander();
+            }
+
+            rc.yield();
+        }
+        rc.setIndicatorString(1, "Finished mission " + orderCode);
+    }
+
+    private boolean buildThenSupplyForCode(int orderCode) {
+        switch (orderCode) {
+            case RobotHQ.ORDER_BARRACKS:
+                return buildThenSupply(BARRACKS);
+            case RobotHQ.ORDER_MINERFACTORY:
+                return buildThenSupply(MINERFACTORY);
+            default:
+                System.out.println("error, invalid building code " + orderCode);
+                return false;
         }
     }
 
@@ -135,11 +139,6 @@ public class RobotBeaver extends Robot {
                 supply = 0;
         }
         return buildThenSupply(rob, supply);
-    }
-
-    // Attempt to build a barracks.
-    private boolean buildBarracks() {
-        return buildThenSupply(BARRACKS);
     }
 
     private boolean goToHQ() {
