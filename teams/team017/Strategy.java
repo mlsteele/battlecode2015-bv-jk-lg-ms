@@ -22,6 +22,17 @@ public enum Strategy {;
     // Get this much from the HQ.
     public static final int MINER_RESUPPLY_FROM_HQ = 2000;
 
+    public static int taskSupply(int task) {
+        switch(task) {
+            case TASK_NONE:         return initialSupply(BEAVER);
+            case TASK_BARRACKS:     return initialSupply(BEAVER) + initialSupply(BARRACKS);
+            case TASK_MINERFACTORY: return initialSupply(BEAVER) + initialSupply(MINERFACTORY);
+            case TASK_TANKFACTORY:  return initialSupply(BEAVER) + initialSupply(TANKFACTORY);
+            case TASK_HELIPAD:      return initialSupply(BEAVER) + initialSupply(HELIPAD);
+            default:                throw new NotImplementedException();
+        }
+    }
+
     public static int initialSupply(RobotType rtype) {
         switch (rtype) {
             case BEAVER:              return 1000;

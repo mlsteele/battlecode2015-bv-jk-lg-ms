@@ -64,4 +64,29 @@ public abstract class Structure extends Robot {
         }
     }
 
+    protected boolean supplyToID(RobotInfo[] candidates, int robotID, int supplyAmount) {
+        if (rc.getSupplyLevel() < supplyAmount)
+            return false;
+
+        if (candidates == null) {
+            candidates = rc.senseNearbyRobots(
+                    GameConstants.SUPPLY_TRANSFER_RADIUS_SQUARED,
+                    rc.getTeam());
+        }
+
+        for (RobotInfo r : candidates) {
+            // Only send to robot with the correct ID
+            if (r.ID != robotID) continue;
+
+            try {
+                rc.transferSupplies(supplyAmount, r.location);
+                return true;
+            } catch (GameActionException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+        return false;
+    }
+
 }

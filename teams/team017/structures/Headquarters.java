@@ -18,6 +18,7 @@ public class Headquarters extends Structure {
     private int spawned_beavers = 0;
     private boolean beaver_mining_spawned = false;
     private boolean beaver_barracks_spawned = false;
+    private Hashtable<Integer,Integer> assignedBeaverJobSlots = new Hashtable<Integer,Integer>();
 
     Headquarters(RobotController rc) { super(rc); }
 
@@ -37,23 +38,29 @@ public class Headquarters extends Structure {
             strategyUpdate();
 
             // Spawn a beaver.
-            if (rc.isCoreReady()) maybeSpawnBeaver();
-
-            switch (missionIndex) {
-                case 0:
-                    if (supplyForMinerFactory()) missionIndex++;
-                    break;
-                case 1:
-                    if (supplyForBarracks()) missionIndex++;
-                    break;
-                case 2:
-                case 3:
-                    if (supplyForTankFactory()) missionIndex++;
-                    break;
-                case 4:
-                    if (supplyForHelipad()) missionIndex++;
-                    break;
-                default: break;
+            //if(rc.isCoreReady()) spawnBeaverWithStrategy(0);
+            //if (rc.isCoreReady()) maybeSpawnBeaver();
+            if(rc.isCoreReady()) {
+                switch (missionIndex) {
+                    case 0:
+                        //if (supplyForMinerFactory()) missionIndex++;
+                        if (spawnBeaverWithStrategy(2)) missionIndex++;
+                        break;
+                    case 1:
+                        //if (supplyForHelipad()) missionIndex++;
+                        if (spawnBeaverWithStrategy(4)) missionIndex++;
+                        break;
+                    case 2:
+                        //if (supplyForBarracks()) missionIndex++;
+                        if (spawnBeaverWithStrategy(1)) missionIndex++;
+                        break;
+                    case 3:
+                        //if (supplyForTankFactory()) missionIndex++;
+                        if (spawnBeaverWithStrategy(3)) missionIndex++;
+                        break;
+                    default:
+                        break;
+                }
             }
 
             // Resupply miners that have run out and returned.
@@ -105,6 +112,28 @@ public class Headquarters extends Structure {
             if (smartSpawn(BEAVER) != null) {
                 spawned_beavers++;
             }
+        }
+    }
+
+    // Assumes supply level desired
+    private boolean spawnBeaverWithStrategy(int task) {
+        if(rc.getSupplyLevel() < Strategy.taskSupply(task)) return false;
+
+        try {
+            int beaverJobSlot = rf.assignBeaverJobSlot(); // Assign a new beaver job slot
+            if (beaverJobSlot < 0) return false; // someone hasnt claimed their job, shame on them
+            rc.setIndicatorString(2, "Creating beaver : slot = " + beaverJobSlot);
+            rf.setJob(task, beaverJobSlot); // give the beaver a job
+
+            Direction dir = spawn(BEAVER); // spawn the beaver
+            rc.yield();
+            RobotInfo rob = rc.senseRobotAtLocation(rc.getLocation().add(dir)); // gets its info
+            int robotID = rob.ID; // get its id
+            RobotInfo[] candidates = {rob};
+            return supplyToID(candidates, robotID, Strategy.taskSupply(task));
+        } catch (GameActionException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 

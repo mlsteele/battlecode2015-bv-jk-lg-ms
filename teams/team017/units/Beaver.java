@@ -36,7 +36,8 @@ public class Beaver extends Unit {
             int initialSupplyLevel = waitForSupplies();
 
             // Order code is which mission to pursue.
-            int orderCode = initialSupplyLevel % 100;
+            //int orderCode = initialSupplyLevel % 100;
+            int orderCode = currentJob;
 
             rc.setIndicatorString(1, "BEAVER mission " + orderCode);
             System.out.println("BEAVER mission " + orderCode);
