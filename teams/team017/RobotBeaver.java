@@ -1,6 +1,8 @@
 package team017;
 
 import battlecode.common.*;
+import battlecode.common.GameActionException;
+
 import static battlecode.common.RobotType.*;
 
 public class RobotBeaver extends Robot {
@@ -8,6 +10,7 @@ public class RobotBeaver extends Robot {
 
     // How much supply the Beaver would like to have before he leaves to explore the world
     public static final int STARTING_SUPPLY = 1000;
+    private static final int LOW_SUPPLY = 50;
 
     // Require this distance free space around buildings
     private static final int BUILDING_PADDING = 25;
@@ -18,61 +21,67 @@ public class RobotBeaver extends Robot {
     public void run() {
         rc.setIndicatorString(0, "i am a RobotBeaver");
         hqLoc = rc.senseHQLocation();
+        
+        while (true) {
 
-        waitForSupplies();
+            waitForSupplies();
 
-        int orderCode = ((int) rc.getSupplyLevel()) % 100;
-        // I am on a mining factory mission
-        switch (orderCode) {
-            case (RobotHQ.ORDER_MINERFACTORY):
-                System.out.println("BEAVER mission ORDER_MINERFACTORY");
-                rc.setIndicatorString(1, "I am on a mining factory mission");
-                while (true) {
-                    rc.setIndicatorString(2, "supply: " + rc.getSupplyLevel());
+            int orderCode = ((int) rc.getSupplyLevel()) % 100;
+            // I am on a mining factory mission
+            switch (orderCode) {
+                case (RobotHQ.ORDER_MINERFACTORY):
+                    System.out.println("BEAVER mission ORDER_MINERFACTORY");
+                    rc.setIndicatorString(1, "I am on a mining factory mission");
+                    while (true) {
+                        rc.setIndicatorString(2, "supply: " + rc.getSupplyLevel());
 
-                    // TODO(jessk) Make sure no buildings are nearby before building here
-                    int distanceFromHQ = rc.getLocation().distanceSquaredTo(hqLoc);
-                    if (rc.isCoreReady()) {
-                        if (distanceFromHQ >= BUILDING_PADDING && buildThenSupply(MINERFACTORY)) break;
-                        wander();
+                        // TODO(jessk) Make sure no buildings are nearby before building here
+                        int distanceFromHQ = rc.getLocation().distanceSquaredTo(hqLoc);
+                        if (rc.isCoreReady()) {
+                            if (distanceFromHQ >= BUILDING_PADDING && buildThenSupply(MINERFACTORY)) break;
+                            wander();
+                        }
+
+                        rc.yield();
                     }
+                    rc.setIndicatorString(1, "Finished mining mission");
+                    break;
+                case (RobotHQ.ORDER_BARRACKS):
+                    System.out.println("BEAVER mission ORDER_BARRACKS");
+                    rc.setIndicatorString(1, "I am on a barracks mission");
+                    while (true) {
+                        rc.setIndicatorString(2, "supply: " + rc.getSupplyLevel());
 
-                    rc.yield();
-                }
-                rc.setIndicatorString(1, "Finished mining mission");
-                break;
-            case (RobotHQ.ORDER_BARRACKS):
-                System.out.println("BEAVER mission ORDER_BARRACKS");
-                rc.setIndicatorString(1, "I am on a barracks mission");
-                while (true) {
-                    rc.setIndicatorString(2, "supply: " + rc.getSupplyLevel());
+                        // TODO(jessk) Make sure no buildings are nearby before building here
+                        int distanceFromHQ = rc.getLocation().distanceSquaredTo(hqLoc);
+                        if (rc.isCoreReady()) {
+                            if (distanceFromHQ >= BUILDING_PADDING && buildBarracks()) break;
+                            wander();
+                        }
 
-                    // TODO(jessk) Make sure no buildings are nearby before building here
-                    int distanceFromHQ = rc.getLocation().distanceSquaredTo(hqLoc);
-                    if (rc.isCoreReady()) {
-                        if (distanceFromHQ >= BUILDING_PADDING && buildBarracks()) break;
-                        wander();
+                        rc.yield();
                     }
+                    rc.setIndicatorString(1, "Finished barracks mission");
+                    break;
+                default:
+                    System.out.println("BEAVER mission none");
+                    while (true) {
+                        rc.setIndicatorString(2, "supply: " + rc.getSupplyLevel());
 
-                    rc.yield();
-                }
-                rc.setIndicatorString(1, "Finished barracks mission");
-                break;
-            default:
-                System.out.println("BEAVER mission none");
-                break;
-        }
+                        if (rc.getSupplyLevel() < LOW_SUPPLY) break;
 
+                        if (rc.isCoreReady()) mine();
+                        if (rc.isCoreReady()) wander();
 
-        // Main loop... mine & wander
-        while(true) {
-            rc.setIndicatorString(2, "supply: " + rc.getSupplyLevel());
+                        rc.yield();
+                    }
+                    break;
+            }
 
-            if (rc.isCoreReady()) mine();
+            // Finished what it was doing
+            goToHQ();
+            dumpSuppliesToHQ();
 
-            if (rc.isCoreReady()) wander();
-
-            rc.yield();
         }
     }
 
@@ -131,5 +140,33 @@ public class RobotBeaver extends Robot {
     // Attempt to build a barracks.
     private boolean buildBarracks() {
         return buildThenSupply(BARRACKS);
+    }
+
+    private boolean goToHQ() {
+        rc.setIndicatorString(1, "Going back to HQ");
+        while(true) {
+
+            if(rc.isCoreReady()) moveToward(hqLoc);
+
+            if(hqLoc.distanceSquaredTo(rc.getLocation()) <= GameConstants.SUPPLY_TRANSFER_RADIUS_SQUARED)
+                return true;
+
+            rc.yield();
+
+        }
+    }
+
+    private boolean dumpSuppliesToHQ() {
+        while(true) {
+            if (rc.isCoreReady()) {
+                try {
+                    rc.transferSupplies((int) rc.getSupplyLevel(), hqLoc);
+                    return true;
+                } catch (GameActionException e) {
+                    return false;
+                }
+            }
+            rc.yield();
+        }
     }
 }
