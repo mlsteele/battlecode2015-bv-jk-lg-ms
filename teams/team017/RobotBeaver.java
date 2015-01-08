@@ -25,6 +25,7 @@ public class RobotBeaver extends Robot {
         // I am on a mining factory mission
         switch (orderCode) {
             case (RobotHQ.ORDER_MINERFACTORY):
+                System.out.println("BEAVER mission ORDER_MINERFACTORY");
                 rc.setIndicatorString(1, "I am on a mining factory mission");
                 while (true) {
                     rc.setIndicatorString(2, "supply: " + rc.getSupplyLevel());
@@ -41,6 +42,7 @@ public class RobotBeaver extends Robot {
                 rc.setIndicatorString(1, "Finished mining mission");
                 break;
             case (RobotHQ.ORDER_BARRACKS):
+                System.out.println("BEAVER mission ORDER_BARRACKS");
                 rc.setIndicatorString(1, "I am on a barracks mission");
                 while (true) {
                     rc.setIndicatorString(2, "supply: " + rc.getSupplyLevel());
@@ -57,6 +59,7 @@ public class RobotBeaver extends Robot {
                 rc.setIndicatorString(1, "Finished barracks mission");
                 break;
             default:
+                System.out.println("BEAVER mission none");
                 break;
         }
 

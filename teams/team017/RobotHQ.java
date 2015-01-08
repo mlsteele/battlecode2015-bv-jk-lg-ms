@@ -53,41 +53,33 @@ public class RobotHQ extends Robot {
             }
 
             // Spawn a beaver.
-            if (rc.isCoreReady() && rc.getSupplyLevel() > RobotBeaver.STARTING_SUPPLY &&
-                    spawned_beavers < MAX_BEAVER) {
-                Direction spawnDir = spawn(BEAVER);
-                spawned_beavers++;
-
-                // Supply spawnling
-                if (spawnDir != null) {
-                    // Wait one round for the robot to spawn.
-                    rc.yield();
-                    MapLocation supplyTargetLoc = rc.getLocation().add(spawnDir);
-
-
-                    try {
-                        // If it would be reasonable to supply a structure, order one built.
-                        if (rc.getSupplyLevel() > RobotMinerFactory.STARTING_SUPPLY &&
-                                beaver_mining_spawned == false) {
-                            //rc.setIndicatorString(0, "Spawning a miner beaver");
-                            beaver_mining_spawned = true;
-                            rc.transferSupplies(
-                                    RobotBeaver.STARTING_SUPPLY + RobotMinerFactory.STARTING_SUPPLY + ORDER_MINERFACTORY,
-                                    supplyTargetLoc);
-                        } else if (rc.getSupplyLevel() > RobotBarracks.STARTING_SUPPLY) {
-                            rc.transferSupplies(
-                                    RobotBeaver.STARTING_SUPPLY + RobotBarracks.STARTING_SUPPLY + ORDER_BARRACKS,
-                                    supplyTargetLoc);
-                        } else {
-                            rc.transferSupplies(RobotBeaver.STARTING_SUPPLY + ORDER_NONE, supplyTargetLoc);
-                        }
-                    } catch (GameActionException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
+            if (rc.isCoreReady()) maybeSpawnBeaver();
+            int supplyAmount = determineBeaverSupplyAmount();
+            supplyNearbyEmpty(null, BEAVER, supplyAmount);
 
             rc.yield();
+        }
+    }
+
+    private void maybeSpawnBeaver() {
+        if (rc.getSupplyLevel() >= RobotBeaver.STARTING_SUPPLY && spawned_beavers < MAX_BEAVER) {
+            if (spawn(BEAVER) != null)
+                spawned_beavers++;
+        }
+    }
+
+    // How much supply should a new beaver get?
+    // Determines the beaver's mission as well.
+    private int determineBeaverSupplyAmount() {
+        // If it would be reasonable to supply a structure, order one built.
+        int supplyLevel = (int)rc.getSupplyLevel();
+        if (supplyLevel > RobotMinerFactory.STARTING_SUPPLY && beaver_mining_spawned == false) {
+            beaver_mining_spawned = true;
+            return RobotBeaver.STARTING_SUPPLY + RobotMinerFactory.STARTING_SUPPLY + ORDER_MINERFACTORY;
+        } else if (supplyLevel > RobotBarracks.STARTING_SUPPLY) {
+            return RobotBeaver.STARTING_SUPPLY + RobotBarracks.STARTING_SUPPLY + ORDER_BARRACKS;
+        } else {
+            return RobotBeaver.STARTING_SUPPLY + ORDER_NONE;
         }
     }
 
