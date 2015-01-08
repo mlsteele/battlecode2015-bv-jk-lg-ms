@@ -37,7 +37,7 @@ public class Headquarters extends Structure {
 
         int missionIndex = 0;
 
-        while(true) {
+        while (true) {
             shootBaddies();
 
             strategyUpdate();
@@ -67,7 +67,7 @@ public class Headquarters extends Structure {
         // Updates the unit count. Happens every UPDATE_UNIT_COUNT_TIME mod times
         if (Clock.getRoundNum() % UPDATE_UNIT_COUNT_TIME == 0) {
             int[] cheese = updateUnitCount();
-            rc.setIndicatorString(0,Arrays.toString(cheese));
+            rc.setIndicatorString(0, Arrays.toString(cheese));
         }
 
         if (Math.abs(Clock.getRoundNum() - TIME_TO_ATTACK1) <= 1) {
@@ -85,7 +85,7 @@ public class Headquarters extends Structure {
     }
 
     private Direction smartSpawn(RobotType robot) {
-        if(robot == RobotType.BEAVER) {
+        if (robot == RobotType.BEAVER) {
             try {
                 int beaverJobSlot = rf.assignBeaverJobSlot();
                 if (beaverJobSlot < 0) return null;

@@ -15,7 +15,7 @@ public class Basher extends Unit {
         waitForSupplies();
 
         // Main loop
-        while(true) {
+        while (true) {
             rf.loadRally1();
             if (rc.isCoreReady()) moveToward(rf.getRally1());
 

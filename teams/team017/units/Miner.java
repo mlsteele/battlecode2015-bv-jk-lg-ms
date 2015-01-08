@@ -18,7 +18,7 @@ public class Miner extends Unit {
 
         // Main loop
         // Just hang out for now
-        while(true) {
+        while (true) {
             Direction forward = NORTH;
 
             if (rc.isCoreReady()) {
@@ -46,7 +46,7 @@ public class Miner extends Unit {
 
         for (Direction d : possibleDirs) {
             double ore = rc.senseOre(curLocation.add(d));
-            if (ore > bestOre && rc.canMove(d)){
+            if (ore > bestOre && rc.canMove(d)) {
                 bestOre = ore;
                 bestDirection = d;
             }
@@ -58,7 +58,7 @@ public class Miner extends Unit {
     // returns true if can mine
     // assumes there is ore
     private boolean mine() {
-        if(rc.canMine()) {
+        if (rc.canMine()) {
             try {
                 rc.mine();
                 return true;

@@ -31,7 +31,7 @@ public class Barracks extends Structure {
     // Spawn a solider or basher if there is enough supply to start them.
     private void spawnCombatant() {
         int supplyAmount;
-        if((rand.nextDouble() * 2) <= 1) {
+        if ((rand.nextDouble() * 2) <= 1) {
             supplyAmount = Strategy.initialSupply(SOLDIER);
             if (rc.getSupplyLevel() >= supplyAmount)
                 spawn(SOLDIER);

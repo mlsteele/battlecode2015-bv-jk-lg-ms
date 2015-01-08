@@ -28,7 +28,7 @@ public abstract class Unit extends Robot {
             }
         } else {
             try {
-                if((rand.nextDouble() * 2) <= 1) {
+                if ((rand.nextDouble() * 2) <= 1) {
                     forward = forward.rotateRight();
                 } else {
                     forward = forward.rotateLeft();

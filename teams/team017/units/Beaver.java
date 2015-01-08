@@ -30,7 +30,7 @@ public class Beaver extends Unit {
 
 
         hqLoc = rc.senseHQLocation();
-        
+
         // Not your average loop.
         // This is NOT the inner loop.
         while (true) {
@@ -157,11 +157,11 @@ public class Beaver extends Unit {
 
     private boolean goToHQ() {
         rc.setIndicatorString(1, "Going back to HQ");
-        while(true) {
+        while (true) {
 
-            if(rc.isCoreReady()) moveToward(hqLoc);
+            if (rc.isCoreReady()) moveToward(hqLoc);
 
-            if(hqLoc.distanceSquaredTo(rc.getLocation()) <= GameConstants.SUPPLY_TRANSFER_RADIUS_SQUARED) {
+            if (hqLoc.distanceSquaredTo(rc.getLocation()) <= GameConstants.SUPPLY_TRANSFER_RADIUS_SQUARED) {
                 rc.setIndicatorString(1, "Back at HQ");
                 return true;
             }

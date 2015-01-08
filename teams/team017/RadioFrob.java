@@ -32,15 +32,15 @@ public class RadioFrob {
 
     // Assigns a job to the beaver slot. Returns job assignment slot
     // returns -1 if slot has not been claimed
-   public int assignBeaverJobSlot() throws GameActionException {
-       if (rc.readBroadcast(BEAVER_JOB_ASSIGNMENT_SLOT) != 0) {
-           return -1;
-       } else {
-           freeBeaverJobSlot++;
-           rc.broadcast(BEAVER_JOB_ASSIGNMENT_SLOT, freeBeaverJobSlot);
-           return freeBeaverJobSlot;
-       }
-   }
+    public int assignBeaverJobSlot() throws GameActionException {
+        if (rc.readBroadcast(BEAVER_JOB_ASSIGNMENT_SLOT) != 0) {
+            return -1;
+        } else {
+            freeBeaverJobSlot++;
+            rc.broadcast(BEAVER_JOB_ASSIGNMENT_SLOT, freeBeaverJobSlot);
+            return freeBeaverJobSlot;
+        }
+    }
 
     public int getBeaverJobSlot() throws GameActionException {
         return rc.readBroadcast(BEAVER_JOB_ASSIGNMENT_SLOT);
@@ -50,12 +50,12 @@ public class RadioFrob {
         rc.broadcast(BEAVER_JOB_ASSIGNMENT_SLOT, 0);
     }
 
-    public int getJob(int jobSlot) throws GameActionException{
+    public int getJob(int jobSlot) throws GameActionException {
         return rc.readBroadcast(BEAVER_JOB_BASE + jobSlot);
     }
 
     // returns my job
-    public int getJob() throws GameActionException{
+    public int getJob() throws GameActionException {
         System.out.println("Attempting to get job with: " + myJobSlot);
         return getJob(myJobSlot);
     }

@@ -15,7 +15,7 @@ public class Tank extends Unit {
         waitForSupplies();
 
         // Main loop
-        while(true) {
+        while (true) {
             shootBaddies();
 
             rf.loadRally1();
