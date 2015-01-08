@@ -53,10 +53,8 @@ public class Headquarters extends Structure {
                     if (supplyForBarracks()) missionIndex++;
                     break;
                 case 2:
-                    if (supplyForTankFactory()) missionIndex++;
-                    break;
                 case 3:
-                    if (supplyForBarracks()) missionIndex++;
+                    if (supplyForTankFactory()) missionIndex++;
                     break;
                 default: break;
             }

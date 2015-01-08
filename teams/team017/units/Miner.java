@@ -10,7 +10,7 @@ import java.util.*;
 public class Miner extends Unit {
     Miner(RobotController rc) { super(rc); }
 
-    public static final int STARTING_SUPPLY = 2000;
+    public static final int STARTING_SUPPLY = 3000;
 
     @Override
     public void run() {

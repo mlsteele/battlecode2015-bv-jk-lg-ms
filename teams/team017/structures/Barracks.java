@@ -16,14 +16,16 @@ public class Barracks extends Structure {
         rc.setIndicatorString(0, "i am a Barracks");
 
         while (true) {
-            if (rc.isCoreReady()) spawnCombatant();
+            if (false) {
+                if (rc.isCoreReady()) spawnCombatant();
 
-            // Supply any nearby spawnees that are waiting.
-            RobotInfo[] candidates = rc.senseNearbyRobots(
-                    GameConstants.SUPPLY_TRANSFER_RADIUS_SQUARED,
-                    rc.getTeam());
-            supplyNearbyEmpty(candidates, SOLDIER, Soldier.STARTING_SUPPLY);
-            supplyNearbyEmpty(candidates, BASHER, Basher.STARTING_SUPPLY);
+                // Supply any nearby spawnees that are waiting.
+                RobotInfo[] candidates = rc.senseNearbyRobots(
+                        GameConstants.SUPPLY_TRANSFER_RADIUS_SQUARED,
+                        rc.getTeam());
+                supplyNearbyEmpty(candidates, SOLDIER, Soldier.STARTING_SUPPLY);
+                supplyNearbyEmpty(candidates, BASHER, Basher.STARTING_SUPPLY);
+            }
 
             rc.yield();
         }

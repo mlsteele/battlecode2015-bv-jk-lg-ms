@@ -7,7 +7,7 @@ import java.util.*;
 
 public class TankFactory extends Structure {
     // Given to the miner factory when built.
-    public static final int STARTING_SUPPLY = 10000;
+    public static final int STARTING_SUPPLY = 20000;
 
     TankFactory(RobotController rc) { super(rc); }
 
