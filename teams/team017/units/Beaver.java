@@ -43,12 +43,12 @@ public class Beaver extends Unit {
             rc.setIndicatorString(1, "BEAVER mission " + orderCode);
             System.out.println("BEAVER mission " + orderCode);
             switch (orderCode) {
-                case (Headquarters.ORDER_BARRACKS):
-                case (Headquarters.ORDER_MINERFACTORY):
-                case (Headquarters.ORDER_TANKFACTORY):
+                case (Strategy.TASK_BARRACKS):
+                case (Strategy.TASK_MINERFACTORY):
+                case (Strategy.TASK_TANKFACTORY):
                     buildStructureMission(orderCode);
                     break;
-                case (Headquarters.ORDER_NONE):
+                case (Strategy.TASK_NONE):
                     System.out.println("BEAVER mission none");
                     while (true) {
                         rc.setIndicatorString(2, "supply: " + rc.getSupplyLevel());
@@ -91,11 +91,11 @@ public class Beaver extends Unit {
 
     private boolean buildThenSupplyForCode(int orderCode) {
         switch (orderCode) {
-            case Headquarters.ORDER_BARRACKS:
+            case Strategy.TASK_BARRACKS:
                 return buildThenSupply(BARRACKS);
-            case Headquarters.ORDER_MINERFACTORY:
+            case Strategy.TASK_MINERFACTORY:
                 return buildThenSupply(MINERFACTORY);
-            case Headquarters.ORDER_TANKFACTORY:
+            case Strategy.TASK_TANKFACTORY:
                 return buildThenSupply(TANKFACTORY);
             default:
                 System.out.println("error, invalid building code " + orderCode);

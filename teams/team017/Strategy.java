@@ -6,8 +6,13 @@ import static battlecode.common.RobotType.*;
 import java.util.*;
 
 // Strategy constants
-public enum Strategy {
-    ;
+public enum Strategy {;
+    // Supply-based order codes that HQ gives to beavers
+    public static final int TASK_NONE = 0;
+    public static final int TASK_BARRACKS = 1;
+    public static final int TASK_MINERFACTORY = 2;
+    public static final int TASK_TANKFACTORY = 3;
+
     public static int initialSupply(RobotType rtype) {
         switch (rtype) {
             case BEAVER:              return 1000;

@@ -15,12 +15,6 @@ public class Headquarters extends Structure {
     private static final int NUM_OF_UNIT_TYPES = RobotType.values().length;
     int[] unitsOnField = new int[NUM_OF_UNIT_TYPES];
 
-    // Supply-based order codes that HQ gives to beavers
-    public static final int ORDER_NONE = 0;
-    public static final int ORDER_BARRACKS = 1;
-    public static final int ORDER_MINERFACTORY = 2;
-    public static final int ORDER_TANKFACTORY = 3;
-
     private int spawned_beavers = 0;
     private boolean beaver_mining_spawned = false;
     private boolean beaver_barracks_spawned = false;
@@ -125,21 +119,21 @@ public class Headquarters extends Structure {
 
     private boolean supplyForMinerFactory() {
         if (rc.getTeamOre() < MINERFACTORY.oreCost) return false;
-        return supplyBeaver(Strategy.initialSupply(BEAVER) + Strategy.initialSupply(MINERFACTORY) + ORDER_MINERFACTORY);
+        return supplyBeaver(Strategy.initialSupply(BEAVER) + Strategy.initialSupply(MINERFACTORY) + Strategy.TASK_MINERFACTORY);
     }
 
     private boolean supplyForBarracks() {
         if (rc.getTeamOre() < BARRACKS.oreCost) return false;
-        return supplyBeaver(Strategy.initialSupply(BEAVER) + Strategy.initialSupply(BARRACKS) + ORDER_BARRACKS);
+        return supplyBeaver(Strategy.initialSupply(BEAVER) + Strategy.initialSupply(BARRACKS) + Strategy.TASK_BARRACKS);
     }
 
     private boolean supplyForTankFactory() {
         if (rc.getTeamOre() < TANKFACTORY.oreCost) return false;
-        return supplyBeaver(Strategy.initialSupply(BEAVER) + Strategy.initialSupply(TANKFACTORY) + ORDER_TANKFACTORY);
+        return supplyBeaver(Strategy.initialSupply(BEAVER) + Strategy.initialSupply(TANKFACTORY) + Strategy.TASK_TANKFACTORY);
     }
 
     private boolean supplyForWander() {
-        return supplyBeaver(Strategy.initialSupply(BEAVER) + ORDER_NONE);
+        return supplyBeaver(Strategy.initialSupply(BEAVER) + Strategy.TASK_NONE);
     }
 
     private boolean supplyBeaver(int supplyAmount) {
