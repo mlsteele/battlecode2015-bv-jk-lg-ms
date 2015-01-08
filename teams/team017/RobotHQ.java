@@ -34,23 +34,7 @@ public class RobotHQ extends Robot {
         while(true) {
             shootBaddies();
 
-            // Updates the unit count. Happens every UPDATE_UNIT_COUNT_TIME mod times
-            if (Clock.getRoundNum()%UPDATE_UNIT_COUNT_TIME == 0) {
-                int[] cheese = updateUnitCount();
-                rc.setIndicatorString(0,Arrays.toString(cheese));
-            }
-
-            if (Math.abs(Clock.getRoundNum() - TIME_TO_ATTACK1) <= 1) {
-                // Rally at half point.
-                rf.writeRally1(avgLocations(rc.senseEnemyHQLocation(), rc.senseHQLocation()));
-                rc.setIndicatorString(1, "set rally1 to " + rf.getRally1());
-            }
-
-            if (Math.abs(Clock.getRoundNum() - TIME_TO_ATTACK2) <= 1) {
-                // Rally at the enemy HQ
-                rf.writeRally1(rc.senseEnemyHQLocation());
-                rc.setIndicatorString(1, "set rally1 to " + rf.getRally1());
-            }
+            strategyUpdate();
 
             // Spawn a beaver.
             if (rc.isCoreReady()) maybeSpawnBeaver();
@@ -59,6 +43,27 @@ public class RobotHQ extends Robot {
 
             rc.yield();
         }
+    }
+
+    private void strategyUpdate() {
+        // Updates the unit count. Happens every UPDATE_UNIT_COUNT_TIME mod times
+        if (Clock.getRoundNum() % UPDATE_UNIT_COUNT_TIME == 0) {
+            int[] cheese = updateUnitCount();
+            rc.setIndicatorString(0,Arrays.toString(cheese));
+        }
+
+        if (Math.abs(Clock.getRoundNum() - TIME_TO_ATTACK1) <= 1) {
+            // Rally at half point.
+            rf.writeRally1(avgLocations(rc.senseEnemyHQLocation(), rc.senseHQLocation()));
+            rc.setIndicatorString(1, "set rally1 to " + rf.getRally1());
+        }
+
+        if (Math.abs(Clock.getRoundNum() - TIME_TO_ATTACK2) <= 1) {
+            // Rally at the enemy HQ
+            rf.writeRally1(rc.senseEnemyHQLocation());
+            rc.setIndicatorString(1, "set rally1 to " + rf.getRally1());
+        }
+
     }
 
     private void maybeSpawnBeaver() {
