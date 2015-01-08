@@ -106,8 +106,6 @@ public class Headquarters extends Structure {
         }
     }
 
-    // TODO(miles): build tank factory. But only if we satisfy prereqs.
-
     private int[] updateUnitCount() {
         int[] unitsOnField = new int[NUM_OF_UNIT_TYPES];
         RobotInfo[] robots = rc.senseNearbyRobots(rc.getLocation(), Integer.MAX_VALUE, rc.getTeam());
@@ -123,10 +121,12 @@ public class Headquarters extends Structure {
     }
 
     private boolean supplyForMinerFactory() {
+        if (rc.getTeamOre() < MINERFACTORY.oreCost) return false;
         return supplyBeaver(Beaver.STARTING_SUPPLY + MinerFactory.STARTING_SUPPLY + ORDER_MINERFACTORY);
     }
 
     private boolean supplyForBarracks() {
+        if (rc.getTeamOre() < BARRACKS.oreCost) return false;
         return supplyBeaver(Beaver.STARTING_SUPPLY + Barracks.STARTING_SUPPLY + ORDER_BARRACKS);
     }
 

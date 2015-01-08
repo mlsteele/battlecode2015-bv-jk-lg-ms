@@ -121,7 +121,7 @@ public class Beaver extends Unit {
     }
 
     // Attempt to build and then supply a building
-    private boolean buildThenSupply(RobotType rob , int supply) {
+    private boolean buildThenSupply(RobotType rob, int supply) {
         Direction dir = randomDirection();
         if (rc.canBuild(dir, rob)) {
             try {
