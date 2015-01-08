@@ -16,6 +16,12 @@ public class RobotTankFactory extends Robot {
         rc.setIndicatorString(0, "I am a RobotTankFactory");
 
         while (true) {
+            if (rc.isCoreReady() && rc.getSupplyLevel() > RobotTank.STARTING_SUPPLY)
+                spawn(TANK);
+
+            // Supply any nearby spawnees that are waiting.
+            supplyNearbyEmpty(null, TANK, RobotTank.STARTING_SUPPLY);
+
             rc.yield();
         }
     }
