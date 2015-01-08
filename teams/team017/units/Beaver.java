@@ -50,8 +50,6 @@ public class Beaver extends Unit {
                 case (Strategy.TASK_NONE):
                     System.out.println("BEAVER mission none");
                     while (true) {
-                        rc.setIndicatorString(2, "supply: " + rc.getSupplyLevel());
-
                         if (rc.getSupplyLevel() < LOW_SUPPLY) break;
 
                         if (rc.isCoreReady()) mine();

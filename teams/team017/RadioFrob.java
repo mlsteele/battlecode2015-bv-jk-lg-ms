@@ -112,13 +112,11 @@ public class RadioFrob {
         // This sortof kindof increases the maximum length of
         // an axis to 240, which is ~8 bits.
         MapLocation rel = loc.add(-hqLoc.x, -hqLoc.y).add(120, 120);
-        rc.setIndicatorString(2, "encode rel " + rel);
         return (rel.y << 8) | rel.x;
     }
 
     private MapLocation decodeLocation(int loc) {
         MapLocation rel = new MapLocation(loc & 0xFF, loc >> 8);
-        rc.setIndicatorString(2, "decode rel " + rel);
         return rel.add(hqLoc.x, hqLoc.y).add(-120, -120);
     }
 }

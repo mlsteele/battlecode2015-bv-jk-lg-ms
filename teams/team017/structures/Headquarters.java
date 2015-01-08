@@ -88,7 +88,6 @@ public class Headquarters extends Structure {
             try {
                 int beaverJobSlot = rf.assignBeaverJobSlot();
                 if (beaverJobSlot < 0) return null;
-                rc.setIndicatorString(2, "Creating beaver : slot = " + beaverJobSlot);
                 rf.setJob(spawned_beavers, beaverJobSlot);
                 return spawn(BEAVER);
             } catch (GameActionException e) {
