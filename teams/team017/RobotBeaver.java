@@ -31,14 +31,15 @@ public class RobotBeaver extends Robot {
             // Order code is which mission to pursue.
             int orderCode = ((int) rc.getSupplyLevel()) % 100;
 
+            rc.setIndicatorString(1, "BEAVER mission " + orderCode);
+            System.out.println("BEAVER mission " + orderCode);
             switch (orderCode) {
-                case (RobotHQ.ORDER_MINERFACTORY):
-                    buildStructureMission(RobotHQ.ORDER_BARRACKS);
-                    break;
                 case (RobotHQ.ORDER_BARRACKS):
-                    buildStructureMission(RobotHQ.ORDER_BARRACKS);
+                case (RobotHQ.ORDER_MINERFACTORY):
+                case (RobotHQ.ORDER_TANKFACTORY):
+                    buildStructureMission(orderCode);
                     break;
-                default:
+                case (RobotHQ.ORDER_NONE):
                     System.out.println("BEAVER mission none");
                     while (true) {
                         rc.setIndicatorString(2, "supply: " + rc.getSupplyLevel());
@@ -51,7 +52,10 @@ public class RobotBeaver extends Robot {
                         rc.yield();
                     }
                     break;
+                default:
+                    System.out.println("ERROR: BEAVER sent on invalid mission ("+orderCode+"), please debug");
             }
+            rc.setIndicatorString(1, "Finished mission " + orderCode);
 
             // Finished what it was doing
             goToHQ();
@@ -60,21 +64,19 @@ public class RobotBeaver extends Robot {
     }
 
     private void buildStructureMission(int orderCode) {
-        System.out.println("BEAVER mission " + orderCode);
-        rc.setIndicatorString(1, "BEAVER mission " + orderCode);
         while (true) {
-            rc.setIndicatorString(2, "supply: " + rc.getSupplyLevel());
 
             // TODO(jessk) Make sure no buildings are nearby before building here
             int distanceFromHQ = rc.getLocation().distanceSquaredTo(hqLoc);
+            rc.setIndicatorString(2, "distanceFromHQ: " + distanceFromHQ);
             if (rc.isCoreReady()) {
-                if (distanceFromHQ >= BUILDING_PADDING && buildThenSupplyForCode(orderCode)) break;
+                if (distanceFromHQ >= BUILDING_PADDING && buildThenSupplyForCode(orderCode))
+                    return;
                 wander();
             }
 
             rc.yield();
         }
-        rc.setIndicatorString(1, "Finished mission " + orderCode);
     }
 
     private boolean buildThenSupplyForCode(int orderCode) {
@@ -83,6 +85,8 @@ public class RobotBeaver extends Robot {
                 return buildThenSupply(BARRACKS);
             case RobotHQ.ORDER_MINERFACTORY:
                 return buildThenSupply(MINERFACTORY);
+            case RobotHQ.ORDER_TANKFACTORY:
+                return buildThenSupply(TANKFACTORY);
             default:
                 System.out.println("error, invalid building code " + orderCode);
                 return false;
@@ -155,15 +159,12 @@ public class RobotBeaver extends Robot {
         }
     }
 
-    private boolean dumpSuppliesToHQ() {
+    private void dumpSuppliesToHQ() {
         while(true) {
-            if (rc.isCoreReady()) {
-                try {
-                    rc.transferSupplies((int) rc.getSupplyLevel(), hqLoc);
-                    return true;
-                } catch (GameActionException e) {
-                    return false;
-                }
+            try {
+                rc.transferSupplies(Integer.MAX_VALUE, hqLoc);
+            } catch (GameActionException e) {
+                e.printStackTrace();
             }
             rc.yield();
         }

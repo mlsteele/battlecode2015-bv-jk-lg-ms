@@ -17,6 +17,7 @@ public class RobotHQ extends Robot {
     public static final int ORDER_NONE = 0;
     public static final int ORDER_BARRACKS = 1;
     public static final int ORDER_MINERFACTORY = 2;
+    public static final int ORDER_TANKFACTORY = 3;
 
     private int spawned_beavers = 0;
     private boolean beaver_mining_spawned = false;
@@ -78,6 +79,7 @@ public class RobotHQ extends Robot {
     private int determineBeaverSupplyAmount() {
         // If it would be reasonable to supply a structure, order one built.
         int supplyLevel = (int)rc.getSupplyLevel();
+        // TODO(miles): build tank factory. But only if we satisfy prereqs.
         if (supplyLevel > RobotMinerFactory.STARTING_SUPPLY && beaver_mining_spawned == false) {
             beaver_mining_spawned = true;
             return RobotBeaver.STARTING_SUPPLY + RobotMinerFactory.STARTING_SUPPLY + ORDER_MINERFACTORY;

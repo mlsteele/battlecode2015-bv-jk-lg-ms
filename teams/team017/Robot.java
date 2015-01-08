@@ -160,7 +160,7 @@ public abstract class Robot {
             if (shouldAttack) shootBaddies();
             rc.yield();
         }
-        rc.setIndicatorString(1, "recvd for supplies");
+        rc.setIndicatorString(1, "recvd supplies");
     }
 
     // Give supplies to nearby robots who have no supplies.
