@@ -12,6 +12,7 @@ public enum Strategy {;
     public static final int TASK_BARRACKS = 1;
     public static final int TASK_MINERFACTORY = 2;
     public static final int TASK_TANKFACTORY = 3;
+    public static final int TASK_HELIPAD = 4;
 
     public static int initialSupply(RobotType rtype) {
         switch (rtype) {
@@ -24,7 +25,7 @@ public enum Strategy {;
             case SOLDIER:             return 1000;
             case BASHER:              return 1000;
 
-            case HELIPAD:             return 10 * initialSupply(DRONE);
+            case HELIPAD:             return 20 * initialSupply(DRONE);
             case DRONE:               return 1000;
 
             case TANKFACTORY:         return 9 * initialSupply(TANK);

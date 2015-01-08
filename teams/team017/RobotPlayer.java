@@ -35,6 +35,8 @@ public class RobotPlayer {
             case MINERFACTORY: return new MinerFactory(rc);
             case TANK: return new Tank(rc);
             case TANKFACTORY: return new TankFactory(rc);
+            case HELIPAD: return new Helipad(rc);
+            case DRONE: return new Drone(rc);
             default: return null;
         }
     }
