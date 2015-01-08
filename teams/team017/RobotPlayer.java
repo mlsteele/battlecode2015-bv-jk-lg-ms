@@ -1,62 +1,41 @@
 package team017;
 
 import battlecode.common.*;
+import static battlecode.common.Direction.*;
+import static battlecode.common.RobotType.*;
 import java.util.*;
 
 // Entry point for robots.
+// Dispatches to one of the Robot classes.
 public class RobotPlayer {
     public static void run(RobotController rc) {
-        Robot r;
+        Robot r = resolveRobotType(rc);
 
-        // Dispatch to one of the Robot* classes.
-        // Should never return.
+        if (r != null) {
+            // Should never return.
+            r.run();
+        } else {
+            // Unimplemented or unknown robot type
+            rc.setIndicatorString(0, "having existential crisis.");
+            while (true) {
+                rc.yield();
+            }
+        }
+    }
+
+    private static Robot resolveRobotType(RobotController rc) {
         switch (rc.getType()) {
-            case HQ:
-                r = new HQ(rc);
-                r.run();
-                break;
-            case TOWER:
-                r = new Tower(rc);
-                r.run();
-                break;
-            case BEAVER:
-                r = new Beaver(rc);
-                r.run();
-                break;
-            case BARRACKS:
-                r = new Barracks(rc);
-                r.run();
-                break;
-            case SOLDIER:
-                r = new Soldier(rc);
-                r.run();
-                break;
-            case BASHER:
-                r = new Basher(rc);
-                r.run();
-                break;
-            case MINER:
-                r = new Miner(rc);
-                r.run();
-                break;
-            case MINERFACTORY:
-                r = new MinerFactory(rc);
-                r.run();
-                break;
-            case TANK:
-                r = new Tank(rc);
-                r.run();
-                break;
-            case TANKFACTORY:
-                r = new Tank(rc);
-                r.run();
-                break;
-            default:
-                // Unimplemented robot type
-                rc.setIndicatorString(0, "having existential crisis.");
-                while (true) {
-                    rc.yield();
-                }
+            case HQ: return new HQ(rc);
+            case TOWER: return new Tower(rc);
+            case BEAVER: return new Beaver(rc);
+            case BARRACKS: return new Barracks(rc);
+            case SOLDIER: return new Soldier(rc);
+            case BASHER: return new Basher(rc);
+            case MINER: return new Miner(rc);
+            case MINERFACTORY: return new MinerFactory(rc);
+            case TANK: return new Tank(rc);
+            case TANKFACTORY: return new Tank(rc);
+            default: return null;
         }
     }
 }
