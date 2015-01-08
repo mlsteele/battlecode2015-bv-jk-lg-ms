@@ -69,12 +69,13 @@ public abstract class Robot {
     }
 
     protected boolean shootBaddies() {
+        int range = rc.getType().attackRadiusSquared;
+        Team enemy = rc.getTeam().opponent();
+
         // Keep scanning until either a hit or no enemies in sight.
-        // It's not good to shuffle around, causing further loading delay,
+        // It's not good to shuffle around, causing further loading delay
         // when an enemy is in range.
         while (true) {
-            int range = rc.getType().attackRadiusSquared;
-            Team enemy = rc.getTeam().opponent();
             RobotInfo[] enemies = rc.senseNearbyRobots(range, enemy);
 
             if (enemies.length == 0) {
