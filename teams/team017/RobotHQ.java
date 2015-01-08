@@ -41,18 +41,20 @@ public class RobotHQ extends Robot {
             // Spawn a beaver.
             if (rc.isCoreReady()) maybeSpawnBeaver();
 
-            if (!beaver_mining_spawned) {
-                if (supplyForMinerFactory())
-                    beaver_mining_spawned = true;
-                else {
-                    rc.yield();
-                    continue;
-                }
-            }
-            else if (supplyForBarracks())
-                beaver_barracks_spawned = true;
-            else
-                supplyForWander();
+            // if (!beaver_mining_spawned) {
+                // if (supplyForMinerFactory())
+                    // beaver_mining_spawned = true;
+                // else {
+                    // rc.yield();
+                    // continue;
+                // }
+            // }
+            // else if (supplyForBarracks())
+                // beaver_barracks_spawned = true;
+            // else
+                // supplyForWander();
+
+            supplyForWander();
 
 
             rc.yield();
@@ -115,9 +117,6 @@ public class RobotHQ extends Robot {
         return supplyBeaver(RobotBeaver.STARTING_SUPPLY + ORDER_NONE);
     }
 
-    // Give supplies to nearby robots who have no supplies.
-    // Attempt to transfer `supplyAmount` supplies to nearby robots of type `rtype` who have 0 supply.
-    // If candidates is null, they will be fetched automatically.
     private boolean supplyBeaver(int supplyAmount) {
         if (rc.getSupplyLevel() < supplyAmount)
             return false;
@@ -133,6 +132,7 @@ public class RobotHQ extends Robot {
 
             try {
                 rc.transferSupplies(supplyAmount, r.location);
+                System.out.println("HQ sending " + supplyAmount + " supplies");
                 return true;
             } catch (GameActionException e) {
                 e.printStackTrace();

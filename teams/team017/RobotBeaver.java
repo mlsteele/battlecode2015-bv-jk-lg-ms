@@ -26,10 +26,10 @@ public class RobotBeaver extends Robot {
         // This is NOT the inner loop.
         while (true) {
 
-            waitForSupplies();
+            int initialSupplyLevel = waitForSupplies();
 
             // Order code is which mission to pursue.
-            int orderCode = ((int) rc.getSupplyLevel()) % 100;
+            int orderCode = initialSupplyLevel % 100;
 
             rc.setIndicatorString(1, "BEAVER mission " + orderCode);
             System.out.println("BEAVER mission " + orderCode);
@@ -54,6 +54,7 @@ public class RobotBeaver extends Robot {
                     break;
                 default:
                     System.out.println("ERROR: BEAVER sent on invalid mission ("+orderCode+"), please debug");
+                    rc.yield();
             }
             rc.setIndicatorString(1, "Finished mission " + orderCode);
 
@@ -65,7 +66,6 @@ public class RobotBeaver extends Robot {
 
     private void buildStructureMission(int orderCode) {
         while (true) {
-
             // TODO(jessk) Make sure no buildings are nearby before building here
             int distanceFromHQ = rc.getLocation().distanceSquaredTo(hqLoc);
             rc.setIndicatorString(2, "distanceFromHQ: " + distanceFromHQ);
@@ -151,18 +151,22 @@ public class RobotBeaver extends Robot {
 
             if(rc.isCoreReady()) moveToward(hqLoc);
 
-            if(hqLoc.distanceSquaredTo(rc.getLocation()) <= GameConstants.SUPPLY_TRANSFER_RADIUS_SQUARED)
+            if(hqLoc.distanceSquaredTo(rc.getLocation()) <= GameConstants.SUPPLY_TRANSFER_RADIUS_SQUARED) {
+                rc.setIndicatorString(1, "Back at HQ");
                 return true;
+            }
 
             rc.yield();
-
         }
     }
 
     private void dumpSuppliesToHQ() {
+        rc.setIndicatorString(1, "Dumping supplies...");
         while(true) {
             try {
                 rc.transferSupplies(Integer.MAX_VALUE, hqLoc);
+                rc.setIndicatorString(1, "Dumped supplies.");
+                return;
             } catch (GameActionException e) {
                 e.printStackTrace();
             }

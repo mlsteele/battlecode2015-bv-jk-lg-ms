@@ -153,15 +153,18 @@ public abstract class Robot {
 
     // Idle until any supplies are received.
     // Also shoot.
-    protected void waitForSupplies() {
+    // Return the amount of supplies received.
+    protected int waitForSupplies() {
         rc.setIndicatorString(1, "waiting for supplies");
         boolean shouldAttack = rc.getType() != BASHER;
-        while (rc.getSupplyLevel() < 1) {
+        int supplyLevel;
+        while ((supplyLevel = (int)rc.getSupplyLevel()) < 1) {
             if (shouldAttack) shootBaddies();
             rc.yield();
         }
-        System.out.println("Received " + rc.getSupplyLevel() + " supplies");
-        //rc.setIndicatorString(1, "recvd for supplies");
+        System.out.println("Received " + supplyLevel + " supplies");
+        rc.setIndicatorString(1, "recvd " + supplyLevel + "supplies");
+        return supplyLevel;
     }
 
     // Give supplies to nearby robots who have no supplies.
