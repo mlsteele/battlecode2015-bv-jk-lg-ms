@@ -5,7 +5,7 @@ import battlecode.common.MapLocation;
 
 import java.util.*;
 
-public class Basher extends Robot {
+public class Basher extends Unit {
     Basher(RobotController rc) { super(rc); }
 
     public static final int STARTING_SUPPLY = 1000;

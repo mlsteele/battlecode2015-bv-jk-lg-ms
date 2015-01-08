@@ -5,7 +5,7 @@ import battlecode.common.MapLocation;
 
 import java.util.*;
 
-public class Tank extends Robot {
+public class Tank extends Unit {
     Tank(RobotController rc) { super(rc); }
 
     public static final int STARTING_SUPPLY = 1000;

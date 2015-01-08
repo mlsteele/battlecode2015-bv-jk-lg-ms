@@ -4,7 +4,7 @@ import battlecode.common.*;
 import battlecode.common.GameActionException;
 import static battlecode.common.RobotType.*;
 
-public class Beaver extends Robot {
+public class Beaver extends Unit {
     Beaver(RobotController rc) { super(rc); }
 
     // How much supply the Beaver would like to have before he leaves to explore the world

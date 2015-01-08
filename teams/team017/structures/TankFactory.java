@@ -5,7 +5,7 @@ import static battlecode.common.Direction.*;
 import static battlecode.common.RobotType.*;
 import java.util.*;
 
-public class TankFactory extends Robot {
+public class TankFactory extends Structure {
     // Given to the miner factory when built.
     public static final int STARTING_SUPPLY = 10000;
 

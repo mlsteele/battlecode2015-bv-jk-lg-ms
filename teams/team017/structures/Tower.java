@@ -3,7 +3,7 @@ package team017;
 import battlecode.common.*;
 import java.util.*;
 
-public class Tower extends Robot {
+public class Tower extends Structure {
     Tower(RobotController rc) { super(rc); }
 
     @Override

@@ -5,7 +5,7 @@ import static battlecode.common.Direction.*;
 import static battlecode.common.RobotType.*;
 import java.util.*;
 
-public class Headquarters extends Robot {
+public class Headquarters extends Structure {
     private static final int TIME_TO_ATTACK1 = 500;
     private static final int TIME_TO_ATTACK2 = 1000;
     private static final int MAX_BEAVER = 10;

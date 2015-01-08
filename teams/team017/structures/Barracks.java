@@ -5,7 +5,7 @@ import static battlecode.common.Direction.*;
 import static battlecode.common.RobotType.*;
 import java.util.*;
 
-public class Barracks extends Robot {
+public class Barracks extends Structure {
     // Given to the barracks when built.
     public static final int STARTING_SUPPLY = 10000;
 

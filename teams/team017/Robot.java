@@ -12,13 +12,11 @@ public abstract class Robot {
     protected RobotController rc;
     protected RadioFrob rf;
     protected Random rand;
-    protected Direction forward;
 
     Robot(RobotController rc) {
         this.rc = rc;
         rf = new RadioFrob(rc);
         rand = new Random(rc.getID());
-        forward = randomDirection();
     }
 
     abstract public void run();
@@ -70,58 +68,6 @@ public abstract class Robot {
         return null;
     }
 
-    // Tries to move dir.
-    // Returns whether successful.
-    // Assumes CoreReady
-    protected boolean moveForward() {
-        if (rc.canMove(forward)) {
-            try {
-                rc.move(forward);
-                return true;
-            } catch (GameActionException e) {
-                e.printStackTrace();
-                return false;
-            }
-        } else {
-            try {
-                if((rand.nextDouble() * 2) <= 1) {
-                    forward = forward.rotateRight();
-                } else {
-                    forward = forward.rotateLeft();
-                }
-                if (rc.canMove(forward)) {
-                    rc.move(forward);
-                }
-                return true;
-            } catch (GameActionException e) {
-                e.printStackTrace();
-                return false;
-            }
-
-        }
-    }
-
-    protected boolean moveToward(MapLocation loc) {
-        forward = rc.getLocation().directionTo(loc);
-        return moveForward();
-    }
-
-    // Wander the field aimlessly.
-    // Returns whether movement occurred.
-    // Assumes CoreReady
-    // TOOD(miles): If this gets used, please avoid walking into the line of fire.
-    protected boolean wander() {
-        // MapLocation target = rc.getLocation().add(forward);
-        for (int i = 0; i < 4; i++) {
-            if (moveForward()) {
-                return true;
-            } else {
-                forward = forward.rotateRight().rotateRight();
-            }
-        }
-        return false;
-    }
-
     protected boolean shootBaddies() {
         // Keep scanning until either a hit or no enemies in sight.
         // It's not good to shuffle around, causing further loading delay,
@@ -166,37 +112,6 @@ public abstract class Robot {
         System.out.println("Received " + supplyLevel + " supplies");
         rc.setIndicatorString(1, "recvd " + supplyLevel + "supplies");
         return (int)supplyLevel;
-    }
-
-    // Give supplies to nearby robots who have no supplies.
-    // Attempt to transfer `supplyAmount` supplies to nearby robots of type `rtype` who have 0 supply.
-    // If candidates is null, they will be fetched automatically.
-    protected void supplyNearbyEmpty(RobotInfo[] candidates, RobotType rtype, int supplyAmount) {
-        if (rc.getSupplyLevel() < supplyAmount)
-            return;
-
-        if (candidates == null) {
-            candidates = rc.senseNearbyRobots(
-                GameConstants.SUPPLY_TRANSFER_RADIUS_SQUARED,
-                rc.getTeam());
-        }
-
-        for (RobotInfo r : candidates) {
-            // Only send to the correct type of bot.
-            if (r.type != rtype) continue;
-            if (r.supplyLevel > 0) continue;
-
-            try {
-                rc.transferSupplies(supplyAmount, r.location);
-            } catch (GameActionException e) {
-                e.printStackTrace();
-            }
-
-            // Abort when supplier run out of supplies.
-            if (rc.getSupplyLevel() < supplyAmount) {
-                return;
-            }
-        }
     }
 
 }

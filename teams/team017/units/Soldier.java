@@ -5,7 +5,7 @@ import battlecode.common.MapLocation;
 
 import java.util.*;
 
-public class Soldier extends Robot {
+public class Soldier extends Unit {
     Soldier(RobotController rc) { super(rc); }
 
     public static final int STARTING_SUPPLY = 1000;

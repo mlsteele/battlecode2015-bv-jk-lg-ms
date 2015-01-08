@@ -7,7 +7,7 @@ import static battlecode.common.Direction.*;
 
 import java.util.*;
 
-public class Miner extends Robot {
+public class Miner extends Unit {
     Miner(RobotController rc) { super(rc); }
 
     public static final int STARTING_SUPPLY = 2000;
