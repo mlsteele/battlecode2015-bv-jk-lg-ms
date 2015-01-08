@@ -68,7 +68,7 @@ public abstract class Robot {
         return null;
     }
 
-    protected boolean shootBaddies() {
+    protected void shootBaddies() {
         int range = rc.getType().attackRadiusSquared;
         Team enemy = rc.getTeam().opponent();
 
@@ -78,19 +78,16 @@ public abstract class Robot {
         while (true) {
             RobotInfo[] enemies = rc.senseNearbyRobots(range, enemy);
 
-            if (enemies.length == 0) {
-                // All clear.
-                return false;
-            }
+            // Return if all clear.
+            if (enemies.length == 0)
+                return;
 
             if (rc.isWeaponReady()) {
                 try {
                     // Note: canAttackLocation seems useless (see engine source)
                     rc.attackLocation(chooseTarget(enemies).location);
-                    return true;
                 } catch (GameActionException e) {
                     e.printStackTrace();
-                    return false;
                 }
             }
 
