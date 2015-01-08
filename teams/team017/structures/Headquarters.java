@@ -50,7 +50,11 @@ public class Headquarters extends Structure {
                     if (supplyForMinerFactory()) missionIndex++;
                     break;
                 case 1:
+                    if (supplyForBarracks()) missionIndex++;
+                    break;
                 case 2:
+                    if (supplyForTankFactory()) missionIndex++;
+                    break;
                 case 3:
                     if (supplyForBarracks()) missionIndex++;
                     break;
@@ -129,6 +133,11 @@ public class Headquarters extends Structure {
     private boolean supplyForBarracks() {
         if (rc.getTeamOre() < BARRACKS.oreCost) return false;
         return supplyBeaver(Beaver.STARTING_SUPPLY + Barracks.STARTING_SUPPLY + ORDER_BARRACKS);
+    }
+
+    private boolean supplyForTankFactory() {
+        if (rc.getTeamOre() < TANKFACTORY.oreCost) return false;
+        return supplyBeaver(Beaver.STARTING_SUPPLY + TankFactory.STARTING_SUPPLY + ORDER_TANKFACTORY);
     }
 
     private boolean supplyForWander() {
