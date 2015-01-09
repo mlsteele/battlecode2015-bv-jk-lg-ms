@@ -33,68 +33,68 @@ public class RadioFrob {
     private static int REQUEST_RESUPPLY_LOCATION_SLOT = 1;
     private static int REQUEST_RESUPPLY_AMOUNT_SLOT = 2;
 
-    private static int BEAVER_JOB_ASSIGNMENT_SLOT = 1000;
-    private static int BEAVER_JOB_BASE = BEAVER_JOB_ASSIGNMENT_SLOT + 1;
+    private static int BEAVER_TASK_ASSIGNMENT_SLOT = 1000;
+    private static int BEAVER_TASK_BASE = BEAVER_TASK_ASSIGNMENT_SLOT + 1;
 
     private RobotController rc;
     private MapLocation hqLoc; // Used for anchoring relative coordinates.
     private MapLocation[] rallyPoints = new MapLocation[RALLY_POINT_RANGE_SIZE];
 
-    private int freeBeaverJobSlot = 0;
-    public int myJobSlot = 0;
+    private int freeBeaverTaskSlot = 0;
+    public int myTaskSlot = 0;
 
     RadioFrob(RobotController rc) {
         this.rc = rc;
         hqLoc = rc.senseHQLocation();
     }
 
-    // Assigns a job to the beaver slot. Returns job assignment slot
+    // Assigns a task to the beaver slot. Returns task assignment slot
     // returns -1 if slot has not been claimed
-    public int assignBeaverJobSlot() {
-        if (rx(BEAVER_JOB_ASSIGNMENT_SLOT) != 0) {
+    public int assignBeaverTaskSlot() {
+        if (rx(BEAVER_TASK_ASSIGNMENT_SLOT) != 0) {
             return -1;
         } else {
-            freeBeaverJobSlot++;
-            tx(BEAVER_JOB_ASSIGNMENT_SLOT, freeBeaverJobSlot);
-            return freeBeaverJobSlot;
+            freeBeaverTaskSlot++;
+            tx(BEAVER_TASK_ASSIGNMENT_SLOT, freeBeaverTaskSlot);
+            return freeBeaverTaskSlot;
         }
     }
 
-    // gets the jobSlot of the beaver who was assigned one (used by beaver)
-    // clears it to let the hq know it got its jobSlot
-    public int getBeaverJobSlot() {
-        int jobSlot = rx(BEAVER_JOB_ASSIGNMENT_SLOT);
-        tx(BEAVER_JOB_ASSIGNMENT_SLOT, 0);
-        return jobSlot;
+    // gets the taskSlot of the beaver who was assigned one (used by beaver)
+    // clears it to let the hq know it got its taskSlot
+    public int getBeaverTaskSlot() {
+        int taskSlot = rx(BEAVER_TASK_ASSIGNMENT_SLOT);
+        tx(BEAVER_TASK_ASSIGNMENT_SLOT, 0);
+        return taskSlot;
     }
 
-    // returns the job at a given jobSlot
-    public Job getJob(int jobSlot) {
-        return decodeJob(rx(BEAVER_JOB_BASE + jobSlot));
+    // returns the task at a given taskSlot
+    public Task getTask(int taskSlot) {
+        return decodeTask(rx(BEAVER_TASK_BASE + taskSlot));
     }
 
-    // sets a job for the given beaver jobSlot
-    public boolean setJob(Job job, int jobSlot) {
-        tx(BEAVER_JOB_BASE + jobSlot, encodeJob(job));
+    // sets a task for the given beaver taskSlot
+    public boolean setTask(Task task, int taskSlot) {
+        tx(BEAVER_TASK_BASE + taskSlot, encodeTask(task));
         return true;
     }
 
-    // used by beaver to request a job
-    public boolean requestJob() {
-        tx(BEAVER_JOB_BASE, myJobSlot);
-        tx(myJobSlot, -1);
+    // used by beaver to request a task
+    public boolean requestTask() {
+        tx(BEAVER_TASK_BASE, myTaskSlot);
+        tx(myTaskSlot, -1);
         return true;
     }
 
-    // used by hq, returns the jobslot of the beaver assigned the job
-    public int assignJobToNextFree(Job job) {
-        int jobSlot = rx(BEAVER_JOB_BASE);
-        System.out.println("This is what was the jobslot" + jobSlot);
-        if (jobSlot > 0 && (rx(jobSlot) == -1)) {
-            System.out.println("Giving jobSlot " + jobSlot + " job " + job);
-            tx(BEAVER_JOB_BASE, 0);
-            setJob(job, jobSlot);
-            return jobSlot;
+    // used by hq, returns the taskslot of the beaver assigned the task
+    public int assignTaskToNextFree(Task task) {
+        int taskSlot = rx(BEAVER_TASK_BASE);
+        System.out.println("This is what was the taskslot" + taskSlot);
+        if (taskSlot > 0 && (rx(taskSlot) == -1)) {
+            System.out.println("Giving taskSlot " + taskSlot + " task " + task);
+            tx(BEAVER_TASK_BASE, 0);
+            setTask(task, taskSlot);
+            return taskSlot;
         } else return -1;
     }
 
@@ -163,16 +163,16 @@ public class RadioFrob {
         return rel.add(hqLoc.x, hqLoc.y).add(-120, -120);
     }
 
-    private int encodeJob(Job job) {
-        if (job.loc == null) return job.jobNum;
-        return (encodeLocation(job.loc) << 16) | job.jobNum;
+    private int encodeTask(Task task) {
+        if (task.loc == null) return task.taskNum;
+        return (encodeLocation(task.loc) << 16) | task.taskNum;
     }
 
-    private Job decodeJob(int job) {
-        int encodedLoc = job >> 16;
-        if (encodedLoc == 0) return new Job(job);
-        int jobNum = job & 0xFFFF;
-        return new Job(jobNum, decodeLocation(encodedLoc));
+    private Task decodeTask(int task) {
+        int encodedLoc = task >> 16;
+        if (encodedLoc == 0) return new Task(task);
+        int taskNum = task & 0xFFFF;
+        return new Task(taskNum, decodeLocation(encodedLoc));
     }
 
     // Receive from radio.

@@ -21,8 +21,8 @@ public class Headquarters extends Structure {
     private boolean beaver_mining_spawned = false;
     private boolean beaver_barracks_spawned = false;
 
-    private Hashtable<Integer, Integer> assignedBeaverJobSlots = new Hashtable<Integer, Integer>();
-    private Queue<Job> taskQueue = new LinkedList<Job>();
+    private Hashtable<Integer, Integer> assignedBeaverTaskSlots = new Hashtable<Integer, Integer>();
+    private Queue<Task> taskQueue = new LinkedList<Task>();
 
     Headquarters(RobotController rc) { super(rc); }
 
@@ -34,8 +34,8 @@ public class Headquarters extends Structure {
 
         int missionIndex = 0;
 
-        taskQueue.add(new Job(Strategy.TASK_BARRACKS));
-        taskQueue.add(new Job(Strategy.TASK_BARRACKS));
+        taskQueue.add(new Task(Strategy.TASK_BARRACKS));
+        taskQueue.add(new Task(Strategy.TASK_BARRACKS));
 
         while (true) {
             shootBaddies();
@@ -114,10 +114,10 @@ public class Headquarters extends Structure {
 
     private void taskUpkeep() {
         // check if there are any tasks
-        Job nextTask = taskQueue.peek();
+        Task nextTask = taskQueue.peek();
         if (nextTask == null) return;
 
-        if (rc.getSupplyLevel() < Strategy.taskSupply(nextTask.jobNum)) {
+        if (rc.getSupplyLevel() < Strategy.taskSupply(nextTask.taskNum)) {
             return;
         }
 
@@ -125,17 +125,17 @@ public class Headquarters extends Structure {
 
 
         // check if anyone wants tasks
-        taskSlot = rf.assignJobToNextFree(nextTask);
+        taskSlot = rf.assignTaskToNextFree(nextTask);
         if (taskSlot < 0) {
-            // no one can get tasks so add the job back to queue
+            // no one can get tasks so add the task back to queue
             return;
         }
 
 
         // we have given the beaver the task, lets transfer the supplies
-        int robotID = assignedBeaverJobSlots.get((Integer) taskSlot);
-        while (!supplyToID(null, robotID, Strategy.taskSupply(nextTask.jobNum))) continue;
-        // we have given the supplies, we can remove the job now
+        int robotID = assignedBeaverTaskSlots.get((Integer) taskSlot);
+        while (!supplyToID(null, robotID, Strategy.taskSupply(nextTask.taskNum))) continue;
+        // we have given the supplies, we can remove the task now
         taskQueue.remove();
     }
 
@@ -146,12 +146,12 @@ public class Headquarters extends Structure {
         Direction dir = spawn(BEAVER); // spawn the beaver
         if (dir == null) return false;
 
-        int beaverJobSlot = rf.assignBeaverJobSlot(); // Assign a new beaver job slot
-        if (beaverJobSlot < 0) {
-            return false; // someone hasnt claimed their job, shame on them
+        int beaverTaskSlot = rf.assignBeaverTaskSlot(); // Assign a new beaver task slot
+        if (beaverTaskSlot < 0) {
+            return false; // someone hasnt claimed their task, shame on them
         }
-        rc.setIndicatorString(2, "Creating beaver : slot = " + beaverJobSlot);
-        rf.setJob(new Job(task, loc), beaverJobSlot); // give the beaver a job
+        rc.setIndicatorString(2, "Creating beaver : slot = " + beaverTaskSlot);
+        rf.setTask(new Task(task, loc), beaverTaskSlot); // give the beaver a task
 
         rc.yield();
 
@@ -165,7 +165,7 @@ public class Headquarters extends Structure {
 
         int robotID = rob.ID; // get its id
         RobotInfo[] candidates = {rob};
-        assignedBeaverJobSlots.put(beaverJobSlot, robotID);
+        assignedBeaverTaskSlots.put(beaverTaskSlot, robotID);
         return supplyToID(candidates, robotID, Strategy.taskSupply(task));
     }
 

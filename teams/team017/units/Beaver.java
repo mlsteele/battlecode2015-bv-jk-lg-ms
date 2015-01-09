@@ -18,25 +18,25 @@ public class Beaver extends Unit {
     // Don't build farther away than this
     private static final int MAX_DISTANCE_FROM_HQ = 100;
 
-    private Job currentJob = new Job(Strategy.TASK_NONE);
+    private Task currentTask = new Task(Strategy.TASK_NONE);
 
     @Override
     public void run() {
-        int myJobSlot = rf.getBeaverJobSlot();
-        rf.myJobSlot = myJobSlot;
+        int myTaskSlot = rf.getBeaverTaskSlot();
+        rf.myTaskSlot = myTaskSlot;
 
-        currentJob = rf.getJob(myJobSlot);
-        rc.setIndicatorString(0, "slot:" + myJobSlot + " job:" + currentJob.jobNum);
+        currentTask = rf.getTask(myTaskSlot);
+        rc.setIndicatorString(0, "slot:" + myTaskSlot + " task:" + currentTask.taskNum);
 
         // This is NOT the inner loop.
         while (true) {
 
             int initialSupplyLevel = waitForSupplies();
 
-            rc.setIndicatorString(0, "slot:" + rf.myJobSlot + " job:" + currentJob.jobNum);
+            rc.setIndicatorString(0, "slot:" + rf.myTaskSlot + " task:" + currentTask.taskNum);
 
             // Order code is which mission to pursue.
-            int orderCode = currentJob.jobNum;
+            int orderCode = currentTask.taskNum;
 
             rc.setIndicatorString(1, "BEAVER mission " + orderCode);
             switch (orderCode) {
@@ -68,7 +68,7 @@ public class Beaver extends Unit {
             // Finished what it was doing
             rc.setIndicatorString(1, "Finished mission " + orderCode);
             System.out.println("BEAVER finished mission " + orderCode);
-            currentJob = new Job(Strategy.TASK_BARRACKS);
+            currentTask = new Task(Strategy.TASK_BARRACKS);
             goToHQ();
             dumpSuppliesToHQ();
             getTaskFromHQ();
@@ -86,7 +86,7 @@ public class Beaver extends Unit {
                     moveToward(hqLoc);
                 } else {
                     if (isClearToBuild()) {
-                        if (buildThenSupplyForCode(currentJob.jobNum)) {
+                        if (buildThenSupplyForCode(currentTask.taskNum)) {
                             return;
                         }
                     } else {
@@ -110,7 +110,7 @@ public class Beaver extends Unit {
 
     private void resupplyMission() {
         int amt;
-        switch (currentJob.jobNum) {
+        switch (currentTask.taskNum) {
             case (Strategy.TASK_RESUPPLY_TANKFACTORY):
                 amt = Strategy.TANKFACTORY_RESUPPLY_AMT;
                 break;
@@ -120,13 +120,13 @@ public class Beaver extends Unit {
         }
         while(true) {
             if (rc.isCoreReady()) {
-                if (rc.getLocation().distanceSquaredTo(currentJob.loc) > GameConstants.SUPPLY_TRANSFER_RADIUS_SQUARED) {
-                    moveToward(currentJob.loc);
+                if (rc.getLocation().distanceSquaredTo(currentTask.loc) > GameConstants.SUPPLY_TRANSFER_RADIUS_SQUARED) {
+                    moveToward(currentTask.loc);
                     rc.yield();
                     continue;
                 } else {
                     try {
-                        rc.transferSupplies(amt, currentJob.loc);
+                        rc.transferSupplies(amt, currentTask.loc);
                         rc.yield();
                         return;
                     } catch (GameActionException e) {
@@ -249,9 +249,9 @@ public class Beaver extends Unit {
     private void getTaskFromHQ() {
         goToHQ();
 
-        // im near the hq, lets ask for a job and clear my job slot
-        rf.requestJob();
-        currentJob = new Job(Strategy.TASK_REQUESTING_TASK);
+        // im near the hq, lets ask for a task and clear my task slot
+        rf.requestTask();
+        currentTask = new Task(Strategy.TASK_REQUESTING_TASK);
 
         // wait for supply from HQ
         while(rc.getSupplyLevel() < Strategy.initialSupply(RobotType.BEAVER)) rc.yield();
@@ -259,7 +259,7 @@ public class Beaver extends Unit {
         rc.yield();
         rc.yield();
         rc.yield();
-        currentJob = rf.getJob(rf.myJobSlot);
+        currentTask = rf.getTask(rf.myTaskSlot);
     }
 
     private void dumpSuppliesToHQ() {
