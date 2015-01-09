@@ -39,7 +39,6 @@ public class Beaver extends Unit {
             int orderCode = currentJob.jobNum;
 
             rc.setIndicatorString(1, "BEAVER mission " + orderCode);
-            System.out.println("BEAVER mission " + orderCode);
             switch (orderCode) {
                 case (Strategy.TASK_BARRACKS):
                 case (Strategy.TASK_MINERFACTORY):
@@ -248,7 +247,6 @@ public class Beaver extends Unit {
     // gets a tack from the hq
     // blocking
     private void getTaskFromHQ() {
-        System.out.println("Hey im going to get a new job");
         goToHQ();
 
         // im near the hq, lets ask for a job and clear my job slot
@@ -261,9 +259,7 @@ public class Beaver extends Unit {
         rc.yield();
         rc.yield();
         rc.yield();
-        System.out.println("This is my jobslot " + rf.myJobSlot);
         currentJob = rf.getJob(rf.myJobSlot);
-        System.out.println("I was looking for a new job and got " + currentJob.jobNum);
     }
 
     private void dumpSuppliesToHQ() {

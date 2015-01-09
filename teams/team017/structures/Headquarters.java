@@ -118,7 +118,6 @@ public class Headquarters extends Structure {
         if (nextTask == null) return;
 
         if (rc.getSupplyLevel() < Strategy.taskSupply(nextTask.jobNum)) {
-            System.out.println("Sorry dont have enough for mission");
             return;
         }
 
@@ -134,12 +133,7 @@ public class Headquarters extends Structure {
 
 
         // we have given the beaver the task, lets transfer the supplies
-        if (assignedBeaverJobSlots == null) {
-            System.out.println("The hashtable is null");
-        }
         int robotID = assignedBeaverJobSlots.get((Integer) taskSlot);
-        System.out.println("This is the task we are going to give to task slot "+taskSlot+ " with id " + robotID + " : " + nextTask);
-        System.out.println("its going to get this much supply " + Strategy.taskSupply(nextTask.jobNum));
         while (!supplyToID(null, robotID, Strategy.taskSupply(nextTask.jobNum))) continue;
         // we have given the supplies, we can remove the job now
         taskQueue.remove();
