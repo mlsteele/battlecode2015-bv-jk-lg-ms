@@ -10,7 +10,7 @@ public class Beaver extends Unit {
     private static final int LOW_SUPPLY = 50;
 
     // Require this distance free space around buildings
-    private static final int BUILDING_PADDING = 25;
+    private static final int BUILDING_PADDING = 5;
 
     // Don't build farther away than this
     private static final int MAX_DISTANCE_FROM_HQ = 100;
@@ -75,32 +75,34 @@ public class Beaver extends Unit {
     }
 
     private void buildStructureMission(int orderCode) {
-        whileLoop: while (true) {
+        while (true) {
             int distanceFromHQ = rc.getLocation().distanceSquaredTo(hqLoc);
+
             if (rc.isCoreReady()) {
                 if (distanceFromHQ > MAX_DISTANCE_FROM_HQ) {
                     moveToward(hqLoc);
                 } else {
-                    RobotInfo[] nearby = rc.senseNearbyRobots(BUILDING_PADDING);
-                    for (RobotInfo r : nearby) {
-                        if (r.type.isBuilding || r.team == rc.getTeam().opponent()) {
-                            // can't build here
-                            wander();
-                            rc.yield();
-                            continue whileLoop;
+                    if (isClearToBuild()) {
+                        if (buildThenSupplyForCode(orderCode)) {
+                            return;
                         }
-                    }
-                    // ok, we can build
-                    if (buildThenSupplyForCode(orderCode)) return;
-                    else {
+                    } else {
                         wander();
-                        rc.yield();
-                        continue whileLoop;
                     }
                 }
             }
             rc.yield();
         }
+    }
+
+    private boolean isClearToBuild() {
+        RobotInfo[] nearby = rc.senseNearbyRobots(BUILDING_PADDING);
+        for (RobotInfo r : nearby) {
+            if (r.type.isBuilding || r.team == rc.getTeam().opponent()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private boolean buildThenSupplyForCode(int orderCode) {
@@ -142,14 +144,16 @@ public class Beaver extends Unit {
         if (rc.canBuild(dir, rob)) {
             try {
                 rc.build(dir, rob);
-                MapLocation rob_loc = rc.getLocation().add(dir);
-                // Wait one turn for the building to spawn.
-                rc.yield();
-                rc.transferSupplies(supply, rob_loc);
+                MapLocation buildLoc = rc.getLocation().add(dir);
+                rc.yield(); // Wait one turn for the building to spawn.
+                rc.transferSupplies(supply, buildLoc);
+                waitForBuildCompletion(buildLoc);
                 return true;
             } catch (GameActionException e) {
                 e.printStackTrace();
             }
+        } else {
+            rc.setIndicatorString(2, "canBuild is false there");
         }
         return false;
     }
@@ -178,6 +182,32 @@ public class Beaver extends Unit {
         }
         return buildThenSupply(rob, supply);
     }
+
+    // Wait (blocking) for a structure to finish being built by this robot.
+    // If the building dies, that counts too.
+    private void waitForBuildCompletion(MapLocation loc) {
+        RobotInfo ri = null;
+        rc.setIndicatorString(2, "Waiting for building");
+        rc.yield();
+        rc.yield();
+        do {
+            try {
+                ri = rc.senseRobotAtLocation(loc);
+            } catch (GameActionException e) {
+                e.printStackTrace();
+            }
+            // Poll the building's builder field.
+            if (ri != null && ri.builder == null) {
+                rc.setIndicatorString(2, "Building finished.");
+                rc.setIndicatorString(1, ri == null ? "null ri" : "ri");
+                rc.setIndicatorString(0, ri.builder == null ? "null ri.builder" : "ri.builder");
+                rc.yield(); // delete me
+                return;
+            }
+            rc.yield();
+        } while (true);
+    }
+
 
     private void dumpSuppliesToHQ() {
         rc.setIndicatorString(1, "Dumping supplies...");
