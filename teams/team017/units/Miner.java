@@ -22,7 +22,7 @@ public class Miner extends Unit {
 
             if (rc.isCoreReady()) {
                 boolean miner_low_supply = rc.getSupplyLevel() <= Strategy.MINER_LOW_SUPPLY;
-                boolean team_low_ore     = rc.getSupplyLevel() <= Strategy.TEAM_LOW_ORE;
+                boolean team_low_ore     = rc.getTeamOre()     <= Strategy.TEAM_LOW_ORE;
                 if (miner_low_supply && team_low_ore) {
                     goToHQ();
                     rc.setIndicatorString(1, "waiting for supply");
