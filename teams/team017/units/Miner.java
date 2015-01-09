@@ -54,12 +54,18 @@ public class Miner extends Unit {
             rc.setIndicatorString(1, "mining here");
             mineHere();
         } else {
-            forward = optimalOreDirection();
-            rc.setIndicatorString(1, "mining moving");
-            try {
-                rc.move(forward);
-            } catch (GameActionException e) {
-                e.printStackTrace();
+            Direction oreTarget = optimalOreDirection();
+            if (oreTarget != null) {
+                try {
+                    rc.setIndicatorString(1, "mining moving with a porpoise");
+                    forward = oreTarget;
+                    rc.move(forward);
+                } catch (GameActionException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                rc.setIndicatorString(1, "mining wandering");
+                wander();
             }
         }
     }
@@ -77,13 +83,14 @@ public class Miner extends Unit {
     }
 
     // Which direction's adjacent location has the most ore.
-    // Returns a location that has been checked for canMove.
+    // Returns NULL or a location that has been checked for canMove.
+    // A return of NULL means that there is no nearby ore.
     public Direction optimalOreDirection() {
         Direction[] possibleDirs = {NORTH, NORTH_EAST, EAST, SOUTH_EAST,
                                     SOUTH, SOUTH_WEST, WEST, NORTH_WEST};
 
         MapLocation curLocation = rc.getLocation();
-        double bestOre = 0;
+        double bestOre = 0.1;
         Direction bestDirection = null;
 
         Direction d;
@@ -91,7 +98,7 @@ public class Miner extends Unit {
         for (int i = 0; i < 8; i++) {
             d = possibleDirs[(i + ri) % 8];
             double ore = rc.senseOre(curLocation.add(d));
-            if (ore >= bestOre && rc.canMove(d)) {
+            if (ore > bestOre && rc.canMove(d)) {
                 bestOre = ore;
                 bestDirection = d;
             }
