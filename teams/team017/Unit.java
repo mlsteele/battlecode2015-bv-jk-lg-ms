@@ -16,34 +16,32 @@ public abstract class Unit extends Robot {
         hqLoc = rc.senseHQLocation();
     }
 
-    // Tries to move dir.
+    // Tries to move forward.
     // Returns whether successful.
     // Assumes CoreReady
     protected boolean moveForward() {
-        if (rc.canMove(forward)) {
-            try {
-                rc.move(forward);
-                return true;
-            } catch (GameActionException e) {
-                e.printStackTrace();
-                return false;
-            }
-        } else {
-            try {
-                if ((rand.nextInt(2)) == 0) {
-                    forward = forward.rotateRight();
-                } else {
-                    forward = forward.rotateLeft();
-                }
-                if (rc.canMove(forward)) {
-                    rc.move(forward);
-                }
-                return true;
-            } catch (GameActionException e) {
-                e.printStackTrace();
-                return false;
-            }
-        }
+        // try forwards
+        if (moveStrictlyForward()) return true;
+
+        // try leftish
+        forward = forward.rotateLeft();
+        if (moveStrictlyForward()) return true;
+
+        // try rightish
+        forward = forward.rotateRight();
+        forward = forward.rotateRight();
+        if (moveStrictlyForward()) return true;
+
+        // try right
+        forward = forward.rotateRight();
+        if (moveStrictlyForward()) return true;
+
+        // try right-back
+        forward = forward.rotateRight();
+        if (moveStrictlyForward()) return true;
+
+        // give up
+        return false;
     }
 
     protected boolean moveToward(MapLocation loc) {
@@ -89,4 +87,15 @@ public abstract class Unit extends Robot {
         return false;
     }
 
+    private boolean moveStrictlyForward() {
+        if (rc.canMove(forward)) {
+            try {
+                rc.move(forward);
+                return true;
+            } catch (GameActionException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
 }
