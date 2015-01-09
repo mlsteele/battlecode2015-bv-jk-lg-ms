@@ -2,13 +2,11 @@ package team017;
 
 import battlecode.common.*;
 import battlecode.common.GameActionException;
-import battlecode.common.MapLocation;
-
-import javax.sound.midi.SysexMessage;
-
 import static battlecode.common.Direction.*;
 import static battlecode.common.RobotType.*;
+import static team017.Strategy.*;
 import java.util.*;
+
 
 // Radio module to abstract away our radio protocol.
 // Caches chunks of data.
@@ -49,7 +47,7 @@ public class RadioFrob {
     private MapLocation[] rallyPoints = new MapLocation[RALLY_POINT_RANGE_SIZE];
 
     private int freeBeaverTaskSlot = 0;
-    public int myTaskSlot = 0;
+    public int myTaskSlot = 0; // set by beaver using getBeaverTaskSlot
 
     RadioFrob(RobotController rc) {
         this.rc = rc;
@@ -88,9 +86,15 @@ public class RadioFrob {
         return taskSlot;
     }
 
-    // returns the task at a given taskSlot
+    // Returns the task at a given taskSlot
+    // Returns null if it is in the requesting task state.
     public Task getTask(int taskSlot) {
-        return decodeTask(rx(BEAVER_TASK_BASE + taskSlot));
+        int taskSerial = rx(BEAVER_TASK_BASE + taskSlot);
+        if (taskSerial == TASK_REQUESTING_TASK) {
+            return null;
+        } else {
+            return decodeTask(taskSerial);
+        }
     }
 
     // sets a task for the given beaver taskSlot
@@ -102,7 +106,7 @@ public class RadioFrob {
     // used by beaver to request a task
     public boolean requestTask() {
         tx(BEAVER_TASK_BASE, myTaskSlot);
-        tx(myTaskSlot, Strategy.TASK_REQUESTING_TASK);
+        tx(BEAVER_TASK_BASE + myTaskSlot, TASK_REQUESTING_TASK);
         return true;
     }
 
@@ -110,8 +114,7 @@ public class RadioFrob {
     // returns -1 if it cant verify the beaver wants a job
     public int assignTaskToNextFree(Task task) {
         int taskSlot = rx(BEAVER_TASK_BASE);
-        if (taskSlot > 0 && (rx(taskSlot) == Strategy.TASK_REQUESTING_TASK)) {
-            System.out.println("Giving taskSlot " + taskSlot + " task " + task);
+        if (taskSlot > 0 && (rx(BEAVER_TASK_BASE + taskSlot) == TASK_REQUESTING_TASK)) {
             tx(BEAVER_TASK_BASE, 0);
             setTask(task, taskSlot);
             return taskSlot;

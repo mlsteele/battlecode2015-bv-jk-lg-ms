@@ -25,11 +25,12 @@ public class TankFactory extends Structure {
                 incomingResupply = false;
             }
 
+            // Tanks take so long to build that we should build
+            // them even if we don't have the supply to fuel them.
             if (rc.isCoreReady())
                 spawn(TANK);
 
-            if (supply >= initialSupply(TANK))
-                supplyNearbyEmpty(null, TANK, initialSupply(TANK));
+            supplyNearbyEmpty(null, TANK, initialSupply(TANK));
 
             rc.yield();
         }

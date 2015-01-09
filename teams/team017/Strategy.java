@@ -10,12 +10,17 @@ public enum Strategy {;
     // Task codes that HQ gives to beavers.
     public static final int TASK_REQUESTING_TASK = -1;
     public static final int TASK_NONE = 0;
-    public static final int TASK_BARRACKS = 1;
-    public static final int TASK_MINERFACTORY = 2;
-    public static final int TASK_TANKFACTORY = 3;
-    public static final int TASK_HELIPAD = 4;
-    public static final int TASK_SUPPLYDEPOT = 5;
-    public static final int TASK_RESUPPLY_TANKFACTORY = 6;
+    public static final int TASK_MINE = 1;
+    public static final int TASK_BARRACKS = 2;
+    public static final int TASK_MINERFACTORY = 3;
+    public static final int TASK_TANKFACTORY = 4;
+    public static final int TASK_HELIPAD = 5;
+    public static final int TASK_SUPPLYDEPOT = 6;
+    public static final int TASK_RESUPPLY_TANKFACTORY = 7;
+
+    // How many beavers to maintain for tasks.
+    // TODO(miles): add task completion checking to make >1 more palatable.
+    public static final int BEAVER_POOL_SIZE = 1;
 
     // Miners don't request supply if team has excess ore.
     public static final int TEAM_LOW_ORE = 1500;
@@ -34,6 +39,7 @@ public enum Strategy {;
     public static int taskSupply(int task) {
         switch(task) {
             case TASK_NONE:              return initialSupply(BEAVER);
+            case TASK_MINE:              return initialSupply(BEAVER);
             case TASK_BARRACKS:          return initialSupply(BEAVER) + initialSupply(BARRACKS);
             case TASK_MINERFACTORY:      return initialSupply(BEAVER) + initialSupply(MINERFACTORY);
             case TASK_TANKFACTORY:       return initialSupply(BEAVER) + initialSupply(TANKFACTORY);
@@ -46,6 +52,7 @@ public enum Strategy {;
 
     public static int initialSupply(RobotType rtype) {
         switch (rtype) {
+            // TODO(miles): decrease this by a metrick fuckton.
             case BEAVER:              return 1000;
 
             case MINERFACTORY:        return 0;//10 * initialSupply(MINER);

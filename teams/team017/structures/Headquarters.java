@@ -16,7 +16,6 @@ public class Headquarters extends Structure {
     private static final int UPDATE_UNIT_COUNT_TIME = 10;
     int[] unitsOnField = new int[NUM_ROBOT_TYPES];
 
-    private int spawned_beavers = 0;
     private boolean beaver_mining_spawned = false;
     private boolean beaver_barracks_spawned = false;
 
@@ -30,8 +29,24 @@ public class Headquarters extends Structure {
         // Tell all soldiers to rally at our first tower.
         rf.writeRally(RALLY_ARMY, rc.senseTowerLocations()[0]);
 
-        int missionIndex = 0;
-        taskQueue.add(new Task(Strategy.TASK_BARRACKS));
+        taskQueue.add(new Task(TASK_MINERFACTORY));
+        taskQueue.add(new Task(TASK_SUPPLYDEPOT));
+        taskQueue.add(new Task(TASK_SUPPLYDEPOT));
+        taskQueue.add(new Task(TASK_BARRACKS));
+        taskQueue.add(new Task(TASK_TANKFACTORY));
+        taskQueue.add(new Task(TASK_TANKFACTORY));
+        taskQueue.add(new Task(TASK_TANKFACTORY));
+
+        // Spawn the initial beavers
+        // TODO(miles): Interlace this into the main loop so the HQ can multitask.
+        for (int i = 0; i < BEAVER_POOL_SIZE; i++) {
+            while (true) {
+                if (rc.isCoreReady()) {
+                    if (spawnBeaverWithTask(TASK_NONE, null))
+                        break;
+                }
+            }
+        }
 
         // set the max number of mining units
         rf.requestXUnits(RobotType.MINER, 40);
@@ -43,33 +58,14 @@ public class Headquarters extends Structure {
 
             taskUpkeep();
 
-            // Spawn a beaver.
-            if(rc.isCoreReady()) {
-                switch (missionIndex) {
-                    case 0:
-                        if (spawnBeaverWithStrategy(TASK_MINERFACTORY, null)) missionIndex++;
-                        break;
-                    case 1:
-                    case 2:
-                        if (spawnBeaverWithStrategy(TASK_SUPPLYDEPOT, null)) missionIndex++;
-                        break;
-                    case 3:
-                    case 4:
-                        if (spawnBeaverWithStrategy(TASK_MINERFACTORY, null)) missionIndex++;
-                        break;
-                    case 5:
-                    case 6:
-                    case 7:
-                        if (spawnBeaverWithStrategy(TASK_TANKFACTORY, null)) missionIndex++;
-                        break;
-                    default:
-                        if (rf.resupplyFromTankFactoryRequested()) {
-                            if (spawnBeaverWithStrategy(TASK_RESUPPLY_TANKFACTORY, rf.getResupplyLocation())) {
-                                rf.clearResupplyRequest();
-                            }
-                        }
-
-                        break;
+            // TODO(miles): did I break this?
+            // TODO(miles): use existing beavers for resupply tasks.
+            // TODO(miles): what if there is no one in getResupplyLocation()?
+            if(rc.isCoreReady() && taskQueue.isEmpty()) {
+                if (rf.resupplyFromTankFactoryRequested()) {
+                    if (spawnBeaverWithTask(TASK_RESUPPLY_TANKFACTORY, rf.getResupplyLocation())) {
+                        rf.clearResupplyRequest();
+                    }
                 }
             }
 
@@ -111,8 +107,8 @@ public class Headquarters extends Structure {
 
     private void taskUpkeep() {
         // check if there are any tasks
+        if (taskQueue.isEmpty()) return;
         Task nextTask = taskQueue.peek();
-        if (nextTask == null) return;
 
         if (rc.getSupplyLevel() < Strategy.taskSupply(nextTask.taskNum)) {
             return;
@@ -120,24 +116,25 @@ public class Headquarters extends Structure {
 
         int taskSlot;
 
-
         // check if anyone wants tasks
         taskSlot = rf.assignTaskToNextFree(nextTask);
         if (taskSlot < 0) {
-            // no one can get tasks so add the task back to queue
+            // no one can get tasks so leave it in the queue.
             return;
         }
 
-
         // we have given the beaver the task, lets transfer the supplies
         int robotID = assignedBeaverTaskSlots.get((Integer) taskSlot);
+        // TODO(miles): block the hq? :( What if the beaver dies?
+        // Block until beaver gets supply
         while (!supplyToID(null, robotID, Strategy.taskSupply(nextTask.taskNum))) continue;
         // we have given the supplies, we can remove the task now
         taskQueue.remove();
+        System.out.println("dispatched task ("+taskQueue.size()+" tasks remaining)");
     }
 
     // Assumes supply level desired
-    private boolean spawnBeaverWithStrategy(int task, MapLocation loc) {
+    private boolean spawnBeaverWithTask(int task, MapLocation loc) {
         if(rc.getSupplyLevel() < Strategy.taskSupply(task)) return false;
 
         Direction dir = spawn(BEAVER); // spawn the beaver
@@ -149,6 +146,7 @@ public class Headquarters extends Structure {
         }
         rf.setTask(new Task(task, loc), beaverTaskSlot); // give the beaver a task
 
+        // Yield so that the spawned beaver exists.
         rc.yield();
 
         RobotInfo rob;
@@ -159,39 +157,14 @@ public class Headquarters extends Structure {
             return false;
         }
 
-        int robotID = rob.ID; // get its id
         RobotInfo[] candidates = {rob};
-        assignedBeaverTaskSlots.put(beaverTaskSlot, robotID);
-        return supplyToID(candidates, robotID, Strategy.taskSupply(task));
+        assignedBeaverTaskSlots.put(beaverTaskSlot, rob.ID);
+        return supplyToID(candidates, rob.ID, Strategy.taskSupply(task));
     }
 
 
     private MapLocation avgLocations(MapLocation a, MapLocation b) {
         return new MapLocation((a.x + b.x) / 2, (a.y + b.y) / 2);
-    }
-
-    private boolean supplyForMinerFactory() {
-        if (rc.getTeamOre() < MINERFACTORY.oreCost) return false;
-        return supplyBeaver(Strategy.initialSupply(BEAVER) + Strategy.initialSupply(MINERFACTORY) + Strategy.TASK_MINERFACTORY);
-    }
-
-    private boolean supplyForBarracks() {
-        if (rc.getTeamOre() < BARRACKS.oreCost) return false;
-        return supplyBeaver(Strategy.initialSupply(BEAVER) + Strategy.initialSupply(BARRACKS) + Strategy.TASK_BARRACKS);
-    }
-
-    private boolean supplyForTankFactory() {
-        if (rc.getTeamOre() < TANKFACTORY.oreCost) return false;
-        return supplyBeaver(Strategy.initialSupply(BEAVER) + Strategy.initialSupply(TANKFACTORY) + Strategy.TASK_TANKFACTORY);
-    }
-
-    private boolean supplyForHelipad() {
-        if (rc.getTeamOre() < HELIPAD.oreCost) return false;
-        return supplyBeaver(Strategy.initialSupply(BEAVER) + Strategy.initialSupply(HELIPAD) + Strategy.TASK_HELIPAD);
-    }
-
-    private boolean supplyForWander() {
-        return supplyBeaver(Strategy.initialSupply(BEAVER) + Strategy.TASK_NONE);
     }
 
     private boolean supplyBeaver(int supplyAmount) {

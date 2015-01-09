@@ -18,39 +18,38 @@ public class Beaver extends Unit {
     // Don't build farther away than this
     private static final int MAX_DISTANCE_FROM_HQ = 100;
 
-    private Task currentTask = new Task(Strategy.TASK_NONE);
+    private Task currentTask = new Task(TASK_NONE);
 
     @Override
     public void run() {
-        int myTaskSlot = rf.getBeaverTaskSlot();
-        rf.myTaskSlot = myTaskSlot;
+        rf.myTaskSlot = rf.getBeaverTaskSlot();
 
-        currentTask = rf.getTask(myTaskSlot);
-        rc.setIndicatorString(0, "slot:" + myTaskSlot + " task:" + currentTask.taskNum);
+        currentTask = rf.getTask(rf.myTaskSlot);
+        rc.setIndicatorString(0, "slot:" + rf.myTaskSlot + " task:" + currentTask.taskNum);
+        System.out.println("BEAVER initial task " + currentTask.taskNum);
+
+        waitForSupplies();
 
         // This is NOT the inner loop.
         while (true) {
 
-            int initialSupplyLevel = waitForSupplies();
-
             rc.setIndicatorString(0, "slot:" + rf.myTaskSlot + " task:" + currentTask.taskNum);
 
-            // Order code is which mission to pursue.
+            // Order code is which task to pursue.
             int orderCode = currentTask.taskNum;
 
             switch (orderCode) {
-                case (Strategy.TASK_BARRACKS):
-                case (Strategy.TASK_MINERFACTORY):
-                case (Strategy.TASK_TANKFACTORY):
-                case (Strategy.TASK_HELIPAD):
-                case (Strategy.TASK_SUPPLYDEPOT):
+                case (TASK_BARRACKS):
+                case (TASK_MINERFACTORY):
+                case (TASK_TANKFACTORY):
+                case (TASK_HELIPAD):
+                case (TASK_SUPPLYDEPOT):
                     buildStructureMission();
                     break;
-                case (Strategy.TASK_RESUPPLY_TANKFACTORY):
+                case (TASK_RESUPPLY_TANKFACTORY):
                     resupplyMission();
                     break;
-                case (Strategy.TASK_NONE):
-                    System.out.println("BEAVER mission none");
+                case (TASK_MINE):
                     while (true) {
                         if (rc.getSupplyLevel() < LOW_SUPPLY) break;
 
@@ -60,6 +59,8 @@ public class Beaver extends Unit {
                         rc.yield();
                     }
                     break;
+                case (TASK_NONE):
+                    break;
                 default:
                     System.err.println("ERROR: BEAVER sent on invalid mission ("+orderCode+"), please debug");
             }
@@ -67,12 +68,10 @@ public class Beaver extends Unit {
             // Finished what it was doing
             rc.setIndicatorString(1, "finished task");
             System.out.println("BEAVER finished task " + orderCode);
-            currentTask = new Task(Strategy.TASK_BARRACKS);
             goToHQ();
+            rc.setIndicatorString(1, "returned to hq");
             dumpSuppliesToHQ();
             getTaskFromHQ();
-            // Just give up and die.
-            //rc.disintegrate();
         }
     }
 
@@ -234,18 +233,30 @@ public class Beaver extends Unit {
         } while (true);
     }
 
-    // gets a tack from the hq
-    // blocking
+    // Requests a task from HQ.
+    // Blocks until we have a new task.
     private void getTaskFromHQ() {
         goToHQ();
+        rc.setIndicatorString(1, "awaiting new task");
 
         // im near the hq, lets ask for a task and clear my task slot
         rf.requestTask();
-        currentTask = new Task(Strategy.TASK_REQUESTING_TASK);
+        currentTask = null;
 
-        // wait for supply from HQ
-        while(rc.getSupplyLevel() < Strategy.initialSupply(RobotType.BEAVER)) rc.yield();
-        currentTask = rf.getTask(rf.myTaskSlot);
+        // yield so the request propogates
+        // otherwise we might see our old task.
+        // TODO(miles): remove these
+        rc.yield();
+        rc.yield();
+
+        // wait for signal from HQ
+        rc.setIndicatorString(1, "awaiting task");
+        do {
+            currentTask = rf.getTask(rf.myTaskSlot);
+        } while (currentTask == null);
+
+        rc.setIndicatorString(1, "received task");
+        System.out.println("BEAVER received task " + currentTask.taskNum);
     }
 
     private void dumpSuppliesToHQ() {
