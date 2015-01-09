@@ -18,7 +18,7 @@ public class Headquarters extends Structure {
     private int spawned_beavers = 0;
     private boolean beaver_mining_spawned = false;
     private boolean beaver_barracks_spawned = false;
-    private Hashtable<Integer,Integer> assignedBeaverJobSlots = new Hashtable<Integer,Integer>();
+    private Hashtable<Integer, Integer> assignedBeaverJobSlots = new Hashtable<Integer, Integer>();
 
     Headquarters(RobotController rc) { super(rc); }
 
@@ -133,6 +133,7 @@ public class Headquarters extends Structure {
             RobotInfo rob = rc.senseRobotAtLocation(rc.getLocation().add(dir)); // gets its info
             int robotID = rob.ID; // get its id
             RobotInfo[] candidates = {rob};
+            assignedBeaverJobSlots.put(robotID, beaverJobSlot);
             return supplyToID(candidates, robotID, Strategy.taskSupply(task));
         } catch (GameActionException e) {
             e.printStackTrace();
