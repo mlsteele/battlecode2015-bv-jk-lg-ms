@@ -32,8 +32,6 @@ public class Headquarters extends Structure {
         rf.writeRally(RALLY_ARMY, rc.senseTowerLocations()[0]);
 
         int missionIndex = 0;
-
-        taskQueue.add(new Task(Strategy.TASK_BARRACKS));
         taskQueue.add(new Task(Strategy.TASK_BARRACKS));
 
         while (true) {
@@ -47,15 +45,15 @@ public class Headquarters extends Structure {
             if(rc.isCoreReady()) {
                 switch (missionIndex) {
                     case 0:
+                        if (spawnBeaverWithStrategy(TASK_MINERFACTORY, null)) missionIndex++;
+                        break;
                     case 1:
                     case 2:
                         if (spawnBeaverWithStrategy(TASK_SUPPLYDEPOT, null)) missionIndex++;
                         break;
                     case 3:
-                        if (spawnBeaverWithStrategy(TASK_MINERFACTORY, null)) missionIndex++;
-                        break;
                     case 4:
-                        if (spawnBeaverWithStrategy(TASK_BARRACKS, null)) missionIndex++;
+                        if (spawnBeaverWithStrategy(TASK_MINERFACTORY, null)) missionIndex++;
                         break;
                     case 5:
                     case 6:

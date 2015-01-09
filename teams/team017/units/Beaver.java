@@ -245,10 +245,6 @@ public class Beaver extends Unit {
 
         // wait for supply from HQ
         while(rc.getSupplyLevel() < Strategy.initialSupply(RobotType.BEAVER)) rc.yield();
-        rc.yield();
-        rc.yield();
-        rc.yield();
-        rc.yield();
         currentTask = rf.getTask(rf.myTaskSlot);
     }
 
