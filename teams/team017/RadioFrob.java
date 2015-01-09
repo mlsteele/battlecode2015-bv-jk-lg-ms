@@ -50,104 +50,81 @@ public class RadioFrob {
 
     // Assigns a job to the beaver slot. Returns job assignment slot
     // returns -1 if slot has not been claimed
-    public int assignBeaverJobSlot() throws GameActionException {
-        if (rc.readBroadcast(BEAVER_JOB_ASSIGNMENT_SLOT) != 0) {
+    public int assignBeaverJobSlot() {
+        if (rx(BEAVER_JOB_ASSIGNMENT_SLOT) != 0) {
             return -1;
         } else {
             freeBeaverJobSlot++;
-            rc.broadcast(BEAVER_JOB_ASSIGNMENT_SLOT, freeBeaverJobSlot);
+            tx(BEAVER_JOB_ASSIGNMENT_SLOT, freeBeaverJobSlot);
             return freeBeaverJobSlot;
         }
     }
 
-    public int getBeaverJobSlot() throws GameActionException {
-        int jobSlot = rc.readBroadcast(BEAVER_JOB_ASSIGNMENT_SLOT);
-        rc.broadcast(BEAVER_JOB_ASSIGNMENT_SLOT, 0);
+    // gets the jobSlot of the beaver who was assigned one (used by beaver)
+    // clears it to let the hq know it got its jobSlot
+    public int getBeaverJobSlot() {
+        int jobSlot = rx(BEAVER_JOB_ASSIGNMENT_SLOT);
+        tx(BEAVER_JOB_ASSIGNMENT_SLOT, 0);
         return jobSlot;
     }
 
-    public Job getJob(int jobSlot) throws GameActionException {
-        return decodeJob(rc.readBroadcast(BEAVER_JOB_BASE + jobSlot));
+    // returns the job at a given jobSlot
+    public Job getJob(int jobSlot) {
+        return decodeJob(rx(BEAVER_JOB_BASE + jobSlot));
     }
 
-    // sets a job for the given beaver job slot
-    public boolean setJob(Job job, int jobSlot) throws GameActionException {
-        rc.broadcast(BEAVER_JOB_BASE + jobSlot, encodeJob(job));
+    // sets a job for the given beaver jobSlot
+    public boolean setJob(Job job, int jobSlot) {
+        tx(BEAVER_JOB_BASE + jobSlot, encodeJob(job));
         return true;
     }
 
-    // used by beaver
-    public boolean requestJob() throws GameActionException {
-        rc.broadcast(BEAVER_JOB_BASE, myJobSlot);
-        rc.broadcast(myJobSlot, -1);
+    // used by beaver to request a job
+    public boolean requestJob() {
+        tx(BEAVER_JOB_BASE, myJobSlot);
+        tx(myJobSlot, -1);
         return true;
     }
 
     // used by hq, returns the jobslot of the beaver assigned the job
-    public int assignJobToNextFree(Job job) throws GameActionException {
-        int jobSlot = rc.readBroadcast(BEAVER_JOB_BASE);
+    public int assignJobToNextFree(Job job) {
+        int jobSlot = rx(BEAVER_JOB_BASE);
         System.out.println("This is what was the jobslot" + jobSlot);
-        if (jobSlot > 0 && (rc.readBroadcast(jobSlot) == -1)) {
+        if (jobSlot > 0 && (rx(jobSlot) == -1)) {
             System.out.println("Giving jobSlot " + jobSlot + " job " + job);
-            // cool we actually got a beaver whos waiting
-            // lets clear the job slot and give them the job
-            rc.broadcast(BEAVER_JOB_BASE, 0);
+            tx(BEAVER_JOB_BASE, 0);
             setJob(job, jobSlot);
             return jobSlot;
         } else return -1;
     }
 
     public boolean requestResupply(int amount) {
-        try {
-            // someone else is requesting right now
-            if (rc.readBroadcast(REQUEST_RESUPPLY_LOCATION_SLOT) != 0) return false;
-            rc.broadcast(REQUEST_RESUPPLY_LOCATION_SLOT, encodeLocation(rc.getLocation()));
-            rc.broadcast(REQUEST_RESUPPLY_AMOUNT_SLOT, amount);
-            return true;
-        } catch (GameActionException e) {
-            e.printStackTrace();
-            return false;
-        }
+        // someone else is requesting right now
+        if (rx(REQUEST_RESUPPLY_LOCATION_SLOT) != 0) return false;
+        tx(REQUEST_RESUPPLY_LOCATION_SLOT, encodeLocation(rc.getLocation()));
+        tx(REQUEST_RESUPPLY_AMOUNT_SLOT, amount);
+        return true;
     }
 
     public boolean resupplyFromTankFactoryRequested() {
-        try {
-            return rc.readBroadcast(REQUEST_RESUPPLY_LOCATION_SLOT) != 0;
-        } catch (GameActionException e) {
-            e.printStackTrace();
-            return false;
-        }
-
+            return rx(REQUEST_RESUPPLY_LOCATION_SLOT) != 0;
     }
 
     public boolean clearResupplyRequest() {
-        try {
-            rc.broadcast(REQUEST_RESUPPLY_LOCATION_SLOT, 0);
-            return true;
-        } catch (GameActionException e) {
-            e.printStackTrace();
-            return false;
-        }
+        tx(REQUEST_RESUPPLY_LOCATION_SLOT, 0);
+        return true;
     }
 
     public MapLocation getResupplyLocation() {
-        try {
-            int encodedLoc = rc.readBroadcast(REQUEST_RESUPPLY_LOCATION_SLOT);
-            if (encodedLoc == 0) return null;
-            return decodeLocation(encodedLoc);
-        } catch (GameActionException e) {
-            return null;
-        }
+        int encodedLoc = rx(REQUEST_RESUPPLY_LOCATION_SLOT);
+        if (encodedLoc == 0) return null;
+        return decodeLocation(encodedLoc);
     }
 
     //TODO: Use caching later Dont think this is used lol
     public void writeIncMiningFacCount() {
-        try {
-            int mining_count = rc.readBroadcast(NUM_MINING_FACTORIES);
-            rc.broadcast(NUM_MINING_FACTORIES, mining_count++);
-        } catch (GameActionException e) {
-            e.printStackTrace();
-        }
+        int mining_count = rx(NUM_MINING_FACTORIES);
+        tx(NUM_MINING_FACTORIES, mining_count++);
     }
 
     // Load rally point n

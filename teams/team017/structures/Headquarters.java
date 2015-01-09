@@ -126,17 +126,12 @@ public class Headquarters extends Structure {
 
 
         // check if anyone wants tasks
-        try {
-            taskSlot = rf.assignJobToNextFree(nextTask);
-            if (taskSlot < 0) {
-                // no one can get tasks so add the job back to queue
-                return;
-            }
-
-        } catch (GameActionException e) {
-            e.printStackTrace();
+        taskSlot = rf.assignJobToNextFree(nextTask);
+        if (taskSlot < 0) {
+            // no one can get tasks so add the job back to queue
             return;
         }
+
 
         // we have given the beaver the task, lets transfer the supplies
         if (assignedBeaverJobSlots == null) {
@@ -154,28 +149,30 @@ public class Headquarters extends Structure {
     private boolean spawnBeaverWithStrategy(int task, MapLocation loc) {
         if(rc.getSupplyLevel() < Strategy.taskSupply(task)) return false;
 
+        Direction dir = spawn(BEAVER); // spawn the beaver
+        if (dir == null) return false;
+
+        int beaverJobSlot = rf.assignBeaverJobSlot(); // Assign a new beaver job slot
+        if (beaverJobSlot < 0) {
+            return false; // someone hasnt claimed their job, shame on them
+        }
+        rc.setIndicatorString(2, "Creating beaver : slot = " + beaverJobSlot);
+        rf.setJob(new Job(task, loc), beaverJobSlot); // give the beaver a job
+
+        rc.yield();
+
+        RobotInfo rob;
         try {
-            Direction dir = spawn(BEAVER); // spawn the beaver
-            if (dir == null) return false;
-
-            int beaverJobSlot = rf.assignBeaverJobSlot(); // Assign a new beaver job slot
-            if (beaverJobSlot < 0) {
-                return false; // someone hasnt claimed their job, shame on them
-            }
-            rc.setIndicatorString(2, "Creating beaver : slot = " + beaverJobSlot);
-            rf.setJob(new Job(task, loc), beaverJobSlot); // give the beaver a job
-
-            rc.yield();
-
-            RobotInfo rob = rc.senseRobotAtLocation(rc.getLocation().add(dir)); // gets its info
-            int robotID = rob.ID; // get its id
-            RobotInfo[] candidates = {rob};
-            assignedBeaverJobSlots.put(beaverJobSlot, robotID);
-            return supplyToID(candidates, robotID, Strategy.taskSupply(task));
+            rob = rc.senseRobotAtLocation(rc.getLocation().add(dir)); // gets its info
         } catch (GameActionException e) {
             e.printStackTrace();
             return false;
         }
+
+        int robotID = rob.ID; // get its id
+        RobotInfo[] candidates = {rob};
+        assignedBeaverJobSlots.put(beaverJobSlot, robotID);
+        return supplyToID(candidates, robotID, Strategy.taskSupply(task));
     }
 
     private int[] updateUnitCount() {

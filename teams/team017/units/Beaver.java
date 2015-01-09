@@ -22,15 +22,11 @@ public class Beaver extends Unit {
 
     @Override
     public void run() {
-        try {
-            int myJobSlot = rf.getBeaverJobSlot();
-            rf.myJobSlot = myJobSlot;
+        int myJobSlot = rf.getBeaverJobSlot();
+        rf.myJobSlot = myJobSlot;
 
-            currentJob = rf.getJob(myJobSlot);
-            rc.setIndicatorString(0, "slot:" + myJobSlot + " job:" + currentJob.jobNum);
-        } catch (GameActionException e) {
-            e.printStackTrace();
-        }
+        currentJob = rf.getJob(myJobSlot);
+        rc.setIndicatorString(0, "slot:" + myJobSlot + " job:" + currentJob.jobNum);
 
         // This is NOT the inner loop.
         while (true) {
@@ -256,11 +252,7 @@ public class Beaver extends Unit {
         goToHQ();
 
         // im near the hq, lets ask for a job and clear my job slot
-        try {
-            rf.requestJob();
-        } catch (GameActionException e) {
-            e.printStackTrace();
-        }
+        rf.requestJob();
         currentJob = new Job(Strategy.TASK_REQUESTING_TASK);
 
         // wait for supply from HQ
@@ -270,11 +262,7 @@ public class Beaver extends Unit {
         rc.yield();
         rc.yield();
         System.out.println("This is my jobslot " + rf.myJobSlot);
-        try {
-            currentJob = rf.getJob(rf.myJobSlot);
-        } catch (GameActionException e) {
-            e.printStackTrace();
-        }
+        currentJob = rf.getJob(rf.myJobSlot);
         System.out.println("I was looking for a new job and got " + currentJob.jobNum);
     }
 
