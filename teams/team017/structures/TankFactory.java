@@ -19,11 +19,14 @@ public class TankFactory extends Structure {
 
         while (true) {
 
-            if (rc.getSupplyLevel() < TANKFACTORY_LOW_SUPPLY) {
-                if (!incomingResupply)
+            if (rc.getSupplyLevel() <= TANKFACTORY_LOW_SUPPLY) {
+                if (!incomingResupply) {
+                    rc.setIndicatorString(1, "Requesting Supply");
                     if (rf.requestResupply(TANKFACTORY_RESUPPLY_AMT))
                         incomingResupply = true;
+                }
             } else {
+                rc.setIndicatorString(1, "Not requesting supply");
                 incomingResupply = false;
                 if (rc.isCoreReady())
                     spawn(TANK);

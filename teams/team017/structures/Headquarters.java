@@ -57,9 +57,13 @@ public class Headquarters extends Structure {
                         if (spawnBeaverWithStrategy(TASK_TANKFACTORY, null)) missionIndex++;
                         break;
                     default:
-                        if (rf.resupplyFromTankFactoryRequested() &&
-                                spawnBeaverWithStrategy(TASK_RESUPPLY_TANKFACTORY, rf.getResupplyLocation()))
+                        if (rf.resupplyFromTankFactoryRequested()) {
+                            rc.setIndicatorString(1, "Found resupply request");
+                            if (spawnBeaverWithStrategy(TASK_RESUPPLY_TANKFACTORY, rf.getResupplyLocation())) {
+                                rc.setIndicatorString(1, "Spawned supplier");
                                 rf.clearResupplyRequest();
+                            }
+                        }
 
                         break;
                 }

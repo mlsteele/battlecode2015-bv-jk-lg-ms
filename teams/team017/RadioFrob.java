@@ -88,6 +88,7 @@ public class RadioFrob {
             if (rc.readBroadcast(REQUEST_RESUPPLY_LOCATION_SLOT) != 0) return false;
             rc.broadcast(REQUEST_RESUPPLY_LOCATION_SLOT, encodeLocation(rc.getLocation()));
             rc.broadcast(REQUEST_RESUPPLY_AMOUNT_SLOT, amount);
+            rc.setIndicatorString(2, "RF: Request Supply " + encodeLocation(rc.getLocation()) + ", " + amount);
             return true;
         } catch (GameActionException e) {
             e.printStackTrace();
@@ -97,7 +98,9 @@ public class RadioFrob {
 
     public boolean resupplyFromTankFactoryRequested() {
         try {
-            return rc.readBroadcast(REQUEST_RESUPPLY_LOCATION_SLOT) != 0;
+            boolean req = rc.readBroadcast(REQUEST_RESUPPLY_LOCATION_SLOT) != 0;
+            rc.setIndicatorString(2, "RF: Found Request? " + req);
+            return req;
         } catch (GameActionException e) {
             e.printStackTrace();
             return false;
