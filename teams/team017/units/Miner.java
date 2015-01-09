@@ -21,10 +21,11 @@ public class Miner extends Unit {
             if (rc.isCoreReady()) runAway();
 
             if (rc.isCoreReady()) {
-                boolean miner_low_supply = rc.getSupplyLevel() > Strategy.MINER_LOW_SUPPLY;
-                boolean team_low_ore     = rc.getSupplyLevel() > Strategy.TEAM_LOW_ORE;
+                boolean miner_low_supply = rc.getSupplyLevel() <= Strategy.MINER_LOW_SUPPLY;
+                boolean team_low_ore     = rc.getSupplyLevel() <= Strategy.TEAM_LOW_ORE;
                 if (miner_low_supply && team_low_ore) {
                     goToHQ();
+                    rc.setIndicatorString(1, "waiting for supply");
                 } else {
                     pursueMining();
                 }
@@ -50,10 +51,16 @@ public class Miner extends Unit {
 
     private void pursueMining() {
         if (rc.senseOre(rc.getLocation()) > 0) {
+            rc.setIndicatorString(1, "mining here");
             mineHere();
         } else {
             forward = optimalOreDirection();
-            moveForward();
+            rc.setIndicatorString(1, "mining moving");
+            try {
+                rc.move(forward);
+            } catch (GameActionException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -70,20 +77,21 @@ public class Miner extends Unit {
     }
 
     // Which direction's adjacent location has the most ore.
+    // Returns a location that has been checked for canMove.
     public Direction optimalOreDirection() {
         Direction[] possibleDirs = {NORTH, NORTH_EAST, EAST, SOUTH_EAST,
                                     SOUTH, SOUTH_WEST, WEST, NORTH_WEST};
 
         MapLocation curLocation = rc.getLocation();
         double bestOre = 0;
-        Direction bestDirection = NORTH;
+        Direction bestDirection = null;
 
         Direction d;
         int ri = rand.nextInt(8);
         for (int i = 0; i < 8; i++) {
             d = possibleDirs[(i + ri) % 8];
             double ore = rc.senseOre(curLocation.add(d));
-            if (ore > bestOre && rc.canMove(d)) {
+            if (ore >= bestOre && rc.canMove(d)) {
                 bestOre = ore;
                 bestDirection = d;
             }
