@@ -34,7 +34,7 @@ public class Headquarters extends Structure {
         taskQueue.add(new Task(Strategy.TASK_BARRACKS));
 
         // set the max number of mining units
-        rf.requestXUnits(RobotType.MINER, 10);
+        rf.requestXUnits(RobotType.MINER, 40);
 
         while (true) {
             shootBaddies();
