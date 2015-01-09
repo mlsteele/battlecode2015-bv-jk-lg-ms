@@ -10,10 +10,13 @@ public abstract class Unit extends Robot {
     protected Direction forward;
     protected MapLocation hqLoc;
 
+    Direction cameFrom;
+
     Unit(RobotController rc) {
         super(rc);
         forward = randomDirection();
         hqLoc = rc.senseHQLocation();
+        cameFrom = NORTH; // arbitrary initialization
     }
 
     // Tries to move forward.
@@ -23,9 +26,11 @@ public abstract class Unit extends Robot {
         // try forwards
         if (moveStrictlyForward()) return true;
 
-        // try leftish
+        // try leftish but not if that's where we came from.
         forward = forward.rotateLeft();
-        if (moveStrictlyForward()) return true;
+        if (forward != cameFrom) {
+            if (moveStrictlyForward()) return true;
+        }
 
         // try rightish
         forward = forward.rotateRight();
@@ -91,6 +96,7 @@ public abstract class Unit extends Robot {
         if (rc.canMove(forward)) {
             try {
                 rc.move(forward);
+                cameFrom = forward.opposite();
                 return true;
             } catch (GameActionException e) {
                 e.printStackTrace();
