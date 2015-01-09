@@ -14,8 +14,7 @@ public class Headquarters extends Structure {
     private static final int TIME_TO_ATTACK2 = 1000;
     private static final int MAX_BEAVER = 10;
     private static final int UPDATE_UNIT_COUNT_TIME = 10;
-    private static final int NUM_OF_UNIT_TYPES = RobotType.values().length;
-    int[] unitsOnField = new int[NUM_OF_UNIT_TYPES];
+    int[] unitsOnField = new int[NUM_ROBOT_TYPES];
 
     private int spawned_beavers = 0;
     private boolean beaver_mining_spawned = false;
@@ -33,6 +32,9 @@ public class Headquarters extends Structure {
 
         int missionIndex = 0;
         taskQueue.add(new Task(Strategy.TASK_BARRACKS));
+
+        // set the max number of mining units
+        rf.requestXUnits(RobotType.MINER, 10);
 
         while (true) {
             shootBaddies();
@@ -161,15 +163,6 @@ public class Headquarters extends Structure {
         RobotInfo[] candidates = {rob};
         assignedBeaverTaskSlots.put(beaverTaskSlot, robotID);
         return supplyToID(candidates, robotID, Strategy.taskSupply(task));
-    }
-
-    private int[] updateUnitCount() {
-        int[] unitsOnField = new int[NUM_OF_UNIT_TYPES];
-        RobotInfo[] robots = rc.senseNearbyRobots(rc.getLocation(), Integer.MAX_VALUE, rc.getTeam());
-        for (RobotInfo rob : robots) {
-            unitsOnField[rob.type.ordinal()]++;
-        }
-        return unitsOnField;
     }
 
 

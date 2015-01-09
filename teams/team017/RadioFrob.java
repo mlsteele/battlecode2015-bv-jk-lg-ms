@@ -21,10 +21,16 @@ public class RadioFrob {
     // 1    | undocumented
     //      |
     // ------
+    // 10   | requesting units
+    // 31   |
+    // ------
     // 3000 | rally points
     // 3009 |
     // ------
     //      | unused
+    // ------
+    // 6000 | Beaver Assignment Slots
+    // ...  | Unbound
     private static final int RALLY_POINT_RANGE_BOTTOM = 3000;
     private static final int RALLY_POINT_RANGE_SIZE   = 10;
 
@@ -33,8 +39,10 @@ public class RadioFrob {
     private static int REQUEST_RESUPPLY_LOCATION_SLOT = 1;
     private static int REQUEST_RESUPPLY_AMOUNT_SLOT = 2;
 
-    private static int BEAVER_TASK_ASSIGNMENT_SLOT = 1000;
+    private static int BEAVER_TASK_ASSIGNMENT_SLOT = 6000;
     private static int BEAVER_TASK_BASE = BEAVER_TASK_ASSIGNMENT_SLOT + 1;
+
+    private static int REQUEST_ROBOT_BOTTOM = 10;
 
     private RobotController rc;
     private MapLocation hqLoc; // Used for anchoring relative coordinates.
@@ -46,6 +54,18 @@ public class RadioFrob {
     RadioFrob(RobotController rc) {
         this.rc = rc;
         hqLoc = rc.senseHQLocation();
+    }
+
+    // requests there be x of a type of unit on the field
+    // used by hq
+    public void requestXUnits(RobotType rob, int num) {
+        tx(REQUEST_ROBOT_BOTTOM + rob.ordinal(), num);
+    }
+
+    // checks to see how many units of a type of unit is desired
+    // used by unit production facilities
+    public int checkXUnits(RobotType rob) {
+        return rx(REQUEST_ROBOT_BOTTOM + rob.ordinal());
     }
 
     // Assigns a task to the beaver slot. Returns task assignment slot

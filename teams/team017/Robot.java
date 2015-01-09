@@ -19,6 +19,8 @@ public abstract class Robot {
         rand = new Random(rc.getID());
     }
 
+    protected static int NUM_ROBOT_TYPES  = RobotType.values().length;
+
     abstract public void run();
 
     // Chooses the robot

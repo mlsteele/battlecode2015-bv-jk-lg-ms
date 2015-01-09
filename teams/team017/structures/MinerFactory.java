@@ -10,11 +10,17 @@ import java.util.*;
 public class MinerFactory extends Structure {
     MinerFactory(RobotController rc) { super(rc); }
 
+    int[] unitCount;
+
     @Override
     public void run() {
         while (true) {
-            if (rc.isCoreReady() && rc.getSupplyLevel() >= Strategy.initialSupply(MINER))
-                spawn(MINER);
+            unitCount = updateUnitCount();
+
+            if(unitCount[RobotType.MINER.ordinal()] < rf.checkXUnits(RobotType.MINER)) {
+                if (rc.isCoreReady() && rc.getSupplyLevel() >= Strategy.initialSupply(MINER))
+                    spawn(MINER);
+            }
 
             supplyNearbyEmpty(null, MINER, Strategy.initialSupply(MINER));
 
