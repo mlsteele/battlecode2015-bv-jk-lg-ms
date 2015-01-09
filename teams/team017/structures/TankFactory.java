@@ -3,6 +3,9 @@ package team017;
 import battlecode.common.*;
 import static battlecode.common.Direction.*;
 import static battlecode.common.RobotType.*;
+
+import static team017.Strategy.*;
+
 import java.util.*;
 
 public class TankFactory extends Structure {
@@ -12,11 +15,22 @@ public class TankFactory extends Structure {
     public void run() {
         rc.setIndicatorString(0, "I am a TankFactory");
 
-        while (true) {
-            if (rc.isCoreReady() && rc.getSupplyLevel() >= Strategy.initialSupply(TANK))
-                spawn(TANK);
+        boolean incomingResupply = false;
 
-            supplyNearbyEmpty(null, TANK, Strategy.initialSupply(TANK));
+        while (true) {
+
+            if (rc.getSupplyLevel() < TANKFACTORY_LOW_SUPPLY) {
+                if (!incomingResupply)
+                    if (rf.requestResupply(TANKFACTORY_RESUPPLY_AMT))
+                        incomingResupply = true;
+            } else {
+                incomingResupply = false;
+                if (rc.isCoreReady())
+                    spawn(TANK);
+
+                supplyNearbyEmpty(null, TANK, initialSupply(TANK));
+            }
+
 
             rc.yield();
         }

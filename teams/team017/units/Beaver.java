@@ -2,6 +2,7 @@ package team017;
 
 import battlecode.common.*;
 import battlecode.common.GameActionException;
+
 import static battlecode.common.RobotType.*;
 
 public class Beaver extends Unit {
@@ -47,6 +48,9 @@ public class Beaver extends Unit {
                 case (Strategy.TASK_HELIPAD):
                 case (Strategy.TASK_SUPPLYDEPOT):
                     buildStructureMission(orderCode);
+                    break;
+                case (Strategy.TASK_RESUPPLY_TANKFACTORY):
+                    resupplyMission(orderCode);
                     break;
                 case (Strategy.TASK_NONE):
                     System.out.println("BEAVER mission none");
@@ -102,6 +106,21 @@ public class Beaver extends Unit {
             }
         }
         return true;
+    }
+
+    private void resupplyMission(int orderCode) {
+        int amt;
+        switch (orderCode) {
+            case (Strategy.TASK_RESUPPLY_TANKFACTORY):
+                amt = Strategy.TANKFACTORY_RESUPPLY_AMT;
+                break;
+            default:
+                throw new NotImplementedException("Unknown resupply mission");
+
+        }
+        // TODO(jessk) we need a location!!
+        rc.setIndicatorString(2, "Doing nothing until resupply is implemented");
+
     }
 
     private boolean buildThenSupplyForCode(int orderCode) {

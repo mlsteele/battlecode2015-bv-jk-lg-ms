@@ -57,6 +57,9 @@ public class Headquarters extends Structure {
                         if (spawnBeaverWithStrategy(TASK_TANKFACTORY)) missionIndex++;
                         break;
                     default:
+                        if (rf.resupplyFromTankFactoryRequested() && spawnBeaverWithStrategy(TASK_RESUPPLY_TANKFACTORY))
+                                rf.clearResupplyRequest();
+
                         break;
                 }
             }

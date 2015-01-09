@@ -14,6 +14,7 @@ public enum Strategy {;
     public static final int TASK_TANKFACTORY = 3;
     public static final int TASK_HELIPAD = 4;
     public static final int TASK_SUPPLYDEPOT = 5;
+    public static final int TASK_RESUPPLY_TANKFACTORY = 6;
 
     // Miners don't request supply if team has excess ore.
     public static final int TEAM_LOW_ORE = 1500;
@@ -23,6 +24,10 @@ public enum Strategy {;
     // Get this much from the HQ.
     public static final int MINER_RESUPPLY_FROM_HQ = 2000;
 
+    // Call for resupply at this point.
+    public static final int TANKFACTORY_LOW_SUPPLY = initialSupply(TANK);
+    public static final int TANKFACTORY_RESUPPLY_AMT = 4 * initialSupply(TANK);
+
     public static int taskSupply(int task) {
         switch(task) {
             case TASK_NONE:              return initialSupply(BEAVER);
@@ -31,6 +36,7 @@ public enum Strategy {;
             case TASK_TANKFACTORY:       return initialSupply(BEAVER) + initialSupply(TANKFACTORY);
             case TASK_HELIPAD:           return initialSupply(BEAVER) + initialSupply(HELIPAD);
             case TASK_SUPPLYDEPOT:       return initialSupply(BEAVER) + initialSupply(SUPPLYDEPOT);
+            case TASK_RESUPPLY_TANKFACTORY: return initialSupply(BEAVER) + TANKFACTORY_RESUPPLY_AMT;
             default:                     throw new NotImplementedException();
         }
     }

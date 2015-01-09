@@ -15,6 +15,10 @@ import java.util.*;
 public class RadioFrob {
     private static int RALLY_POINT_1_SLOT = 0;
     private static int NUM_MINING_FACTORIES = 1;
+
+    private static int REQUEST_RESUPPLY_LOCATION_SLOT = 1;
+    private static int REQUEST_RESUPPLY_AMOUNT_SLOT = 2;
+
     private static int BEAVER_JOB_ASSIGNMENT_SLOT = 1000;
     private static int BEAVER_JOB_BASE = BEAVER_JOB_ASSIGNMENT_SLOT + 1;
 
@@ -75,6 +79,39 @@ public class RadioFrob {
             rc.broadcast(jobSlot, job);
             return true;
         } else return false;
+    }
+
+    public boolean requestResupply(int amount) {
+        try {
+            // someone else is requesting right now
+            if (rc.readBroadcast(REQUEST_RESUPPLY_LOCATION_SLOT) != 0) return false;
+            rc.broadcast(REQUEST_RESUPPLY_LOCATION_SLOT, encodeLocation(rc.getLocation()));
+            rc.broadcast(REQUEST_RESUPPLY_AMOUNT_SLOT, amount);
+            return true;
+        } catch (GameActionException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean resupplyFromTankFactoryRequested() {
+        try {
+            return rc.readBroadcast(REQUEST_RESUPPLY_LOCATION_SLOT) != 0;
+        } catch (GameActionException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
+    public boolean clearResupplyRequest() {
+        try {
+            rc.broadcast(REQUEST_RESUPPLY_LOCATION_SLOT, 0);
+            return true;
+        } catch (GameActionException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     //TODO: Use caching later Dont think this is used lol
