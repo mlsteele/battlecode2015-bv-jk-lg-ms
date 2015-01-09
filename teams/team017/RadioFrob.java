@@ -84,7 +84,7 @@ public class RadioFrob {
     }
 
     // used by hq, returns the jobslot of the beaver assigned the job
-    public int assignJobToNextFree(int job) throws GameActionException {
+    public int assignJobToNextFree(Job job) throws GameActionException {
         int jobSlot = rc.readBroadcast(BEAVER_JOB_BASE);
         System.out.println("This is what was the jobslot" + jobSlot);
         if (jobSlot > 0 && (rc.readBroadcast(jobSlot) == -1)) {

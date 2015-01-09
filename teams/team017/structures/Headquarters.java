@@ -22,7 +22,7 @@ public class Headquarters extends Structure {
     private boolean beaver_barracks_spawned = false;
 
     private Hashtable<Integer, Integer> assignedBeaverJobSlots = new Hashtable<Integer, Integer>();
-    private Queue<Integer> taskQueue = new LinkedList<Integer>();
+    private Queue<Job> taskQueue = new LinkedList<Job>();
 
     Headquarters(RobotController rc) { super(rc); }
 
@@ -34,11 +34,8 @@ public class Headquarters extends Structure {
 
         int missionIndex = 0;
 
-        taskQueue.add(1);
-        //taskQueue.add(10);
-        //taskQueue.add(10);
-        //taskQueue.add(10);
-        //taskQueue.add(10);
+        taskQueue.add(new Job(Strategy.TASK_BARRACKS));
+        taskQueue.add(new Job(Strategy.TASK_BARRACKS));
 
         while (true) {
             shootBaddies();
@@ -117,29 +114,27 @@ public class Headquarters extends Structure {
 
     private void taskUpkeep() {
         // check if there are any tasks
-        Integer nextTask = taskQueue.peek();
-        /*
-        if (rc.getSupplyLevel() < Strategy.taskSupply(nextTask)) {
+        Job nextTask = taskQueue.peek();
+        if (nextTask == null) return;
+
+        if (rc.getSupplyLevel() < Strategy.taskSupply(nextTask.jobNum)) {
             System.out.println("Sorry dont have enough for mission");
             return;
-        }*/
+        }
 
         int taskSlot;
 
-        if (nextTask == null) return;
 
         // check if anyone wants tasks
         try {
             taskSlot = rf.assignJobToNextFree(nextTask);
             if (taskSlot < 0) {
                 // no one can get tasks so add the job back to queue
-                taskQueue.add(nextTask);
                 return;
             }
 
         } catch (GameActionException e) {
             e.printStackTrace();
-            taskQueue.add(nextTask);
             return;
         }
 
@@ -149,8 +144,10 @@ public class Headquarters extends Structure {
         }
         int robotID = assignedBeaverJobSlots.get((Integer) taskSlot);
         System.out.println("This is the task we are going to give to task slot "+taskSlot+ " with id " + robotID + " : " + nextTask);
-        System.out.println("its going to get this much supply " + Strategy.taskSupply(nextTask));
-        while (!supplyToID(null, robotID, Strategy.taskSupply(nextTask))) continue;
+        System.out.println("its going to get this much supply " + Strategy.taskSupply(nextTask.jobNum));
+        while (!supplyToID(null, robotID, Strategy.taskSupply(nextTask.jobNum))) continue;
+        // we have given the supplies, we can remove the job now
+        taskQueue.remove();
     }
 
     // Assumes supply level desired

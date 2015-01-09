@@ -37,6 +37,8 @@ public class Beaver extends Unit {
 
             int initialSupplyLevel = waitForSupplies();
 
+            rc.setIndicatorString(0, "slot:" + rf.myJobSlot + " job:" + currentJob.jobNum);
+
             // Order code is which mission to pursue.
             int orderCode = currentJob.jobNum;
 
@@ -71,7 +73,7 @@ public class Beaver extends Unit {
             // Finished what it was doing
             rc.setIndicatorString(1, "Finished mission " + orderCode);
             System.out.println("BEAVER finished mission " + orderCode);
-            currentJob = 6;
+            currentJob = new Job(Strategy.TASK_BARRACKS);
             goToHQ();
             dumpSuppliesToHQ();
             getTaskFromHQ();
@@ -259,7 +261,7 @@ public class Beaver extends Unit {
         } catch (GameActionException e) {
             e.printStackTrace();
         }
-        currentJob = -1;
+        currentJob = new Job(Strategy.TASK_REQUESTING_TASK);
 
         // wait for supply from HQ
         while(rc.getSupplyLevel() < Strategy.initialSupply(RobotType.BEAVER)) rc.yield();
@@ -273,7 +275,7 @@ public class Beaver extends Unit {
         } catch (GameActionException e) {
             e.printStackTrace();
         }
-        System.out.println("I was looking for a new job and got " + currentJob);
+        System.out.println("I was looking for a new job and got " + currentJob.jobNum);
     }
 
     private void dumpSuppliesToHQ() {

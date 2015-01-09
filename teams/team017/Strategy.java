@@ -8,6 +8,7 @@ import java.util.*;
 // Strategy constants
 public enum Strategy {;
     // Task codes that HQ gives to beavers.
+    public static final int TASK_REQUESTING_TASK = -1;
     public static final int TASK_NONE = 0;
     public static final int TASK_BARRACKS = 1;
     public static final int TASK_MINERFACTORY = 2;
