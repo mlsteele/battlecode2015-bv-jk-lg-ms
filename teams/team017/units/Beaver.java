@@ -65,6 +65,7 @@ public class Beaver extends Unit {
 
             // Finished what it was doing
             rc.setIndicatorString(1, "Finished mission " + orderCode);
+            System.out.println("BEAVER finished mission " + orderCode);
             goToHQ();
             dumpSuppliesToHQ();
             // Just give up and die.
@@ -74,7 +75,6 @@ public class Beaver extends Unit {
 
     private void buildStructureMission(int orderCode) {
         whileLoop: while (true) {
-            // TODO(jessk) Make sure no buildings are nearby before building here
             int distanceFromHQ = rc.getLocation().distanceSquaredTo(hqLoc);
             if (rc.isCoreReady()) {
                 if (distanceFromHQ > MAX_DISTANCE_FROM_HQ) {
@@ -113,7 +113,7 @@ public class Beaver extends Unit {
             case Strategy.TASK_HELIPAD:
                 return buildThenSupply(HELIPAD);
             default:
-                System.out.println("error, invalid building code " + orderCode);
+                System.err.println("error, invalid building code " + orderCode);
                 return false;
         }
     }

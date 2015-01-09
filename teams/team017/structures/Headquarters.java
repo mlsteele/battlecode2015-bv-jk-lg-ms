@@ -2,9 +2,9 @@ package team017;
 
 import battlecode.common.*;
 import battlecode.common.GameActionException;
-
 import static battlecode.common.Direction.*;
 import static battlecode.common.RobotType.*;
+import static team017.Strategy.*;
 import java.util.*;
 
 public class Headquarters extends Structure {
@@ -38,25 +38,18 @@ public class Headquarters extends Structure {
             strategyUpdate();
 
             // Spawn a beaver.
-            //if(rc.isCoreReady()) spawnBeaverWithStrategy(0);
-            //if (rc.isCoreReady()) maybeSpawnBeaver();
             if(rc.isCoreReady()) {
                 switch (missionIndex) {
                     case 0:
-                        //if (supplyForMinerFactory()) missionIndex++;
-                        if (spawnBeaverWithStrategy(2)) missionIndex++;
+                        if (spawnBeaverWithStrategy(TASK_MINERFACTORY)) missionIndex++;
                         break;
                     case 1:
-                        //if (supplyForHelipad()) missionIndex++;
-                        if (spawnBeaverWithStrategy(4)) missionIndex++;
+                        if (spawnBeaverWithStrategy(TASK_BARRACKS)) missionIndex++;
                         break;
                     case 2:
-                        //if (supplyForBarracks()) missionIndex++;
-                        if (spawnBeaverWithStrategy(1)) missionIndex++;
-                        break;
                     case 3:
-                        //if (supplyForTankFactory()) missionIndex++;
-                        if (spawnBeaverWithStrategy(3)) missionIndex++;
+                    case 4:
+                        if (spawnBeaverWithStrategy(TASK_TANKFACTORY)) missionIndex++;
                         break;
                     default:
                         break;
@@ -200,7 +193,6 @@ public class Headquarters extends Structure {
 
             try {
                 rc.transferSupplies(supplyAmount, r.location);
-                System.out.println("HQ sending " + supplyAmount + " supplies");
                 return true;
             } catch (GameActionException e) {
                 e.printStackTrace();

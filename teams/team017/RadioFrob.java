@@ -56,13 +56,11 @@ public class RadioFrob {
 
     // returns my job
     public int getJob() throws GameActionException {
-        System.out.println("Attempting to get job with: " + myJobSlot);
         return getJob(myJobSlot);
     }
 
     // sets a job for the given beaver job slot
     public boolean setJob(int job, int jobSlot) throws GameActionException {
-        System.out.println("Setting job for " + jobSlot + " with " + job);
         rc.broadcast(BEAVER_JOB_BASE + jobSlot, job);
         return true;
     }

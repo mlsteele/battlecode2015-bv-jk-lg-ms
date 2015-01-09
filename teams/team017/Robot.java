@@ -111,8 +111,6 @@ public abstract class Robot {
             if (shouldAttack) shootBaddies();
             rc.yield();
         }
-        System.out.println("Received " + supplyLevel + " supplies");
-        rc.setIndicatorString(1, "recvd " + supplyLevel + "supplies");
         return (int)supplyLevel;
     }
 
