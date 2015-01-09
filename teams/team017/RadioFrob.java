@@ -14,7 +14,18 @@ import java.util.*;
 // 'get' methods get cached data (will not cause a load, so be careful not to read old/unitialized data).
 // 'write' methods change information and broadcast it.
 public class RadioFrob {
-    private static int RALLY_POINT_1_SLOT = 0;
+    // 0    | unused
+    // ------
+    // 1    | undocumented
+    //      |
+    // ------
+    // 3000 | rally points
+    // 3009 |
+    // ------
+    //      | unused
+    private static final int RALLY_POINT_RANGE_BOTTOM = 3000;
+    private static final int RALLY_POINT_RANGE_SIZE   = 10;
+
     private static int NUM_MINING_FACTORIES = 1;
 
     private static int REQUEST_RESUPPLY_LOCATION_SLOT = 1;
@@ -25,7 +36,7 @@ public class RadioFrob {
 
     private RobotController rc;
     private MapLocation hqLoc; // Used for anchoring relative coordinates.
-    private MapLocation rallyPoint1;
+    private MapLocation[] rallyPoints = new MapLocation[RALLY_POINT_RANGE_SIZE];
 
     private int freeBeaverJobSlot = 0;
     public int myJobSlot = 0;
@@ -135,26 +146,24 @@ public class RadioFrob {
         }
     }
 
-    // Load rally point 1
-    public void loadRally1() {
-        try {
-            rallyPoint1 = decodeLocation(rc.readBroadcast(RALLY_POINT_1_SLOT));
-        } catch (GameActionException e) {
-            e.printStackTrace();
-        }
+    // Load rally point n
+    public void loadRally(int n) {
+        if (n < 0 || n > RALLY_POINT_RANGE_SIZE)
+            throw new RuntimeException("rally point "+n+" out of bounds");
+        rallyPoints[n] = decodeLocation(rx(RALLY_POINT_RANGE_BOTTOM + n));
     }
 
-    public MapLocation getRally1() {
-        return rallyPoint1;
+    public MapLocation getRally(int n) {
+        if (n < 0 || n > RALLY_POINT_RANGE_SIZE)
+            throw new RuntimeException("rally point "+n+" out of bounds");
+        return rallyPoints[n];
     }
 
-    public void writeRally1(MapLocation loc) {
-        try {
-            rallyPoint1 = loc;
-            rc.broadcast(RALLY_POINT_1_SLOT, encodeLocation(rallyPoint1));
-        } catch (GameActionException e) {
-            e.printStackTrace();
-        }
+    public void writeRally(int n, MapLocation loc) {
+        if (n < 0 || n > RALLY_POINT_RANGE_SIZE)
+            throw new RuntimeException("rally point "+n+" out of bounds");
+        rallyPoints[n] = loc;
+        tx(RALLY_POINT_RANGE_BOTTOM + n, encodeLocation(loc));
     }
 
     private int encodeLocation(MapLocation loc) {
@@ -183,5 +192,28 @@ public class RadioFrob {
         if (encodedLoc == 0) return new Job(job);
         int jobNum = job & 0xFFFF;
         return new Job(jobNum, decodeLocation(encodedLoc));
+    }
+
+    // Receive from radio.
+    // `channel` must be [0, BROADCAST_MAX_CHANNELS]
+    // Wrapper for catching exceptions.
+    private int rx(int channel) {
+        try {
+            return rc.readBroadcast(channel);
+        } catch (GameActionException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    // Transmit through radio.
+    // `channel` must be [0, BROADCAST_MAX_CHANNELS]
+    // Wrapper for catching exceptions.
+    private void tx(int channel, int data) {
+        try {
+            rc.broadcast(channel, data);
+        } catch (GameActionException e) {
+            e.printStackTrace();
+        }
     }
 }

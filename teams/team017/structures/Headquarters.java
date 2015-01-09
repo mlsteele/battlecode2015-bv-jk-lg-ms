@@ -25,8 +25,8 @@ public class Headquarters extends Structure {
     @Override
     public void run() {
         // Tell all soldiers to rally at our first tower.
-        rf.writeRally1(rc.senseTowerLocations()[0]);
-        rc.setIndicatorString(1, "set rally1 to " + rf.getRally1());
+        rf.writeRally(RALLY_ARMY, rc.senseTowerLocations()[0]);
+        rc.setIndicatorString(1, "set rally:army to " + rf.getRally(RALLY_ARMY));
 
         int missionIndex = 0;
 
@@ -81,14 +81,14 @@ public class Headquarters extends Structure {
 
         if (Math.abs(Clock.getRoundNum() - TIME_TO_ATTACK1) <= 1) {
             // Rally at half point.
-            rf.writeRally1(avgLocations(rc.senseEnemyHQLocation(), rc.senseHQLocation()));
-            rc.setIndicatorString(1, "set rally1 to " + rf.getRally1());
+            rf.writeRally(RALLY_ARMY, avgLocations(rc.senseEnemyHQLocation(), rc.senseHQLocation()));
+            rc.setIndicatorString(1, "set rally:army to " + rf.getRally(RALLY_ARMY));
         }
 
         if (Math.abs(Clock.getRoundNum() - TIME_TO_ATTACK2) <= 1) {
             // Rally at the enemy HQ
-            rf.writeRally1(rc.senseEnemyHQLocation());
-            rc.setIndicatorString(1, "set rally1 to " + rf.getRally1());
+            rf.writeRally(RALLY_ARMY, rc.senseEnemyHQLocation());
+            rc.setIndicatorString(1, "set rally:army to " + rf.getRally(RALLY_ARMY));
         }
     }
 

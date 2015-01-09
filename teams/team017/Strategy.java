@@ -28,6 +28,8 @@ public enum Strategy {;
     public static final int TANKFACTORY_LOW_SUPPLY = initialSupply(TANK);
     public static final int TANKFACTORY_RESUPPLY_AMT = 4 * initialSupply(TANK);
 
+    public static final int RALLY_ARMY = 0;
+
     public static int taskSupply(int task) {
         switch(task) {
             case TASK_NONE:              return initialSupply(BEAVER);

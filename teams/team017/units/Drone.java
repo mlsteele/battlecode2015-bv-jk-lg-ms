@@ -1,8 +1,10 @@
 package team017;
 
 import battlecode.common.*;
-import battlecode.common.MapLocation;
-
+import battlecode.common.GameActionException;
+import static battlecode.common.Direction.*;
+import static battlecode.common.RobotType.*;
+import static team017.Strategy.*;
 import java.util.*;
 
 public class Drone extends Unit {
@@ -16,8 +18,8 @@ public class Drone extends Unit {
         while (true) {
             shootBaddies();
 
-            rf.loadRally1();
-            if (rc.isCoreReady()) moveToward(rf.getRally1());
+            rf.loadRally(RALLY_ARMY);
+            if (rc.isCoreReady()) moveToward(rf.getRally(RALLY_ARMY));
 
             rc.yield();
         }

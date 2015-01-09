@@ -2,9 +2,9 @@ package team017;
 
 import battlecode.common.*;
 import battlecode.common.GameActionException;
-import battlecode.common.MapLocation;
 import static battlecode.common.Direction.*;
-
+import static battlecode.common.RobotType.*;
+import static team017.Strategy.*;
 import java.util.*;
 
 public class Miner extends Unit {
