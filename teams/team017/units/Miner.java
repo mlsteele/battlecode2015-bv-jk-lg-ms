@@ -17,13 +17,15 @@ public class Miner extends Unit {
         waitForSupplies();
 
         while (true) {
+            // Top priority is don't get shot.
+            if (rc.isCoreReady()) runAway();
+
             if (rc.isCoreReady()) {
                 boolean miner_low_supply = rc.getSupplyLevel() > Strategy.MINER_LOW_SUPPLY;
                 boolean team_low_ore     = rc.getSupplyLevel() > Strategy.TEAM_LOW_ORE;
                 if (miner_low_supply && team_low_ore) {
                     goToHQ();
                 } else {
-                    runAway();
                     pursueMining();
                 }
             }
@@ -41,7 +43,7 @@ public class Miner extends Unit {
 
         // Move away from first bad guy.
         // TODO you could move smarter than this
-        if (enemies.length > 0 && rc.isCoreReady())
+        if (enemies.length > 0)
             moveToward(enemies[0].location.directionTo(rc.getLocation()));
 
     }
