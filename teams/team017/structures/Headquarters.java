@@ -30,7 +30,6 @@ public class Headquarters extends Structure {
     public void run() {
         // Tell all soldiers to rally at our first tower.
         rf.writeRally(RALLY_ARMY, rc.senseTowerLocations()[0]);
-        rc.setIndicatorString(1, "set rally:army to " + rf.getRally(RALLY_ARMY));
 
         int missionIndex = 0;
 
@@ -85,19 +84,17 @@ public class Headquarters extends Structure {
         // Updates the unit count. Happens every UPDATE_UNIT_COUNT_TIME mod times
         if (Clock.getRoundNum() % UPDATE_UNIT_COUNT_TIME == 0) {
             int[] cheese = updateUnitCount();
-            rc.setIndicatorString(0, Arrays.toString(cheese));
+            // rc.setIndicatorString(0, Arrays.toString(cheese));
         }
 
         if (Math.abs(Clock.getRoundNum() - TIME_TO_ATTACK1) <= 1) {
             // Rally at half point.
             rf.writeRally(RALLY_ARMY, avgLocations(rc.senseEnemyHQLocation(), rc.senseHQLocation()));
-            rc.setIndicatorString(1, "set rally:army to " + rf.getRally(RALLY_ARMY));
         }
 
         if (Math.abs(Clock.getRoundNum() - TIME_TO_ATTACK2) <= 1) {
             // Rally at the enemy HQ
             rf.writeRally(RALLY_ARMY, rc.senseEnemyHQLocation());
-            rc.setIndicatorString(1, "set rally:army to " + rf.getRally(RALLY_ARMY));
         }
     }
 
@@ -150,7 +147,6 @@ public class Headquarters extends Structure {
         if (beaverTaskSlot < 0) {
             return false; // someone hasnt claimed their task, shame on them
         }
-        rc.setIndicatorString(2, "Creating beaver : slot = " + beaverTaskSlot);
         rf.setTask(new Task(task, loc), beaverTaskSlot); // give the beaver a task
 
         rc.yield();

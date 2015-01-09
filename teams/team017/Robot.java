@@ -105,7 +105,6 @@ public abstract class Robot {
     protected int waitForSupplies() {
         double supplyLevel;
 
-        rc.setIndicatorString(1, "Waiting for supplies at " + rc.getSupplyLevel());
         boolean shouldAttack = (rc.getType() != BASHER) && (rc.getType() != BEAVER);
         while ((supplyLevel = rc.getSupplyLevel()) < 1) {
             if (shouldAttack) shootBaddies();

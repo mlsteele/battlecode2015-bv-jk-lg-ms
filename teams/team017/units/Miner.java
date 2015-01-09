@@ -23,7 +23,6 @@ public class Miner extends Unit {
                 boolean team_low_ore     = rc.getTeamOre()     <= Strategy.TEAM_LOW_ORE;
                 if (miner_low_supply && team_low_ore) {
                     goToHQ();
-                    rc.setIndicatorString(1, "awaiting resupply");
                 } else {
                     pursueMining();
                 }
@@ -55,14 +54,14 @@ public class Miner extends Unit {
             Direction oreTarget = optimalOreDirection();
             if (oreTarget != null) {
                 try {
-                    rc.setIndicatorString(1, "mining moving with a porpoise");
+                    rc.setIndicatorString(1, "mining but moving to ore target");
                     forward = oreTarget;
                     rc.move(forward);
                 } catch (GameActionException e) {
                     e.printStackTrace();
                 }
             } else {
-                rc.setIndicatorString(1, "mining wandering");
+                rc.setIndicatorString(1, "mining but wandering");
                 wander();
             }
         }

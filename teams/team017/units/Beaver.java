@@ -38,7 +38,6 @@ public class Beaver extends Unit {
             // Order code is which mission to pursue.
             int orderCode = currentTask.taskNum;
 
-            rc.setIndicatorString(1, "BEAVER mission " + orderCode);
             switch (orderCode) {
                 case (Strategy.TASK_BARRACKS):
                 case (Strategy.TASK_MINERFACTORY):
@@ -66,8 +65,8 @@ public class Beaver extends Unit {
             }
 
             // Finished what it was doing
-            rc.setIndicatorString(1, "Finished mission " + orderCode);
-            System.out.println("BEAVER finished mission " + orderCode);
+            rc.setIndicatorString(1, "finished task");
+            System.out.println("BEAVER finished task " + orderCode);
             currentTask = new Task(Strategy.TASK_BARRACKS);
             goToHQ();
             dumpSuppliesToHQ();
@@ -188,8 +187,6 @@ public class Beaver extends Unit {
             } catch (GameActionException e) {
                 e.printStackTrace();
             }
-        } else {
-            rc.setIndicatorString(2, "canBuild is false there");
         }
         return false;
     }
