@@ -15,20 +15,21 @@ public class TankFactory extends Structure {
         boolean incomingResupply = false;
 
         while (true) {
-
-            if (rc.getSupplyLevel() <= TANKFACTORY_LOW_SUPPLY) {
+            double supply = rc.getSupplyLevel();
+            if (supply <= TANKFACTORY_LOW_SUPPLY) {
                 if (!incomingResupply) {
                     if (rf.requestResupply(TANKFACTORY_RESUPPLY_AMT))
                         incomingResupply = true;
                 }
             } else {
                 incomingResupply = false;
-                if (rc.isCoreReady())
-                    spawn(TANK);
-
-                supplyNearbyEmpty(null, TANK, initialSupply(TANK));
             }
 
+            if (rc.isCoreReady())
+                spawn(TANK);
+
+            if (supply >= initialSupply(TANK))
+                supplyNearbyEmpty(null, TANK, initialSupply(TANK));
 
             rc.yield();
         }

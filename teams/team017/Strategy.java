@@ -27,7 +27,7 @@ public enum Strategy {;
 
     // Call for resupply at this point.
     public static final int TANKFACTORY_LOW_SUPPLY = initialSupply(TANK);
-    public static final int TANKFACTORY_RESUPPLY_AMT = 4 * initialSupply(TANK);
+    public static final int TANKFACTORY_RESUPPLY_AMT = 10 * initialSupply(TANK);
 
     public static final int RALLY_ARMY = 0;
 
@@ -58,7 +58,7 @@ public enum Strategy {;
             case HELIPAD:             return 20 * initialSupply(DRONE);
             case DRONE:               return 1000;
 
-            case TANKFACTORY:         return 5 * initialSupply(TANK);
+            case TANKFACTORY:         return 6 * initialSupply(TANK);
             case TANK:                return 4000;
 
             case SUPPLYDEPOT:         return 0;
