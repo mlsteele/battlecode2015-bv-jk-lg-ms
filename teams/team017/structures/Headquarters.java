@@ -58,9 +58,7 @@ public class Headquarters extends Structure {
                         break;
                     default:
                         if (rf.resupplyFromTankFactoryRequested()) {
-                            rc.setIndicatorString(1, "Found resupply request");
                             if (spawnBeaverWithStrategy(TASK_RESUPPLY_TANKFACTORY, rf.getResupplyLocation())) {
-                                rc.setIndicatorString(1, "Spawned supplier");
                                 rf.clearResupplyRequest();
                             }
                         }

@@ -3,6 +3,8 @@ package team017;
 import battlecode.common.*;
 import battlecode.common.GameActionException;
 
+import java.lang.System;
+
 import static battlecode.common.RobotType.*;
 
 public class Beaver extends Unit {
@@ -119,18 +121,23 @@ public class Beaver extends Unit {
 
         }
         while(true) {
-            if (rc.getLocation().distanceSquaredTo(currentJob.loc) > GameConstants.SUPPLY_TRANSFER_RADIUS_SQUARED) {
-                moveToward(currentJob.loc);
-                rc.yield();
-                continue;
-            } else {
-                try {
-                    rc.transferSupplies(amt, currentJob.loc);
-                    return;
-                } catch (GameActionException e) {
-                    e.printStackTrace();
-                    return;
+            if (rc.isCoreReady()) {
+                if (rc.getLocation().distanceSquaredTo(currentJob.loc) > GameConstants.SUPPLY_TRANSFER_RADIUS_SQUARED) {
+                    moveToward(currentJob.loc);
+                    rc.yield();
+                    continue;
+                } else {
+                    try {
+                        rc.transferSupplies(amt, currentJob.loc);
+                        rc.yield();
+                        return;
+                    } catch (GameActionException e) {
+                        e.printStackTrace();
+                        return;
+                    }
                 }
+            } else {
+                rc.yield();
             }
         }
 
