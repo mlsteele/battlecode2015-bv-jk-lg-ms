@@ -220,9 +220,6 @@ public class Beaver extends Unit {
     // If the building dies, that counts too.
     private void waitForBuildCompletion(MapLocation loc) {
         RobotInfo ri = null;
-        rc.setIndicatorString(2, "Waiting for building");
-        rc.yield();
-        rc.yield();
         do {
             try {
                 ri = rc.senseRobotAtLocation(loc);
@@ -231,10 +228,6 @@ public class Beaver extends Unit {
             }
             // Poll the building's builder field.
             if (ri != null && ri.builder == null) {
-                rc.setIndicatorString(2, "Building finished.");
-                rc.setIndicatorString(1, ri == null ? "null ri" : "ri");
-                rc.setIndicatorString(0, ri.builder == null ? "null ri.builder" : "ri.builder");
-                rc.yield(); // delete me
                 return;
             }
             rc.yield();
