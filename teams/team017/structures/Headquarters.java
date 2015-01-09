@@ -131,19 +131,24 @@ public class Headquarters extends Structure {
         if(rc.getSupplyLevel() < Strategy.taskSupply(task)) return false;
 
         try {
+            Direction dir = spawn(BEAVER); // spawn the beaver
+            if (dir == null) return false;
+
             int beaverJobSlot = rf.assignBeaverJobSlot(); // Assign a new beaver job slot
-            if (beaverJobSlot < 0) return false; // someone hasnt claimed their job, shame on them
+            if (beaverJobSlot < 0) {
+                return false; // someone hasnt claimed their job, shame on them
+            }
             rc.setIndicatorString(2, "Creating beaver : slot = " + beaverJobSlot);
             rf.setJob(task, beaverJobSlot); // give the beaver a job
 
-            Direction dir = spawn(BEAVER); // spawn the beaver
-            if (dir == null) return false;
             rc.yield();
+
             RobotInfo rob = rc.senseRobotAtLocation(rc.getLocation().add(dir)); // gets its info
             int robotID = rob.ID; // get its id
             RobotInfo[] candidates = {rob};
-            assignedBeaverJobSlots.put(beaverJobSlot, beaverJobSlot);
-            return supplyToID(candidates, robotID, Strategy.taskSupply(task));
+            assignedBeaverJobSlots.put(robotID, beaverJobSlot);
+            boolean didSupply = supplyToID(candidates, robotID, Strategy.taskSupply(task));
+            return didSupply;
         } catch (GameActionException e) {
             e.printStackTrace();
             return false;
