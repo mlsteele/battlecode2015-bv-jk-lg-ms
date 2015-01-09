@@ -82,15 +82,15 @@ public class RadioFrob {
     // used by beaver to request a task
     public boolean requestTask() {
         tx(BEAVER_TASK_BASE, myTaskSlot);
-        tx(myTaskSlot, -1);
+        tx(myTaskSlot, Strategy.TASK_REQUESTING_TASK);
         return true;
     }
 
     // used by hq, returns the taskslot of the beaver assigned the task
+    // returns -1 if it cant verify the beaver wants a job
     public int assignTaskToNextFree(Task task) {
         int taskSlot = rx(BEAVER_TASK_BASE);
-        System.out.println("This is what was the taskslot" + taskSlot);
-        if (taskSlot > 0 && (rx(taskSlot) == -1)) {
+        if (taskSlot > 0 && (rx(taskSlot) == Strategy.TASK_REQUESTING_TASK)) {
             System.out.println("Giving taskSlot " + taskSlot + " task " + task);
             tx(BEAVER_TASK_BASE, 0);
             setTask(task, taskSlot);
