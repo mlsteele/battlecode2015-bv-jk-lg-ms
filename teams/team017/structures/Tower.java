@@ -8,8 +8,6 @@ public class Tower extends Structure {
 
     @Override
     public void run() {
-        rc.setIndicatorString(0, "i am a Tower");
-
         while (true) {
             shootBaddies();
 

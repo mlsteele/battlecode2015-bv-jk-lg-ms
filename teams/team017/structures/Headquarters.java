@@ -24,8 +24,6 @@ public class Headquarters extends Structure {
 
     @Override
     public void run() {
-        rc.setIndicatorString(0, "i am an HQ");
-
         // Tell all soldiers to rally at our first tower.
         rf.writeRally1(rc.senseTowerLocations()[0]);
         rc.setIndicatorString(1, "set rally1 to " + rf.getRally1());

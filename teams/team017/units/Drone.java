@@ -10,8 +10,6 @@ public class Drone extends Unit {
 
     @Override
     public void run() {
-        rc.setIndicatorString(0, "i am a Drone");
-
         waitForSupplies();
 
         // Main loop

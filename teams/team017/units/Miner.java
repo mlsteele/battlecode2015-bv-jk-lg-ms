@@ -12,8 +12,6 @@ public class Miner extends Unit {
 
     @Override
     public void run() {
-        rc.setIndicatorString(0, "I am a Miner");
-
         waitForSupplies();
 
         while (true) {
@@ -25,7 +23,7 @@ public class Miner extends Unit {
                 boolean team_low_ore     = rc.getTeamOre()     <= Strategy.TEAM_LOW_ORE;
                 if (miner_low_supply && team_low_ore) {
                     goToHQ();
-                    rc.setIndicatorString(1, "waiting for supply");
+                    rc.setIndicatorString(1, "awaiting resupply");
                 } else {
                     pursueMining();
                 }

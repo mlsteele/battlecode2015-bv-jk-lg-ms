@@ -10,8 +10,6 @@ public class MinerFactory extends Structure {
 
     @Override
     public void run() {
-        rc.setIndicatorString(0, "I am a MinerFactory");
-
         while (true) {
             if (rc.isCoreReady() && rc.getSupplyLevel() >= Strategy.initialSupply(MINER))
                 spawn(MINER);

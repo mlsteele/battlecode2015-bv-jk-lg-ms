@@ -37,7 +37,7 @@ public abstract class Robot {
     }
 
     protected Direction randomDirection() {
-        switch (Math.abs(rand.nextInt()) % 8) {
+        switch (rand.nextInt(8)) {
             case 0: return NORTH;
             case 1: return NORTH_EAST;
             case 2: return EAST;

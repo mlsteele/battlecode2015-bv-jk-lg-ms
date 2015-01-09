@@ -10,8 +10,6 @@ public class Basher extends Unit {
 
     @Override
     public void run() {
-        rc.setIndicatorString(0, "i am a Basher");
-
         waitForSupplies();
 
         // Main loop

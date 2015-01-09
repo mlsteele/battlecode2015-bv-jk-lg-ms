@@ -10,8 +10,6 @@ public class Barracks extends Structure {
 
     @Override
     public void run() {
-        rc.setIndicatorString(0, "i am a Barracks");
-
         while (true) {
             if (false) {
                 if (rc.isCoreReady()) spawnCombatant();

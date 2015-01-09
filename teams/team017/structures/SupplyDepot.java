@@ -8,8 +8,6 @@ public class SupplyDepot extends Structure {
 
     @Override
     public void run() {
-        rc.setIndicatorString(0, "i am a supply depot");
-
         while (true) {
             rc.yield();
         }

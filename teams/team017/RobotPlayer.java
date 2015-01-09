@@ -16,7 +16,7 @@ public class RobotPlayer {
             r.run();
         } else {
             // Unimplemented or unknown robot type
-            rc.setIndicatorString(0, "having existential crisis.");
+            rc.setIndicatorString(0, "Having existential crisis.");
             while (true) {
                 rc.yield();
             }

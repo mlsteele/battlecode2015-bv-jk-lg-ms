@@ -10,8 +10,6 @@ public class Soldier extends Unit {
 
     @Override
     public void run() {
-        rc.setIndicatorString(0, "i am a Soldier");
-
         waitForSupplies();
 
         // Main loop

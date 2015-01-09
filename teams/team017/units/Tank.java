@@ -10,8 +10,6 @@ public class Tank extends Unit {
 
     @Override
     public void run() {
-        rc.setIndicatorString(0, "i am a Tank");
-
         waitForSupplies();
 
         // Main loop

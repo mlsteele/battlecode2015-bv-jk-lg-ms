@@ -13,8 +13,6 @@ public class TankFactory extends Structure {
 
     @Override
     public void run() {
-        rc.setIndicatorString(0, "I am a TankFactory");
-
         boolean incomingResupply = false;
 
         while (true) {

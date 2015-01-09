@@ -10,8 +10,6 @@ public class Helipad extends Structure {
 
     @Override
     public void run() {
-        rc.setIndicatorString(0, "I am a Helipad");
-
         while (true) {
             if (rc.isCoreReady() && rc.getSupplyLevel() >= Strategy.initialSupply(DRONE))
                 spawn(DRONE);
