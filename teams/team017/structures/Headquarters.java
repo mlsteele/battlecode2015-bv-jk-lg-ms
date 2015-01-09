@@ -43,21 +43,22 @@ public class Headquarters extends Structure {
                     case 0:
                     case 1:
                     case 2:
-                        if (spawnBeaverWithStrategy(TASK_SUPPLYDEPOT)) missionIndex++;
+                        if (spawnBeaverWithStrategy(TASK_SUPPLYDEPOT, null)) missionIndex++;
                         break;
                     case 3:
-                        if (spawnBeaverWithStrategy(TASK_MINERFACTORY)) missionIndex++;
+                        if (spawnBeaverWithStrategy(TASK_MINERFACTORY, null)) missionIndex++;
                         break;
                     case 4:
-                        if (spawnBeaverWithStrategy(TASK_BARRACKS)) missionIndex++;
+                        if (spawnBeaverWithStrategy(TASK_BARRACKS, null)) missionIndex++;
                         break;
                     case 5:
                     case 6:
                     case 7:
-                        if (spawnBeaverWithStrategy(TASK_TANKFACTORY)) missionIndex++;
+                        if (spawnBeaverWithStrategy(TASK_TANKFACTORY, null)) missionIndex++;
                         break;
                     default:
-                        if (rf.resupplyFromTankFactoryRequested() && spawnBeaverWithStrategy(TASK_RESUPPLY_TANKFACTORY))
+                        if (rf.resupplyFromTankFactoryRequested() &&
+                                spawnBeaverWithStrategy(TASK_RESUPPLY_TANKFACTORY, rf.getResupplyLocation()))
                                 rf.clearResupplyRequest();
 
                         break;
@@ -103,7 +104,7 @@ public class Headquarters extends Structure {
     }
 
     // Assumes supply level desired
-    private boolean spawnBeaverWithStrategy(int task) {
+    private boolean spawnBeaverWithStrategy(int task, MapLocation loc) {
         if(rc.getSupplyLevel() < Strategy.taskSupply(task)) return false;
 
         try {
@@ -115,7 +116,7 @@ public class Headquarters extends Structure {
                 return false; // someone hasnt claimed their job, shame on them
             }
             rc.setIndicatorString(2, "Creating beaver : slot = " + beaverJobSlot);
-            rf.setJob(new Job(task), beaverJobSlot); // give the beaver a job
+            rf.setJob(new Job(task, loc), beaverJobSlot); // give the beaver a job
 
             rc.yield();
 

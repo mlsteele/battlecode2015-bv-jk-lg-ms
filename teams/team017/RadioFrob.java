@@ -2,6 +2,7 @@ package team017;
 
 import battlecode.common.*;
 import battlecode.common.GameActionException;
+import battlecode.common.MapLocation;
 
 import static battlecode.common.Direction.*;
 import static battlecode.common.RobotType.*;
@@ -111,6 +112,16 @@ public class RadioFrob {
         } catch (GameActionException e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    public MapLocation getResupplyLocation() {
+        try {
+            int encodedLoc = rc.readBroadcast(REQUEST_RESUPPLY_LOCATION_SLOT);
+            if (encodedLoc == 0) return null;
+            return decodeLocation(encodedLoc);
+        } catch (GameActionException e) {
+            return null;
         }
     }
 
