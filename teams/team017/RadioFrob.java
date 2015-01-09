@@ -53,8 +53,8 @@ public class RadioFrob {
         return jobSlot;
     }
 
-    public int getJobNum(int jobSlot) throws GameActionException {
-        return rc.readBroadcast(BEAVER_JOB_BASE + jobSlot);
+    public Job getJob(int jobSlot) throws GameActionException {
+        return decodeJob(rc.readBroadcast(BEAVER_JOB_BASE + jobSlot));
     }
 
     // sets a job for the given beaver job slot

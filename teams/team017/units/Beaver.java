@@ -16,7 +16,7 @@ public class Beaver extends Unit {
     // Don't build farther away than this
     private static final int MAX_DISTANCE_FROM_HQ = 100;
 
-    private int currentJob = 0;
+    private Job currentJob = new Job(Strategy.TASK_NONE);
 
     @Override
     public void run() {
@@ -24,8 +24,9 @@ public class Beaver extends Unit {
             int myJobSlot = rf.getBeaverJobSlot();
             rf.myJobSlot = myJobSlot;
 
-            currentJob = rf.getJobNum(myJobSlot);
-            rc.setIndicatorString(0, "i am Beaver : My job slot is " + myJobSlot + " and my job is : " + currentJob);
+            currentJob = rf.getJob(myJobSlot);
+            rc.setIndicatorString(0,
+                    "i am Beaver : My job slot is " + myJobSlot + " and my job is : " + currentJob.jobNum);
         } catch (GameActionException e) {
             e.printStackTrace();
         }
@@ -36,8 +37,7 @@ public class Beaver extends Unit {
             int initialSupplyLevel = waitForSupplies();
 
             // Order code is which mission to pursue.
-            //int orderCode = initialSupplyLevel % 100;
-            int orderCode = currentJob;
+            int orderCode = currentJob.jobNum;
 
             rc.setIndicatorString(1, "BEAVER mission " + orderCode);
             System.out.println("BEAVER mission " + orderCode);
@@ -47,10 +47,10 @@ public class Beaver extends Unit {
                 case (Strategy.TASK_TANKFACTORY):
                 case (Strategy.TASK_HELIPAD):
                 case (Strategy.TASK_SUPPLYDEPOT):
-                    buildStructureMission(orderCode);
+                    buildStructureMission();
                     break;
                 case (Strategy.TASK_RESUPPLY_TANKFACTORY):
-                    resupplyMission(orderCode);
+                    resupplyMission();
                     break;
                 case (Strategy.TASK_NONE):
                     System.out.println("BEAVER mission none");
@@ -77,7 +77,7 @@ public class Beaver extends Unit {
         }
     }
 
-    private void buildStructureMission(int orderCode) {
+    private void buildStructureMission() {
         while (true) {
             int distanceFromHQ = rc.getLocation().distanceSquaredTo(hqLoc);
 
@@ -86,7 +86,7 @@ public class Beaver extends Unit {
                     moveToward(hqLoc);
                 } else {
                     if (isClearToBuild()) {
-                        if (buildThenSupplyForCode(orderCode)) {
+                        if (buildThenSupplyForCode(currentJob.jobNum)) {
                             return;
                         }
                     } else {
@@ -108,9 +108,9 @@ public class Beaver extends Unit {
         return true;
     }
 
-    private void resupplyMission(int orderCode) {
+    private void resupplyMission() {
         int amt;
-        switch (orderCode) {
+        switch (currentJob.jobNum) {
             case (Strategy.TASK_RESUPPLY_TANKFACTORY):
                 amt = Strategy.TANKFACTORY_RESUPPLY_AMT;
                 break;
@@ -118,8 +118,21 @@ public class Beaver extends Unit {
                 throw new NotImplementedException("Unknown resupply mission");
 
         }
-        // TODO(jessk) we need a location!!
-        rc.setIndicatorString(2, "Doing nothing until resupply is implemented");
+        while(true) {
+            if (rc.getLocation().distanceSquaredTo(currentJob.loc) > GameConstants.SUPPLY_TRANSFER_RADIUS_SQUARED) {
+                moveToward(currentJob.loc);
+                rc.yield();
+                continue;
+            } else {
+                try {
+                    rc.transferSupplies(amt, currentJob.loc);
+                    return;
+                } catch (GameActionException e) {
+                    e.printStackTrace();
+                    return;
+                }
+            }
+        }
 
     }
 
