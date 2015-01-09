@@ -139,7 +139,7 @@ public class Headquarters extends Structure {
             RobotInfo rob = rc.senseRobotAtLocation(rc.getLocation().add(dir)); // gets its info
             int robotID = rob.ID; // get its id
             RobotInfo[] candidates = {rob};
-            assignedBeaverJobSlots.put(robotID, beaverJobSlot);
+            assignedBeaverJobSlots.put(beaverJobSlot, beaverJobSlot);
             return supplyToID(candidates, robotID, Strategy.taskSupply(task));
         } catch (GameActionException e) {
             e.printStackTrace();

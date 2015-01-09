@@ -43,20 +43,13 @@ public class RadioFrob {
     }
 
     public int getBeaverJobSlot() throws GameActionException {
-        return rc.readBroadcast(BEAVER_JOB_ASSIGNMENT_SLOT);
-    }
-
-    public void clearBeaverJobSlot() throws GameActionException {
+        int jobSlot = rc.readBroadcast(BEAVER_JOB_ASSIGNMENT_SLOT);
         rc.broadcast(BEAVER_JOB_ASSIGNMENT_SLOT, 0);
+        return jobSlot;
     }
 
     public int getJob(int jobSlot) throws GameActionException {
         return rc.readBroadcast(BEAVER_JOB_BASE + jobSlot);
-    }
-
-    // returns my job
-    public int getJob() throws GameActionException {
-        return getJob(myJobSlot);
     }
 
     // sets a job for the given beaver job slot
@@ -65,9 +58,23 @@ public class RadioFrob {
         return true;
     }
 
-    // sets my job
-    public boolean setJob(int job) throws GameActionException {
-        return setJob(job, myJobSlot);
+    // used by beaver
+    public boolean requestJob() throws GameActionException {
+        rc.broadcast(BEAVER_JOB_BASE, myJobSlot);
+        rc.broadcast(myJobSlot, -1);
+        return true;
+    }
+
+    // used by hq
+    public boolean assignJobToNextFree(int job) throws GameActionException {
+        int jobSlot = rc.readBroadcast(BEAVER_JOB_BASE);
+        if (jobSlot > 0 && (rc.readBroadcast(jobSlot) == -1)) {
+            // cool we actually got a beaver whos waiting
+            // lets clear the job slot and give them the job
+            rc.broadcast(BEAVER_JOB_BASE, 0);
+            rc.broadcast(jobSlot, job);
+            return true;
+        } else return false;
     }
 
     //TODO: Use caching later Dont think this is used lol
