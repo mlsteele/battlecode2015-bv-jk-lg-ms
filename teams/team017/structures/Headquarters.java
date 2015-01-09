@@ -5,6 +5,8 @@ import battlecode.common.GameActionException;
 import static battlecode.common.Direction.*;
 import static battlecode.common.RobotType.*;
 import static team017.Strategy.*;
+
+import java.lang.System;
 import java.util.*;
 
 public class Headquarters extends Structure {
@@ -18,7 +20,9 @@ public class Headquarters extends Structure {
     private int spawned_beavers = 0;
     private boolean beaver_mining_spawned = false;
     private boolean beaver_barracks_spawned = false;
+
     private Hashtable<Integer, Integer> assignedBeaverJobSlots = new Hashtable<Integer, Integer>();
+    private Queue<Integer> taskQueue = new LinkedList<Integer>();
 
     Headquarters(RobotController rc) { super(rc); }
 
@@ -30,10 +34,18 @@ public class Headquarters extends Structure {
 
         int missionIndex = 0;
 
+        taskQueue.add(1);
+        //taskQueue.add(10);
+        //taskQueue.add(10);
+        //taskQueue.add(10);
+        //taskQueue.add(10);
+
         while (true) {
             shootBaddies();
 
             strategyUpdate();
+
+            taskUpkeep();
 
             // Spawn a beaver.
             if(rc.isCoreReady()) {
@@ -103,6 +115,44 @@ public class Headquarters extends Structure {
         return sum;
     }
 
+    private void taskUpkeep() {
+        // check if there are any tasks
+        Integer nextTask = taskQueue.peek();
+        /*
+        if (rc.getSupplyLevel() < Strategy.taskSupply(nextTask)) {
+            System.out.println("Sorry dont have enough for mission");
+            return;
+        }*/
+
+        int taskSlot;
+
+        if (nextTask == null) return;
+
+        // check if anyone wants tasks
+        try {
+            taskSlot = rf.assignJobToNextFree(nextTask);
+            if (taskSlot < 0) {
+                // no one can get tasks so add the job back to queue
+                taskQueue.add(nextTask);
+                return;
+            }
+
+        } catch (GameActionException e) {
+            e.printStackTrace();
+            taskQueue.add(nextTask);
+            return;
+        }
+
+        // we have given the beaver the task, lets transfer the supplies
+        if (assignedBeaverJobSlots == null) {
+            System.out.println("The hashtable is null");
+        }
+        int robotID = assignedBeaverJobSlots.get((Integer) taskSlot);
+        System.out.println("This is the task we are going to give to task slot "+taskSlot+ " with id " + robotID + " : " + nextTask);
+        System.out.println("its going to get this much supply " + Strategy.taskSupply(nextTask));
+        while (!supplyToID(null, robotID, Strategy.taskSupply(nextTask))) continue;
+    }
+
     // Assumes supply level desired
     private boolean spawnBeaverWithStrategy(int task, MapLocation loc) {
         if(rc.getSupplyLevel() < Strategy.taskSupply(task)) return false;
@@ -123,9 +173,8 @@ public class Headquarters extends Structure {
             RobotInfo rob = rc.senseRobotAtLocation(rc.getLocation().add(dir)); // gets its info
             int robotID = rob.ID; // get its id
             RobotInfo[] candidates = {rob};
-            assignedBeaverJobSlots.put(robotID, beaverJobSlot);
-            boolean didSupply = supplyToID(candidates, robotID, Strategy.taskSupply(task));
-            return didSupply;
+            assignedBeaverJobSlots.put(beaverJobSlot, robotID);
+            return supplyToID(candidates, robotID, Strategy.taskSupply(task));
         } catch (GameActionException e) {
             e.printStackTrace();
             return false;

@@ -71,10 +71,12 @@ public class Beaver extends Unit {
             // Finished what it was doing
             rc.setIndicatorString(1, "Finished mission " + orderCode);
             System.out.println("BEAVER finished mission " + orderCode);
+            currentJob = 6;
             goToHQ();
             dumpSuppliesToHQ();
+            getTaskFromHQ();
             // Just give up and die.
-            rc.disintegrate();
+            //rc.disintegrate();
         }
     }
 
@@ -245,6 +247,34 @@ public class Beaver extends Unit {
         } while (true);
     }
 
+    // gets a tack from the hq
+    // blocking
+    private void getTaskFromHQ() {
+        System.out.println("Hey im going to get a new job");
+        goToHQ();
+
+        // im near the hq, lets ask for a job and clear my job slot
+        try {
+            rf.requestJob();
+        } catch (GameActionException e) {
+            e.printStackTrace();
+        }
+        currentJob = -1;
+
+        // wait for supply from HQ
+        while(rc.getSupplyLevel() < Strategy.initialSupply(RobotType.BEAVER)) rc.yield();
+        rc.yield();
+        rc.yield();
+        rc.yield();
+        rc.yield();
+        System.out.println("This is my jobslot " + rf.myJobSlot);
+        try {
+            currentJob = rf.getJob(rf.myJobSlot);
+        } catch (GameActionException e) {
+            e.printStackTrace();
+        }
+        System.out.println("I was looking for a new job and got " + currentJob);
+    }
 
     private void dumpSuppliesToHQ() {
         rc.setIndicatorString(1, "Dumping supplies...");

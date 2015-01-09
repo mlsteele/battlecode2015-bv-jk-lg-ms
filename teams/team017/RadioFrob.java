@@ -4,6 +4,8 @@ import battlecode.common.*;
 import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
 
+import javax.sound.midi.SysexMessage;
+
 import static battlecode.common.Direction.*;
 import static battlecode.common.RobotType.*;
 import java.util.*;
@@ -81,16 +83,18 @@ public class RadioFrob {
         return true;
     }
 
-    // used by hq
-    public boolean assignJobToNextFree(Job job) throws GameActionException {
+    // used by hq, returns the jobslot of the beaver assigned the job
+    public int assignJobToNextFree(int job) throws GameActionException {
         int jobSlot = rc.readBroadcast(BEAVER_JOB_BASE);
+        System.out.println("This is what was the jobslot" + jobSlot);
         if (jobSlot > 0 && (rc.readBroadcast(jobSlot) == -1)) {
+            System.out.println("Giving jobSlot " + jobSlot + " job " + job);
             // cool we actually got a beaver whos waiting
             // lets clear the job slot and give them the job
             rc.broadcast(BEAVER_JOB_BASE, 0);
-            rc.broadcast(jobSlot, encodeJob(job));
-            return true;
-        } else return false;
+            setJob(job, jobSlot);
+            return jobSlot;
+        } else return -1;
     }
 
     public boolean requestResupply(int amount) {
