@@ -46,6 +46,7 @@ public class Beaver extends Unit {
                 case (Strategy.TASK_MINERFACTORY):
                 case (Strategy.TASK_TANKFACTORY):
                 case (Strategy.TASK_HELIPAD):
+                case (Strategy.TASK_SUPPLYDEPOT):
                     buildStructureMission(orderCode);
                     break;
                 case (Strategy.TASK_NONE):
@@ -112,6 +113,8 @@ public class Beaver extends Unit {
                 return buildThenSupply(TANKFACTORY);
             case Strategy.TASK_HELIPAD:
                 return buildThenSupply(HELIPAD);
+            case Strategy.TASK_SUPPLYDEPOT:
+                return buildThenSupply(SUPPLYDEPOT);
             default:
                 System.err.println("error, invalid building code " + orderCode);
                 return false;
@@ -166,6 +169,9 @@ public class Beaver extends Unit {
                 break;
             case HELIPAD:
                 supply = Strategy.initialSupply(HELIPAD);
+                break;
+            case SUPPLYDEPOT:
+                supply = Strategy.initialSupply(SUPPLYDEPOT);
                 break;
             default:
                 supply = 0;

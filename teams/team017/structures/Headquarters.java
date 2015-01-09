@@ -41,14 +41,19 @@ public class Headquarters extends Structure {
             if(rc.isCoreReady()) {
                 switch (missionIndex) {
                     case 0:
+                    case 1:
+                    case 2:
+                        if (spawnBeaverWithStrategy(TASK_SUPPLYDEPOT)) missionIndex++;
+                        break;
+                    case 3:
                         if (spawnBeaverWithStrategy(TASK_MINERFACTORY)) missionIndex++;
                         break;
-                    case 1:
+                    case 4:
                         if (spawnBeaverWithStrategy(TASK_BARRACKS)) missionIndex++;
                         break;
-                    case 2:
-                    case 3:
-                    case 4:
+                    case 5:
+                    case 6:
+                    case 7:
                         if (spawnBeaverWithStrategy(TASK_TANKFACTORY)) missionIndex++;
                         break;
                     default:

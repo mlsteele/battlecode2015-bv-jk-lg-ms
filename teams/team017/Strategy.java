@@ -13,6 +13,7 @@ public enum Strategy {;
     public static final int TASK_MINERFACTORY = 2;
     public static final int TASK_TANKFACTORY = 3;
     public static final int TASK_HELIPAD = 4;
+    public static final int TASK_SUPPLYDEPOT = 5;
 
     // Miners don't request supply if team has excess ore.
     public static final int TEAM_LOW_ORE = 1500;
@@ -24,12 +25,13 @@ public enum Strategy {;
 
     public static int taskSupply(int task) {
         switch(task) {
-            case TASK_NONE:         return initialSupply(BEAVER);
-            case TASK_BARRACKS:     return initialSupply(BEAVER) + initialSupply(BARRACKS);
-            case TASK_MINERFACTORY: return initialSupply(BEAVER) + initialSupply(MINERFACTORY);
-            case TASK_TANKFACTORY:  return initialSupply(BEAVER) + initialSupply(TANKFACTORY);
-            case TASK_HELIPAD:      return initialSupply(BEAVER) + initialSupply(HELIPAD);
-            default:                throw new NotImplementedException();
+            case TASK_NONE:              return initialSupply(BEAVER);
+            case TASK_BARRACKS:          return initialSupply(BEAVER) + initialSupply(BARRACKS);
+            case TASK_MINERFACTORY:      return initialSupply(BEAVER) + initialSupply(MINERFACTORY);
+            case TASK_TANKFACTORY:       return initialSupply(BEAVER) + initialSupply(TANKFACTORY);
+            case TASK_HELIPAD:           return initialSupply(BEAVER) + initialSupply(HELIPAD);
+            case TASK_SUPPLYDEPOT:       return initialSupply(BEAVER) + initialSupply(SUPPLYDEPOT);
+            default:                     throw new NotImplementedException();
         }
     }
 
@@ -50,6 +52,8 @@ public enum Strategy {;
             case TANKFACTORY:         return 5 * initialSupply(TANK);
             case TANK:                return 4000;
 
+            case SUPPLYDEPOT:         return 0;
+
             case AEROSPACELAB:        throw new NotImplementedException();
             case COMMANDER:           throw new NotImplementedException();
             case COMPUTER:            throw new NotImplementedException();
@@ -57,7 +61,6 @@ public enum Strategy {;
             case HQ:                  throw new NotImplementedException();
             case LAUNCHER:            throw new NotImplementedException();
             case MISSILE:             throw new NotImplementedException();
-            case SUPPLYDEPOT:         throw new NotImplementedException();
             case TECHNOLOGYINSTITUTE: throw new NotImplementedException();
             case TOWER:               throw new NotImplementedException();
             case TRAININGFIELD:       throw new NotImplementedException();
