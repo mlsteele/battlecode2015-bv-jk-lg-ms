@@ -62,7 +62,7 @@ public class Beaver extends Unit {
                     }
                     break;
                 default:
-                    System.out.println("ERROR: BEAVER sent on invalid mission ("+orderCode+"), please debug");
+                    System.err.println("ERROR: BEAVER sent on invalid mission ("+orderCode+"), please debug");
             }
 
             // Finished what it was doing
