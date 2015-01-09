@@ -134,6 +134,7 @@ public class Headquarters extends Structure {
             rf.setJob(task, beaverJobSlot); // give the beaver a job
 
             Direction dir = spawn(BEAVER); // spawn the beaver
+            if (dir == null) return false;
             rc.yield();
             RobotInfo rob = rc.senseRobotAtLocation(rc.getLocation().add(dir)); // gets its info
             int robotID = rob.ID; // get its id
