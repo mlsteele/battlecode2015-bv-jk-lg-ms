@@ -79,8 +79,9 @@ public class Miner extends Unit {
         Direction bestDirection = NORTH;
 
         Direction d;
-        for (int i = rand.nextInt(8); i < 8; i++) {
-            d = possibleDirs[i];
+        int ri = rand.nextInt(8);
+        for (int i = 0; i < 8; i++) {
+            d = possibleDirs[(i + ri) % 8];
             double ore = rc.senseOre(curLocation.add(d));
             if (ore > bestOre && rc.canMove(d)) {
                 bestOre = ore;
