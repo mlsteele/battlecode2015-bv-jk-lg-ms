@@ -24,7 +24,7 @@ public class Beaver extends Unit {
             int myJobSlot = rf.getBeaverJobSlot();
             rf.myJobSlot = myJobSlot;
 
-            currentJob = rf.getJob(myJobSlot);
+            currentJob = rf.getJobNum(myJobSlot);
             rc.setIndicatorString(0, "i am Beaver : My job slot is " + myJobSlot + " and my job is : " + currentJob);
         } catch (GameActionException e) {
             e.printStackTrace();

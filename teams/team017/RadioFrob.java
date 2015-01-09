@@ -52,13 +52,13 @@ public class RadioFrob {
         return jobSlot;
     }
 
-    public int getJob(int jobSlot) throws GameActionException {
+    public int getJobNum(int jobSlot) throws GameActionException {
         return rc.readBroadcast(BEAVER_JOB_BASE + jobSlot);
     }
 
     // sets a job for the given beaver job slot
-    public boolean setJob(int job, int jobSlot) throws GameActionException {
-        rc.broadcast(BEAVER_JOB_BASE + jobSlot, job);
+    public boolean setJob(Job job, int jobSlot) throws GameActionException {
+        rc.broadcast(BEAVER_JOB_BASE + jobSlot, encodeJob(job));
         return true;
     }
 
@@ -70,13 +70,13 @@ public class RadioFrob {
     }
 
     // used by hq
-    public boolean assignJobToNextFree(int job) throws GameActionException {
+    public boolean assignJobToNextFree(Job job) throws GameActionException {
         int jobSlot = rc.readBroadcast(BEAVER_JOB_BASE);
         if (jobSlot > 0 && (rc.readBroadcast(jobSlot) == -1)) {
             // cool we actually got a beaver whos waiting
             // lets clear the job slot and give them the job
             rc.broadcast(BEAVER_JOB_BASE, 0);
-            rc.broadcast(jobSlot, job);
+            rc.broadcast(jobSlot, encodeJob(job));
             return true;
         } else return false;
     }
@@ -160,5 +160,17 @@ public class RadioFrob {
     private MapLocation decodeLocation(int loc) {
         MapLocation rel = new MapLocation(loc & 0xFF, loc >> 8);
         return rel.add(hqLoc.x, hqLoc.y).add(-120, -120);
+    }
+
+    private int encodeJob(Job job) {
+        if (job.loc == null) return job.jobNum;
+        return (encodeLocation(job.loc) << 16) | job.jobNum;
+    }
+
+    private Job decodeJob(int job) {
+        int encodedLoc = job >> 16;
+        if (encodedLoc == 0) return new Job(job);
+        int jobNum = job & 0xFFFF;
+        return new Job(jobNum, decodeLocation(encodedLoc));
     }
 }

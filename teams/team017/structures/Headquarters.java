@@ -102,30 +102,6 @@ public class Headquarters extends Structure {
         return sum;
     }
 
-    private Direction smartSpawn(RobotType robot) {
-        if (robot == RobotType.BEAVER) {
-            try {
-                int beaverJobSlot = rf.assignBeaverJobSlot();
-                if (beaverJobSlot < 0) return null;
-                rf.setJob(spawned_beavers, beaverJobSlot);
-                return spawn(BEAVER);
-            } catch (GameActionException e) {
-                e.printStackTrace();
-                return null;
-            }
-        } else {
-            return spawn(robot);
-        }
-    }
-
-    private void maybeSpawnBeaver() {
-        if (rc.getSupplyLevel() >= Strategy.initialSupply(BEAVER) && spawned_beavers < MAX_BEAVER) {
-            if (smartSpawn(BEAVER) != null) {
-                spawned_beavers++;
-            }
-        }
-    }
-
     // Assumes supply level desired
     private boolean spawnBeaverWithStrategy(int task) {
         if(rc.getSupplyLevel() < Strategy.taskSupply(task)) return false;
@@ -139,7 +115,7 @@ public class Headquarters extends Structure {
                 return false; // someone hasnt claimed their job, shame on them
             }
             rc.setIndicatorString(2, "Creating beaver : slot = " + beaverJobSlot);
-            rf.setJob(task, beaverJobSlot); // give the beaver a job
+            rf.setJob(new Job(task), beaverJobSlot); // give the beaver a job
 
             rc.yield();
 
