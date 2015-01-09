@@ -88,7 +88,17 @@ public class Headquarters extends Structure {
             rf.writeRally1(rc.senseEnemyHQLocation());
             rc.setIndicatorString(1, "set rally1 to " + rf.getRally1());
         }
+    }
 
+
+    private double ourTankHealth() {
+        double sum = 0;
+        for (RobotInfo r : rc.senseNearbyRobots()) {
+            if (r.team == rc.getTeam() && r.type == TANK) {
+                sum += r.health;
+            }
+        }
+        return sum;
     }
 
     private Direction smartSpawn(RobotType robot) {
