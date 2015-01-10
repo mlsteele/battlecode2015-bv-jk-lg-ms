@@ -104,10 +104,9 @@ public class RadioFrob {
     }
 
     // used by beaver to request a task
-    public boolean requestTask() {
+    public void requestTask() {
         tx(BEAVER_TASK_BASE, myTaskSlot);
         tx(BEAVER_TASK_BASE + myTaskSlot, TASK_REQUESTING_TASK);
-        return true;
     }
 
     // used by hq, returns the taskslot of the beaver assigned the task

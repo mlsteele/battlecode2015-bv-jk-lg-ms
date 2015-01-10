@@ -237,21 +237,17 @@ public class Beaver extends Unit {
     // Blocks until we have a new task.
     private void getTaskFromHQ() {
         goToHQ();
-        rc.setIndicatorString(1, "awaiting new task");
 
-        // im near the hq, lets ask for a task and clear my task slot
-        rf.requestTask();
+        rc.setIndicatorString(1, "awaiting new task");
         currentTask = null;
 
-        // yield so the request propogates
-        // otherwise we might see our old task.
-        // TODO(miles): remove these
-        rc.yield();
-        rc.yield();
-
+        // im near the hq, lets ask for a task and clear my task slot
         // wait for signal from HQ
-        rc.setIndicatorString(1, "awaiting task");
         do {
+            rf.requestTask();
+            // yield so the request propogates, otherwise we might see our old task.
+            // yield so that we don't request a task while having an assigned task.
+            rc.yield();
             currentTask = rf.getTask(rf.myTaskSlot);
         } while (currentTask == null);
 
