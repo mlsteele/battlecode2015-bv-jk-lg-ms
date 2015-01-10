@@ -75,6 +75,7 @@ public abstract class Robot {
     }
 
     protected void shootBaddies() {
+        // TODO(miles): attackRadiusSquared is not good for the HQ, must account for range buf
         int range = rc.getType().attackRadiusSquared;
         Team enemy = rc.getTeam().opponent();
 
