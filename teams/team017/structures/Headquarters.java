@@ -59,6 +59,8 @@ public class Headquarters extends Structure {
         rf.requestXUnits(RobotType.MINER, 10);
 
         while (true) {
+            Analyze.sampleTeamOre(rc);
+
             shootBaddies();
 
             strategyUpdate();

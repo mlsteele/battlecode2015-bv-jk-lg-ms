@@ -1,0 +1,2 @@
+ant analyze | tee match.log
+cat match.log | grep "ANALYZE" > match-analyze.log
