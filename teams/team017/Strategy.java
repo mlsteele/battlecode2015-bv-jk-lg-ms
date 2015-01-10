@@ -55,17 +55,17 @@ public enum Strategy {;
             // TODO(miles): decrease this by a metrick fuckton.
             case BEAVER:              return 1000;
 
-            case MINERFACTORY:        return 0;//10 * initialSupply(MINER);
+            case MINERFACTORY:        return 10 * initialSupply(MINER);
             case MINER:               return 1000;
 
-            case BARRACKS:            return 0;//10 * initialSupply(SOLDIER);
+            case BARRACKS:            return 10 * initialSupply(SOLDIER);
             case SOLDIER:             return 1000;
             case BASHER:              return 1000;
 
-            case HELIPAD:             return 0;//20 * initialSupply(DRONE);
+            case HELIPAD:             return 20 * initialSupply(DRONE);
             case DRONE:               return 1000;
 
-            case TANKFACTORY:         return 0;//6 * initialSupply(TANK);
+            case TANKFACTORY:         return 6 * initialSupply(TANK);
             case TANK:                return 4000;
 
             case SUPPLYDEPOT:         return 0;

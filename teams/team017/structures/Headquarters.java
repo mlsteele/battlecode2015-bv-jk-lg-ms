@@ -49,7 +49,7 @@ public class Headquarters extends Structure {
         }
 
         // set the max number of mining units
-        rf.requestXUnits(RobotType.MINER, 40);
+        rf.requestXUnits(RobotType.MINER, 10);
 
         while (true) {
             shootBaddies();
