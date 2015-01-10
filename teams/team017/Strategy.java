@@ -20,7 +20,7 @@ public enum Strategy {;
 
     // How many beavers to maintain for tasks.
     // TODO(miles): add task completion checking to make >1 more palatable.
-    public static final int BEAVER_POOL_SIZE = 1;
+    public static final int BEAVER_POOL_SIZE = 2;
 
     // Miners don't request supply if team has excess ore.
     public static final int TEAM_LOW_ORE = 1500;

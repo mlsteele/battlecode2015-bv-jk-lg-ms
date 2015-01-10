@@ -24,28 +24,28 @@ public abstract class Unit extends Robot {
     // Tries to move forward.
     // Returns whether successful.
     // Assumes CoreReady
-    protected boolean moveForward() {
+    protected boolean moveForwardBug() {
         // try forwards
-        if (moveStrictlyForward()) return true;
+        if (moveForwardStrict()) return true;
 
         // try leftish but not if that's where we came from.
         forward = forward.rotateLeft();
         if (forward != cameFrom) {
-            if (moveStrictlyForward()) return true;
+            if (moveForwardStrict()) return true;
         }
 
         // try rightish
         forward = forward.rotateRight();
         forward = forward.rotateRight();
-        if (moveStrictlyForward()) return true;
+        if (moveForwardStrict()) return true;
 
         // try right
         forward = forward.rotateRight();
-        if (moveStrictlyForward()) return true;
+        if (moveForwardStrict()) return true;
 
         // try right-back
         forward = forward.rotateRight();
-        if (moveStrictlyForward()) return true;
+        if (moveForwardStrict()) return true;
 
         // give up
         return false;
@@ -55,9 +55,9 @@ public abstract class Unit extends Robot {
         return moveToward(rc.getLocation().directionTo(loc));
     }
 
-    protected boolean moveStrictlyToward(MapLocation loc) {
+    protected boolean moveTowardStrict(MapLocation loc) {
         forward = rc.getLocation().directionTo(loc);
-        return moveStrictlyForward();
+        return moveForwardStrict();
     }
 
     // Move to within `distanceSquared` of `loc`.
@@ -67,7 +67,7 @@ public abstract class Unit extends Robot {
         if (rc.getLocation().distanceSquaredTo(loc) > distanceSquaredTo) {
             return moveToward(loc);
         } else {
-            return moveStrictlyToward(loc);
+            return moveTowardStrict(loc);
         }
     }
 
@@ -78,7 +78,7 @@ public abstract class Unit extends Robot {
 
     protected boolean moveToward(Direction dir) {
         forward = dir;
-        return moveForward();
+        return moveForwardBug();
     }
 
     // Return to the HQ.
@@ -98,7 +98,6 @@ public abstract class Unit extends Robot {
         }
     }
 
-
     // Wander the field aimlessly.
     // Returns whether movement occurred.
     // Assumes CoreReady
@@ -106,7 +105,7 @@ public abstract class Unit extends Robot {
     protected boolean wander() {
         // MapLocation target = rc.getLocation().add(forward);
         for (int i = 0; i < 4; i++) {
-            if (moveForward()) {
+            if (moveForwardBug()) {
                 return true;
             } else {
                 forward = forward.rotateRight().rotateRight();
@@ -115,7 +114,7 @@ public abstract class Unit extends Robot {
         return false;
     }
 
-    private boolean moveStrictlyForward() {
+    private boolean moveForwardStrict() {
         if (rc.canMove(forward)) {
             try {
                 rc.move(forward);
