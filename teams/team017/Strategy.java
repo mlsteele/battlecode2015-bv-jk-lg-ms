@@ -36,9 +36,11 @@ public enum Strategy {;
 
     public static final int RALLY_ARMY = 0;
 
-    // TODO(miles): this will probably need to be adjusted for different size groups.
-    // How close must be to target point.
+    // How close must be to target point. (sqrads)
     public static final int MOVEMENT_NEARNESS_THRESHOLD = 25;
+
+    // How close to encircle a target point. (sqrads)
+    public static final int MOVEMENT_CIRCLE_SIZE = 50;
 
     public static int taskSupply(int task) {
         switch(task) {

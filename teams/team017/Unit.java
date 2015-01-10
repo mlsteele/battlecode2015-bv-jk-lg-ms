@@ -13,12 +13,14 @@ public abstract class Unit extends Robot {
     protected MapLocation hqLoc;
 
     Direction cameFrom;
+    boolean buggingDirection;
 
     Unit(RobotController rc) {
         super(rc);
         forward = randomDirection();
         hqLoc = rc.senseHQLocation();
         cameFrom = NORTH; // arbitrary initialization
+        buggingDirection = rand.nextBoolean();
     }
 
     // Return to the HQ.
@@ -56,7 +58,7 @@ public abstract class Unit extends Robot {
 
     // Do whatever the default getting-to-rally-point movement is.
     protected boolean moveToRallyPoint(MapLocation loc) {
-        return moveToClump(loc);
+        return moveToCircle(loc);
     }
 
     protected boolean moveTowardBugging(MapLocation loc) {
@@ -76,26 +78,39 @@ public abstract class Unit extends Robot {
         if (moveForwardStrict()) return true;
 
         // try leftish but not if that's where we just came from.
-        forward = forward.rotateLeft();
+        forward = buggingDirection ? forward.rotateLeft() : forward.rotateRight();
         if (forward != cameFrom) {
             if (moveForwardStrict()) return true;
         }
 
         // try rightish
-        forward = forward.rotateRight();
-        forward = forward.rotateRight();
+        forward = buggingDirection ? forward.rotateRight() : forward.rotateLeft();
+        forward = buggingDirection ? forward.rotateRight() : forward.rotateLeft();
         if (moveForwardStrict()) return true;
 
         // try right
-        forward = forward.rotateRight();
+        forward = buggingDirection ? forward.rotateRight() : forward.rotateLeft();
         if (moveForwardStrict()) return true;
 
         // try right-back
-        forward = forward.rotateRight();
+        forward = buggingDirection ? forward.rotateRight() : forward.rotateLeft();
         if (moveForwardStrict()) return true;
 
         // give up
         return false;
+    }
+
+    // Encircle `loc` with a distance determined by MOVEMENT_CIRCLE_SIZE.
+    private boolean moveToCircle(MapLocation loc) {
+        return moveToCircle(MOVEMENT_CIRCLE_SIZE, loc);
+    }
+
+    private boolean moveToCircle(int distanceSquaredTo, MapLocation loc) {
+        if (rc.getLocation().distanceSquaredTo(loc) > distanceSquaredTo) {
+            return moveTowardBugging(loc);
+        } else {
+            return false;
+        }
     }
 
     // Move near to `loc` as determined by MOVEMENT_NEARNESS_THRESHOLD.
