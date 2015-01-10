@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+ant -Dteam=team017 jar
