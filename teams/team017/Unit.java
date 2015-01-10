@@ -54,6 +54,11 @@ public abstract class Unit extends Robot {
         return false;
     }
 
+    // Do whatever the default getting-to-rally-point movement is.
+    protected boolean moveToRallyPoint(MapLocation loc) {
+        return moveToClump(loc);
+    }
+
     protected boolean moveTowardBugging(MapLocation loc) {
         return moveTowardBugging(rc.getLocation().directionTo(loc));
     }
@@ -93,11 +98,6 @@ public abstract class Unit extends Robot {
         return false;
     }
 
-    // Do whatever the default getting-to-rally-point movement is.
-    protected boolean moveToRallyPoint(MapLocation loc) {
-        return moveToClump(loc);
-    }
-
     // Move near to `loc` as determined by MOVEMENT_NEARNESS_THRESHOLD.
     private boolean moveToClump(MapLocation loc) {
         return moveToClump(MOVEMENT_NEARNESS_THRESHOLD, loc);
@@ -110,8 +110,34 @@ public abstract class Unit extends Robot {
         if (rc.getLocation().distanceSquaredTo(loc) > distanceSquaredTo) {
             return moveTowardBugging(loc);
         } else {
-            return moveTowardStrict(loc);
+            return moveTowardish(loc);
         }
+    }
+
+    private boolean moveTowardish(MapLocation loc) {
+        forward = rc.getLocation().directionTo(loc);
+        return moveForwardish();
+    }
+
+    private boolean moveForwardish() {
+        // try forwards
+        if (moveForwardStrict()) return true;
+
+        // Pick one of the sides at random
+        Direction[] sides = {forward.rotateRight(), forward.rotateLeft()};
+        if (rand.nextInt(2) == 0) {
+            Direction swap = sides[0];
+            sides[0] = sides[1];
+            sides[1] = swap;
+        }
+
+        forward = sides[0];
+        if (moveForwardStrict()) return true;
+
+        forward = sides[1];
+        if (moveForwardStrict()) return true;
+
+        return false;
     }
 
     private boolean moveTowardStrict(MapLocation loc) {
