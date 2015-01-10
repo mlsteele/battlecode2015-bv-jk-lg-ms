@@ -40,7 +40,7 @@ public enum Strategy {;
     public static final int MOVEMENT_NEARNESS_THRESHOLD = 25;
 
     // How close to encircle a target point. (sqrads)
-    public static final int MOVEMENT_CIRCLE_SIZE = 50;
+    public static final int MOVEMENT_CIRCLE_SIZE = 40;
 
     public static int taskSupply(int task) {
         switch(task) {
