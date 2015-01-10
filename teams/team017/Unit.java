@@ -1,8 +1,10 @@
 package team017;
 
 import battlecode.common.*;
+import battlecode.common.GameActionException;
 import static battlecode.common.Direction.*;
 import static battlecode.common.RobotType.*;
+import static team017.Strategy.*;
 import java.util.*;
 
 // Subclass for units that move and shoot and stuff.
@@ -51,6 +53,27 @@ public abstract class Unit extends Robot {
 
     protected boolean moveToward(MapLocation loc) {
         return moveToward(rc.getLocation().directionTo(loc));
+    }
+
+    protected boolean moveStrictlyToward(MapLocation loc) {
+        forward = rc.getLocation().directionTo(loc);
+        return moveStrictlyForward();
+    }
+
+    // Move to within `distanceSquared` of `loc`.
+    // Tries to get closer even if within `distanceSquared`, but not very hard.
+    // Returns whether movement occurred.
+    protected boolean moveToWithin(int distanceSquaredTo, MapLocation loc) {
+        if (rc.getLocation().distanceSquaredTo(loc) > distanceSquaredTo) {
+            return moveToward(loc);
+        } else {
+            return moveStrictlyToward(loc);
+        }
+    }
+
+    // Move near to `loc` as determined by MOVEMENT_NEARNESS_THRESHOLD.
+    protected boolean moveNearTo(MapLocation loc) {
+        return moveToWithin(MOVEMENT_NEARNESS_THRESHOLD, loc);
     }
 
     protected boolean moveToward(Direction dir) {

@@ -36,6 +36,10 @@ public enum Strategy {;
 
     public static final int RALLY_ARMY = 0;
 
+    // TODO(miles): this will probably need to be adjusted for different size groups.
+    // How close must be to target point.
+    public static final int MOVEMENT_NEARNESS_THRESHOLD = 25;
+
     public static int taskSupply(int task) {
         switch(task) {
             case TASK_NONE:              return initialSupply(BEAVER);
