@@ -58,6 +58,7 @@ public class Headquarters extends Structure {
 
             taskUpkeep();
 
+            // Send out resupply beavers.
             // TODO(miles): did I break this?
             // TODO(miles): use existing beavers for resupply tasks.
             // TODO(miles): what if there is no one in getResupplyLocation()?
