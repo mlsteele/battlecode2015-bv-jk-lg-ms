@@ -81,7 +81,7 @@ public class Beaver extends Unit {
 
             if (rc.isCoreReady()) {
                 if (distanceFromHQ > MAX_DISTANCE_FROM_HQ) {
-                    moveToward(hqLoc);
+                    moveTowardBugging(hqLoc);
                 } else {
                     if (isClearToBuild()) {
                         if (buildThenSupplyForCode(currentTask.taskNum)) {
@@ -119,7 +119,7 @@ public class Beaver extends Unit {
         while(true) {
             if (rc.isCoreReady()) {
                 if (rc.getLocation().distanceSquaredTo(currentTask.loc) > GameConstants.SUPPLY_TRANSFER_RADIUS_SQUARED) {
-                    moveToward(currentTask.loc);
+                    moveTowardBugging(currentTask.loc);
                     rc.yield();
                     continue;
                 } else {

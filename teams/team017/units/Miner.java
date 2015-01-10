@@ -42,7 +42,7 @@ public class Miner extends Unit {
         // Move away from first bad guy.
         // TODO you could move smarter than this
         if (enemies.length > 0)
-            moveToward(enemies[0].location.directionTo(rc.getLocation()));
+            moveTowardBugging(enemies[0].location.directionTo(rc.getLocation()));
 
     }
 
