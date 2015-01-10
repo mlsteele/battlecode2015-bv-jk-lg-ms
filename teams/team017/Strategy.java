@@ -18,6 +18,9 @@ public enum Strategy {;
     public static final int TASK_SUPPLYDEPOT = 6;
     public static final int TASK_RESUPPLY_TANKFACTORY = 7;
 
+    public static final int RALLY_GROUP_1 = 0; // for group 1
+    public static final int RALLY_GROUP_2 = 1;  // for group 2
+
     // How many beavers to maintain for tasks.
     // TODO(miles): add task completion checking to make >1 more palatable.
     public static final int BEAVER_POOL_SIZE = 2;
@@ -92,5 +95,14 @@ public enum Strategy {;
             case TRAININGFIELD:       throw new NotImplementedException();
             default:                  throw new NotImplementedException();
         }
+    }
+
+    public static final int EARLY_RALLY_GROUP_1 = 500;
+    public static final int ATTACK_GROUP_1 = 1000;
+    public static final int ATTACK_GROUP_2 = 1700;
+
+    public static final int armyGroupFromRound(int round) {
+        if (round <= ATTACK_GROUP_1 - 10) return 0;
+        else                              return 1;
     }
 }

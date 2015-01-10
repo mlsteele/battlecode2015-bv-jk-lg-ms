@@ -10,14 +10,16 @@ import java.lang.System;
 import java.util.*;
 
 public class Headquarters extends Structure {
-    private static final int TIME_TO_ATTACK1 = 500;
-    private static final int TIME_TO_ATTACK2 = 1000;
+
     private static final int MAX_BEAVER = 10;
     private static final int UPDATE_UNIT_COUNT_TIME = 10;
     int[] unitsOnField = new int[NUM_ROBOT_TYPES];
 
     private boolean beaver_mining_spawned = false;
     private boolean beaver_barracks_spawned = false;
+
+    private MapLocation targetTower;
+    private MapLocation earlyRallyLocation;
 
     private Hashtable<Integer, Integer> assignedBeaverTaskSlots = new Hashtable<Integer, Integer>();
     private Queue<Task> taskQueue = new LinkedList<Task>();
@@ -26,8 +28,13 @@ public class Headquarters extends Structure {
 
     @Override
     public void run() {
-        // Tell all soldiers to rally at our first tower.
-        rf.writeRally(RALLY_ARMY, rc.senseTowerLocations()[0]);
+
+        earlyRallyLocation = avgLocations(0.35, rc.senseHQLocation(), rc.senseEnemyHQLocation());
+
+        // Start by rallying at the closest tower
+        MapLocation homeTower = closestTowerTo(rc.getLocation());
+        rf.writeRally(Strategy.RALLY_GROUP_1, homeTower);
+        rf.writeRally(Strategy.RALLY_GROUP_2, homeTower);
 
         taskQueue.add(new Task(TASK_MINERFACTORY));
         taskQueue.add(new Task(TASK_SUPPLYDEPOT));
@@ -78,21 +85,53 @@ public class Headquarters extends Structure {
     }
 
     private void strategyUpdate() {
+
+        MapLocation oldTargetTower = targetTower;
+
+        updateTargetTower();
+
         // Updates the unit count. Happens every UPDATE_UNIT_COUNT_TIME mod times
         if (Clock.getRoundNum() % UPDATE_UNIT_COUNT_TIME == 0) {
             int[] cheese = updateUnitCount();
             // rc.setIndicatorString(0, Arrays.toString(cheese));
         }
 
-        if (Math.abs(Clock.getRoundNum() - TIME_TO_ATTACK1) <= 1) {
-            // Rally at half point.
-            rf.writeRally(RALLY_ARMY, avgLocations(0.35, rc.senseHQLocation(), rc.senseEnemyHQLocation()));
+        // Rally at 0.35 of the way there.
+        if (Math.abs(Clock.getRoundNum() - Strategy.EARLY_RALLY_GROUP_1) <= 1) {
+            rf.writeRally(Strategy.RALLY_GROUP_1, earlyRallyLocation);
+            rc.setIndicatorString(1, "Early rally at " + earlyRallyLocation);
         }
 
-        if (Math.abs(Clock.getRoundNum() - TIME_TO_ATTACK2) <= 1) {
-            // Rally at the enemy HQ
-            rf.writeRally(RALLY_ARMY, rc.senseEnemyHQLocation());
+        // Rally at an enemy tower, move up 2nd group
+        if (Math.abs(Clock.getRoundNum() - Strategy.ATTACK_GROUP_1) <= 1) {
+            rf.writeRally(Strategy.RALLY_GROUP_1, targetTower);
+            rf.writeRally(Strategy.RALLY_GROUP_2, earlyRallyLocation);
+            rc.setIndicatorString(1, "Group 1 moves forward");
         }
+
+        // Everyone should attack now
+        if (Math.abs(Clock.getRoundNum() - ATTACK_GROUP_2) <= 1) {
+            rf.writeRally(Strategy.RALLY_GROUP_2, targetTower);
+            rc.setIndicatorString(1, "Everyone attacks");
+        }
+
+        // If we have a new target tower, update rally points of attackers
+        if (targetTower != oldTargetTower) {
+            if (Clock.getRoundNum() > Strategy.ATTACK_GROUP_1 + 1) {
+                rf.writeRally(Strategy.RALLY_GROUP_1, targetTower);
+            }
+            if (Clock.getRoundNum() > Strategy.ATTACK_GROUP_2 + 1) {
+                rf.writeRally(Strategy.RALLY_GROUP_2, targetTower);
+            }
+        }
+    }
+
+    private void updateTargetTower() {
+        // Target the tower closest to group 1
+        MapLocation rallyPoint = rf.getRally(Strategy.RALLY_GROUP_1);
+        if (rallyPoint == null) rallyPoint = earlyRallyLocation;
+        targetTower = closestEnemyTowerTo(rallyPoint);
+        rc.setIndicatorDot(targetTower, 0, 255, 0);
     }
 
 

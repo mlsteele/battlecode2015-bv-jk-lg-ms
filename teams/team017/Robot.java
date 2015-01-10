@@ -3,6 +3,8 @@ package team017;
 import battlecode.common.*;
 import static battlecode.common.Direction.*;
 import static battlecode.common.RobotType.*;
+
+import java.lang.RuntimeException;
 import java.util.*;
 
 // Base class for Robot minds.
@@ -114,6 +116,42 @@ public abstract class Robot {
             rc.yield();
         }
         return (int)supplyLevel;
+    }
+
+    // Returns HQ if there are no enemy towers
+    protected MapLocation closestEnemyTowerTo(MapLocation loc) {
+        if (loc == null) throw new RuntimeException("closestEnemyTowerTo is given a null location");
+        MapLocation[] enemyTowerLocations = rc.senseEnemyTowerLocations();
+        if (enemyTowerLocations.length == 0) return rc.senseEnemyHQLocation();
+        MapLocation closestEnemy = enemyTowerLocations[0];
+        int closestDistanceSquared = closestEnemy.distanceSquaredTo(loc);
+        int thisDistanceSquared;
+        for (MapLocation enemyTower : enemyTowerLocations) {
+            thisDistanceSquared = enemyTower.distanceSquaredTo(loc);
+            if (thisDistanceSquared < closestDistanceSquared) {
+                closestDistanceSquared = thisDistanceSquared;
+                closestEnemy = enemyTower;
+            }
+        }
+        return closestEnemy;
+    }
+
+    // Returns HQ if there are no towers
+    protected MapLocation closestTowerTo(MapLocation loc) {
+        if (loc == null) throw new RuntimeException("closestEnemyTowerTo is given a null location");
+        MapLocation[] towerLocations = rc.senseTowerLocations();
+        if (towerLocations.length == 0) return rc.senseHQLocation();
+        MapLocation closest = towerLocations[0];
+        int closestDistanceSquared = closest.distanceSquaredTo(loc);
+        int thisDistanceSquared;
+        for (MapLocation tower : towerLocations) {
+            thisDistanceSquared = tower.distanceSquaredTo(loc);
+            if (thisDistanceSquared < closestDistanceSquared) {
+                closestDistanceSquared = thisDistanceSquared;
+                closest = tower;
+            }
+        }
+        return closest;
     }
 
 }

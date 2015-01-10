@@ -10,16 +10,18 @@ import java.util.*;
 public class Tank extends Unit {
     Tank(RobotController rc) { super(rc); }
 
+
     @Override
     public void run() {
+
         waitForSupplies();
 
         // Main loop
         while (true) {
             shootBaddies();
 
-            rf.loadRally(RALLY_ARMY);
-            if (rc.isCoreReady()) moveToRallyPoint(rf.getRally(RALLY_ARMY));
+            rf.loadRally(rallyGroup);
+            if (rc.isCoreReady()) moveToRallyPoint(rf.getRally(rallyGroup));
 
             rc.yield();
         }

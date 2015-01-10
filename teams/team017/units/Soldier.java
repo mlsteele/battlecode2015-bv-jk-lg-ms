@@ -18,8 +18,8 @@ public class Soldier extends Unit {
         while (true) {
             shootBaddies();
 
-            rf.loadRally(RALLY_ARMY);
-            if (rc.isCoreReady()) moveToRallyPoint(rf.getRally(RALLY_ARMY));
+            rf.loadRally(rallyGroup);
+            if (rc.isCoreReady()) moveToRallyPoint(rf.getRally(rallyGroup));
 
             rc.yield();
         }

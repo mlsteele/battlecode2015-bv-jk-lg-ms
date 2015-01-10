@@ -12,6 +12,8 @@ public abstract class Unit extends Robot {
     protected Direction forward;
     protected MapLocation hqLoc;
 
+    protected int rallyGroup;
+
     Direction cameFrom;
     boolean buggingDirection;
 
@@ -19,6 +21,7 @@ public abstract class Unit extends Robot {
         super(rc);
         forward = randomDirection();
         hqLoc = rc.senseHQLocation();
+        rallyGroup = Strategy.armyGroupFromRound(Clock.getRoundNum());
         cameFrom = NORTH; // arbitrary initialization
         buggingDirection = rand.nextBoolean();
     }

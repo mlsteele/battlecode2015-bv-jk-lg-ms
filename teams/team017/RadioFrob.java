@@ -5,6 +5,9 @@ import battlecode.common.GameActionException;
 import static battlecode.common.Direction.*;
 import static battlecode.common.RobotType.*;
 import static team017.Strategy.*;
+
+import java.lang.RuntimeException;
+import java.lang.System;
 import java.util.*;
 
 
@@ -153,7 +156,9 @@ public class RadioFrob {
     public void loadRally(int n) {
         if (n < 0 || n > RALLY_POINT_RANGE_SIZE)
             throw new RuntimeException("rally point "+n+" out of bounds");
-        rallyPoints[n] = decodeLocation(rx(RALLY_POINT_RANGE_BOTTOM + n));
+        int rallyEncoded = rx(RALLY_POINT_RANGE_BOTTOM + n);
+        if (rallyEncoded == 0) throw new RuntimeException("Tried to load '0' from spot " + n);
+        rallyPoints[n] = decodeLocation(rallyEncoded);
     }
 
     public MapLocation getRally(int n) {
@@ -176,6 +181,7 @@ public class RadioFrob {
         // So we use hqLoc as a reference point.
         // This sortof kindof increases the maximum length of
         // an axis to 240, which is ~8 bits.
+        // Don't change this to let zero be a valid location
         MapLocation rel = loc.add(-hqLoc.x, -hqLoc.y).add(120, 120);
         return (rel.y << 8) | rel.x;
     }
