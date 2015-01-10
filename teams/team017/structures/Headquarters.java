@@ -86,7 +86,7 @@ public class Headquarters extends Structure {
 
         if (Math.abs(Clock.getRoundNum() - TIME_TO_ATTACK1) <= 1) {
             // Rally at half point.
-            rf.writeRally(RALLY_ARMY, avgLocations(rc.senseEnemyHQLocation(), rc.senseHQLocation()));
+            rf.writeRally(RALLY_ARMY, avgLocations(0.35, rc.senseHQLocation(), rc.senseEnemyHQLocation()));
         }
 
         if (Math.abs(Clock.getRoundNum() - TIME_TO_ATTACK2) <= 1) {
@@ -166,6 +166,15 @@ public class Headquarters extends Structure {
 
     private MapLocation avgLocations(MapLocation a, MapLocation b) {
         return new MapLocation((a.x + b.x) / 2, (a.y + b.y) / 2);
+    }
+
+    // mixFactor is a number [0.0,1.0] that describes the weighted average.
+    // mixFactor:0 will return a, mixFactor:0.5 will return the average.
+    private MapLocation avgLocations(double mixFactor, MapLocation a, MapLocation b) {
+        double ma = 1.0 - mixFactor;
+        double mb = mixFactor;
+        return new MapLocation((int)(ma*a.x + mb*b.x),
+                               (int)(ma*a.y + mb*b.y));
     }
 
     private boolean supplyBeaver(int supplyAmount) {
