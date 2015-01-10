@@ -14,8 +14,20 @@ public class MinerFactory extends Structure {
 
     @Override
     public void run() {
+        boolean incomingResupply = false;
+
         while (true) {
             unitCount = updateUnitCount();
+
+            double supply = rc.getSupplyLevel();
+            if (supply <= MINERFACTORY_LOW_SUPPLY) {
+                if (!incomingResupply) {
+                    if (rf.requestResupply(MINERFACTORY_RESUPPLY_AMT))
+                        incomingResupply = true;
+                }
+            } else {
+                incomingResupply = false;
+            }
 
             if(unitCount[RobotType.MINER.ordinal()] < rf.checkXUnits(RobotType.MINER)) {
                 if (rc.isCoreReady() && rc.getSupplyLevel() >= Strategy.initialSupply(MINER))
