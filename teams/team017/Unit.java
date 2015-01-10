@@ -61,7 +61,7 @@ public abstract class Unit extends Robot {
 
     // Do whatever the default getting-to-rally-point movement is.
     protected boolean moveToRallyPoint(MapLocation loc) {
-        return moveToCircle(loc);
+        return moveToClump(loc);
     }
 
     protected boolean moveTowardBugging(MapLocation loc) {
