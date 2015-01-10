@@ -110,33 +110,22 @@ public abstract class Unit extends Robot {
         if (rc.getLocation().distanceSquaredTo(loc) > distanceSquaredTo) {
             return moveTowardBugging(loc);
         } else {
-            return moveTowardish(loc);
+            return moveCloserTo(loc);
         }
     }
 
-    private boolean moveTowardish(MapLocation loc) {
-        forward = rc.getLocation().directionTo(loc);
-        return moveForwardish();
-    }
-
-    private boolean moveForwardish() {
-        // try forwards
-        if (moveForwardStrict()) return true;
-
-        // Pick one of the sides at random
-        Direction[] sides = {forward.rotateRight(), forward.rotateLeft()};
-        if (rand.nextInt(2) == 0) {
-            Direction swap = sides[0];
-            sides[0] = sides[1];
-            sides[1] = swap;
+    // Move closer to a location.
+    // Guarantees that any step will further the cause.
+    private boolean moveCloserTo(MapLocation loc) {
+        Direction[] possibleDirs = {NORTH, NORTH_EAST, EAST, SOUTH_EAST,
+                                    SOUTH, SOUTH_WEST, WEST, NORTH_WEST};
+        int startingDistance = loc.distanceSquaredTo(rc.getLocation());
+        for (int i = 0; i < 8; i++) {
+            forward = possibleDirs[i];
+            if (loc.distanceSquaredTo(rc.getLocation().add(forward)) < startingDistance)
+                if (moveForwardStrict())
+                    return true;
         }
-
-        forward = sides[0];
-        if (moveForwardStrict()) return true;
-
-        forward = sides[1];
-        if (moveForwardStrict()) return true;
-
         return false;
     }
 
