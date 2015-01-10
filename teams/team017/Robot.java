@@ -118,12 +118,11 @@ public abstract class Robot {
         return (int)supplyLevel;
     }
 
-    // Returns HQ if there are no enemy towers
+    // Includes HQ in the list of possible locations
     protected MapLocation closestEnemyTowerTo(MapLocation loc) {
         if (loc == null) throw new RuntimeException("closestEnemyTowerTo is given a null location");
         MapLocation[] enemyTowerLocations = rc.senseEnemyTowerLocations();
-        if (enemyTowerLocations.length == 0) return rc.senseEnemyHQLocation();
-        MapLocation closestEnemy = enemyTowerLocations[0];
+        MapLocation closestEnemy = rc.senseEnemyHQLocation();
         int closestDistanceSquared = closestEnemy.distanceSquaredTo(loc);
         int thisDistanceSquared;
         for (MapLocation enemyTower : enemyTowerLocations) {
