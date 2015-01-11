@@ -255,14 +255,4 @@ public class Beaver extends Unit {
         System.out.println("BEAVER received task " + currentTask.taskNum);
     }
 
-    private void dumpSuppliesToHQ() {
-        rc.setIndicatorString(1, "Dumping supplies...");
-        try {
-            rc.transferSupplies(Integer.MAX_VALUE, hqLoc);
-            rc.setIndicatorString(1, "Dumped supplies.");
-            return;
-        } catch (GameActionException e) {
-            e.printStackTrace();
-        }
-    }
 }

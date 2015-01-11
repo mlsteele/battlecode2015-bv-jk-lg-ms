@@ -44,11 +44,32 @@ public abstract class Structure extends Robot {
     // Attempt to fill robots of type `rtype` so they have `supplyGoal` supplies.
     // Will fill up only robots with <= lowSupplyThreshold supplies.
     // If candidates is null, they will be fetched automatically.
-    protected void resupplyNearby(RobotInfo[] candidates, RobotType rtype, int lowSupplyThreshold, int supplyGoal) {
+    protected void resupplyNearby(RobotInfo[] candidates, RobotType rtype, int lowSupplyThreshold, int supply) {
         if (candidates == null) {
             candidates = rc.senseNearbyRobots(
                 GameConstants.SUPPLY_TRANSFER_RADIUS_SQUARED,
                 rc.getTeam());
+        }
+
+        int minerID = 0;
+        int supplyGoal = supply;
+        int[] minerResupplyRequest = null;
+
+        // special situation for miners
+        if (rtype == MINER) {
+            // Check to see if a miner is requesting supply
+            minerResupplyRequest = rf.checkMinerResupply();
+            if (minerResupplyRequest[0] == 0) return; // no one requested a resupply
+
+            minerID    = minerResupplyRequest[0];
+            supplyGoal = minerResupplyRequest[1];
+
+            supplyToID(candidates, minerID, supplyGoal);
+            rf.clearMinerResupply();
+            return;
+
+        } else {
+            supplyGoal = supply;
         }
 
         for (RobotInfo r : candidates) {

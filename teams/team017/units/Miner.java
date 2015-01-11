@@ -10,6 +10,9 @@ import java.util.*;
 public class Miner extends Unit {
     Miner(RobotController rc) { super(rc); }
 
+    private MapLocation lastSeen = rc.getLocation();
+    private int supplyRequest = 0;
+
     @Override
     public void run() {
         waitForSupplies();
@@ -22,7 +25,12 @@ public class Miner extends Unit {
                 boolean miner_low_supply = rc.getSupplyLevel() <= Strategy.MINER_LOW_SUPPLY;
                 boolean team_low_ore     = rc.getTeamOre()     <= Strategy.TEAM_LOW_ORE;
                 if (miner_low_supply && team_low_ore) {
+                    // we have run out of ore, lets save the last location we were at so we can return
+                    lastSeen = rc.getLocation();
+                    supplyRequest = 8 * lastSeen.distanceSquaredTo(hqLoc) + 4000;
                     goToHQ();
+                    dumpSuppliesToHQ();
+                    rf.minerRequestResupply(supplyRequest);
                 } else {
                     pursueMining();
                 }

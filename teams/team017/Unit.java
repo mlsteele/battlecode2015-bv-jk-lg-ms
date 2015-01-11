@@ -43,6 +43,17 @@ public abstract class Unit extends Robot {
         }
     }
 
+    protected void dumpSuppliesToHQ() {
+        rc.setIndicatorString(1, "Dumping supplies...");
+        try {
+            rc.transferSupplies(Integer.MAX_VALUE, hqLoc);
+            rc.setIndicatorString(1, "Dumped supplies.");
+            return;
+        } catch (GameActionException e) {
+            e.printStackTrace();
+        }
+    }
+
     // Wander the field aimlessly.
     // Returns whether movement occurred.
     // Assumes CoreReady

@@ -22,6 +22,9 @@ public class RadioFrob {
     // 1    | undocumented
     //      |
     // ------
+    // 3    | Miner resupply id
+    // 4    | Miner resupply amount
+    // ------
     // 10   | requesting units
     // 31   |
     // ------
@@ -39,6 +42,9 @@ public class RadioFrob {
 
     private static int REQUEST_RESUPPLY_LOCATION_SLOT = 1;
     private static int REQUEST_RESUPPLY_AMOUNT_SLOT = 2;
+
+    private static int MINER_REQUEST_RESUPPLY_ID_SLOT = 3;
+    private static int MINER_REQUEST_RESUPPLY_AMOUNT_SLOT = 4;
 
     private static int BEAVER_TASK_ASSIGNMENT_SLOT = 6000;
     private static int BEAVER_TASK_BASE = BEAVER_TASK_ASSIGNMENT_SLOT + 1;
@@ -123,6 +129,29 @@ public class RadioFrob {
         } else return -1;
     }
 
+    // used by the miner to set a resupply request
+    public void minerRequestResupply(int amount) {
+        tx(MINER_REQUEST_RESUPPLY_ID_SLOT, rc.getID());
+        tx(MINER_REQUEST_RESUPPLY_AMOUNT_SLOT, amount);
+    }
+
+    // used by the hq to check if a miner wants a resupply
+    // returns a list with the first element being the miner id and the
+    // second being the supply amount
+    public int[] checkMinerResupply() {
+        int minerID       = rx(MINER_REQUEST_RESUPPLY_ID_SLOT);
+        int requestAmount = rx(MINER_REQUEST_RESUPPLY_AMOUNT_SLOT);
+        int[] r = {minerID, requestAmount};
+        return r;
+    }
+
+    // used to clear the miner supply request
+    public void clearMinerResupply() {
+        tx(MINER_REQUEST_RESUPPLY_ID_SLOT, 0);
+        tx(MINER_REQUEST_RESUPPLY_AMOUNT_SLOT, 0);
+    }
+
+    // used for requesting resuply from a location (used by tank factories currently)
     public boolean requestResupply(int amount) {
         // someone else is requesting right now
         if (rx(REQUEST_RESUPPLY_LOCATION_SLOT) != 0) return false;
