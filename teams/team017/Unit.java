@@ -75,11 +75,20 @@ public abstract class Unit extends Robot {
         return moveToClump(loc);
     }
 
+    protected boolean moveTowardBuggingBlocking(MapLocation loc) {
+        while (true) {
+            if(rc.isCoreReady()) moveTowardBugging(loc);
+            if(rc.getLocation().equals(loc)) return true;
+            rc.yield();
+        }
+    }
+
     protected boolean moveTowardBugging(MapLocation loc) {
         return moveTowardBugging(rc.getLocation().directionTo(loc));
     }
 
     protected boolean moveTowardBugging(Direction dir) {
+        if (dir == OMNI) return false;
         forward = dir;
         return moveForwardBugging();
     }
