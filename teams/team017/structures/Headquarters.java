@@ -71,6 +71,7 @@ public class Headquarters extends Structure {
             // TODO(miles): did I break this?
             // TODO(miles): use existing beavers for resupply tasks.
             // TODO(miles): what if there is no one in getResupplyLocation()?
+            // TODO(miles): integrate into task queue?
             if(rc.isCoreReady() && taskQueue.isEmpty()) {
                 if (rf.resupplyFromTankFactoryRequested()) {
                     if (spawnBeaverWithTask(TASK_RESUPPLY_TANKFACTORY, rf.getResupplyLocation())) {
@@ -87,14 +88,13 @@ public class Headquarters extends Structure {
     }
 
     private void strategyUpdate() {
-
         MapLocation oldTargetTower = targetTower;
 
         updateTargetTower();
 
         // Updates the unit count. Happens every UPDATE_UNIT_COUNT_TIME mod times
         if (Clock.getRoundNum() % UPDATE_UNIT_COUNT_TIME == 0) {
-            unitCount = updateUnitCount();
+            unitCount = getUnitCount();
             Analyze.count("beavers", unitCount[BEAVER.ordinal()]);
             Analyze.count("miners", unitCount[MINER.ordinal()]);
             Analyze.count("tanks", unitCount[TANK.ordinal()]);
