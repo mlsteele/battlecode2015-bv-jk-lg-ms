@@ -24,6 +24,7 @@ public class Tank extends Unit {
             if (rc.isCoreReady()) moveToRallyPoint(rf.getRally(rallyGroup));
 
             // At 10% health dump supplies
+            // Maybe not helpful. Eleminate if we need to optimize.
             if (rc.getHealth() <= rc.getType().maxHealth / 10.0) {
                 dumpSuppliesToNeighbor();
             }
