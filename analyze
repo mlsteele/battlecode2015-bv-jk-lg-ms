@@ -1,7 +1,14 @@
 #!/usr/bin/env bash
-LOGFILE=match.log
-LOGANALYSISFILE=match-analyze.log
+# Usage:
+#  ./analyze        # create latest.log
+#  ./analyze better # create better.log
+
+LOGFILE=locallogs/latest.log
+
+if [ ! -z "$1" ]
+  then
+    LOGFILE=locallogs/$1.log
+fi
+
 ant analyze | tee $LOGFILE
-cat match.log | grep "ANALYZE" > $LOGANALYSISFILE
 echo "Match log saved to $LOGFILE"
-echo "Match log saved to $LOGANALYSISFILE"

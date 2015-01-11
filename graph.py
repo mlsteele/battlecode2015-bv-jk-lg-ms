@@ -1,25 +1,30 @@
 """Graph some analysis.
 Usage:
-  graph.py <quantity> [<logfile>...]
+  graph.py <quantity> <logfile>...
+  graph.py <quantity>
   graph.py (-h | --help)
 
 Examples:
-  graph.py team_ore match-analyze.log
+  graph.py team_ore locallogs/latest.log
 
 Options:
   -h, --help
 """
 
 import re
+import os
+import glob
 from docopt import docopt
 import matplotlib
 # matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
+DEFAULT_LOG_DIR = "locallogs"
+
 def parselog(filepath):
     with open(filepath) as f:
         lines = f.read().splitlines()
-    return map(decompose_logline, lines)
+    return (x for x in map(decompose_logline, lines) if x != None)
 
 def decompose_logline(line):
     # example log line:
@@ -27,7 +32,7 @@ def decompose_logline(line):
     p = "     \[java\] \[(?P<team>\w):(?P<robot>\w+)#(?P<rid>\d+)@(?P<round>\d+)\] ANALYZE (?P<msg>.*)"
     m = re.search(p, line)
     if m == None:
-        raise RuntimeError("Couldn't match log line: " + line)
+        return
 
     entry = {}
     entry.update(m.groupdict())
@@ -59,6 +64,7 @@ def plot(log, field, label, round_max=float('inf')):
             xs.append(entry['round'])
             ys.append(entry[field])
     plt.plot(xs, ys, label=label)
+    plt.legend()
     plt.xlabel("Round")
     plt.ylabel(field)
 
@@ -74,11 +80,15 @@ if __name__ == "__main__":
     arguments = docopt(__doc__)
     field = arguments['<quantity>']
     logfiles = arguments['<logfile>']
+    if not logfiles:
+        logfiles = glob.glob(os.path.join(DEFAULT_LOG_DIR, "*.log"))
 
     ROUND_MAX = 2000
     for logfile in logfiles:
         log = parselog(logfile)
-        plot(log, field, logfile, round_max=ROUND_MAX)
+        label = os.path.splitext(logfile.split("/")[-1])[0]
+        print label
+        plot(log, field, label, round_max=ROUND_MAX)
 
     commit()
 
