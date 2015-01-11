@@ -1,6 +1,6 @@
 import re
 import matplotlib
-matplotlib.use('Agg')
+# matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 DATAFILE = "match-analyze.log"
@@ -30,6 +30,8 @@ def decompose_logmsg(entry):
     msg = entry['msg']
     entry.update(extract_msg(msg,
         "team ore (?P<team_ore>.*)"))
+    entry.update(extract_msg(msg,
+        "count miners_alive (?P<miners_alive>.*)"))
 
 def extract_msg(msg, pattern):
     m = re.search(pattern, msg)
@@ -48,11 +50,15 @@ def plot(log, field, round_max=float('inf')):
     plt.plot(xs, ys)
     plt.xlabel("Round")
     plt.ylabel(field)
+
+def commit():
+    fig = plt.gcf()
+    fig.savefig("localgraphs/latest.png")
+    print "Graph saved to localgraphs/latest.png"
     plt.show()
-    plt.savefig("localgraphs/latest.png")
 
 log = parselog(DATAFILE)
-print "If you don't see an interactive plot"
-print "Check localgraphs/latest.png"
-# plot(log, 'team_ore', round_max=500)
-plot(log, 'team_ore')
+ROUND_MAX = 800
+plot(log, 'miners_alive', round_max=ROUND_MAX)
+# plot(log, 'team_ore', round_max=ROUND_MAX)
+commit()
