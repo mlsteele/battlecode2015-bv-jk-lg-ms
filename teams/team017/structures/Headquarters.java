@@ -95,10 +95,10 @@ public class Headquarters extends Structure {
         // Updates the unit count. Happens every UPDATE_UNIT_COUNT_TIME mod times
         if (Clock.getRoundNum() % UPDATE_UNIT_COUNT_TIME == 0) {
             unitCount = updateUnitCount();
+            Analyze.count("beavers", unitCount[BEAVER.ordinal()]);
             Analyze.count("miners", unitCount[MINER.ordinal()]);
             Analyze.count("tanks", unitCount[TANK.ordinal()]);
             Analyze.count("drones", unitCount[DRONE.ordinal()]);
-            // rc.setIndicatorString(0, Arrays.toString(cheese));
         }
 
         // Rally at 0.35 of the way there.
