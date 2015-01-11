@@ -17,8 +17,7 @@ public class MinerFactory extends Structure {
         boolean incomingResupply = false;
 
         while (true) {
-            unitCount = updateUnitCount();
-
+            // Request resupply when low
             double supply = rc.getSupplyLevel();
             if (supply <= MINERFACTORY_LOW_SUPPLY) {
                 if (!incomingResupply) {
@@ -29,9 +28,11 @@ public class MinerFactory extends Structure {
                 incomingResupply = false;
             }
 
-            if(unitCount[RobotType.MINER.ordinal()] < rf.checkXUnits(RobotType.MINER)) {
-                if (rc.isCoreReady() && rc.getSupplyLevel() >= Strategy.initialSupply(MINER))
-                    spawn(MINER);
+            if (rc.isCoreReady() && rc.getSupplyLevel() >= Strategy.initialSupply(MINER)) {
+                unitCount = updateUnitCount();
+                if(unitCount[RobotType.MINER.ordinal()] < rf.checkXUnits(RobotType.MINER)) {
+                        spawn(MINER);
+                }
             }
 
             supplyNearbyEmpty(null, MINER, Strategy.initialSupply(MINER));

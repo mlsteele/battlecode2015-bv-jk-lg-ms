@@ -13,7 +13,7 @@ public class Headquarters extends Structure {
 
     private static final int MAX_BEAVER = 10;
     private static final int UPDATE_UNIT_COUNT_TIME = 10;
-    int[] unitsOnField = new int[NUM_ROBOT_TYPES];
+    int[] unitCount;
 
     private boolean beaver_mining_spawned = false;
     private boolean beaver_barracks_spawned = false;
@@ -94,7 +94,8 @@ public class Headquarters extends Structure {
 
         // Updates the unit count. Happens every UPDATE_UNIT_COUNT_TIME mod times
         if (Clock.getRoundNum() % UPDATE_UNIT_COUNT_TIME == 0) {
-            int[] cheese = updateUnitCount();
+            unitCount = updateUnitCount();
+            Analyze.count("miners_alive", unitCount[MINER.ordinal()]);
             // rc.setIndicatorString(0, Arrays.toString(cheese));
         }
 
