@@ -12,6 +12,7 @@ public class Miner extends Unit {
 
     private MapLocation lastSeen = rc.getLocation();
     private int supplyRequest = 0;
+    private boolean resupplying = false;
 
     @Override
     public void run() {
@@ -30,9 +31,15 @@ public class Miner extends Unit {
                     supplyRequest = 8 * lastSeen.distanceSquaredTo(hqLoc) + 4000;
                     goToHQ();
                     dumpSuppliesToHQ();
+                    resupplying = true;
                     rf.minerRequestResupply(supplyRequest);
                 } else {
-                    pursueMining();
+                    if (resupplying) {
+                        if(rc.getLocation().equals(lastSeen)) resupplying = false;
+                        moveTowardBugging(lastSeen);
+                    } else {
+                        pursueMining();
+                    }
                 }
             }
 
