@@ -18,8 +18,9 @@ public class TankFactory extends Structure {
             double supply = rc.getSupplyLevel();
             if (supply <= TANKFACTORY_LOW_SUPPLY) {
                 if (!incomingResupply) {
-                    if (rf.requestResupply(TANKFACTORY_RESUPPLY_AMT))
+                    if (rf.requestResupply(TANKFACTORY_RESUPPLY_AMT)) {
                         incomingResupply = true;
+                    }
                 }
             } else {
                 incomingResupply = false;

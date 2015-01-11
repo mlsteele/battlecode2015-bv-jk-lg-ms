@@ -49,6 +49,8 @@ public class RadioFrob {
     private static int BEAVER_TASK_ASSIGNMENT_SLOT = 6000;
     private static int BEAVER_TASK_BASE = BEAVER_TASK_ASSIGNMENT_SLOT + 1;
 
+    private static int QUEUE_MAX_SIZE = 10;
+
     private static int REQUEST_ROBOT_BOTTOM = 10;
 
     private RobotController rc;
@@ -73,6 +75,29 @@ public class RadioFrob {
     // used by unit production facilities
     public int checkXUnits(RobotType rob) {
         return rx(REQUEST_ROBOT_BOTTOM + rob.ordinal());
+    }
+
+    // generic messaging queue consume
+    public int consumeMessageQueue(int queueBase) {
+        int head = rx(queueBase - 2);
+        int nextHead = (head+1)%QUEUE_MAX_SIZE;
+        int tail = rx(queueBase - 1);
+        if(head == tail) return -1; // There was no messages
+
+        tx(queueBase - 2, nextHead);// update the stored head
+        return rx(queueBase + head);// consume the message at the head
+    }
+
+    //generic messaging queue insert
+    public boolean insertMessageQueue(int queueBase, int message) {
+        int head = rx(queueBase - 2);
+        int tail = rx(queueBase - 1);
+        int nextTail = (tail+1)%QUEUE_MAX_SIZE;
+        if(nextTail == head) return false; // queue is full
+
+        tx(queueBase + tail, message); // put in the new message
+        tx(queueBase - 1, nextTail); // update the tail
+        return true;
     }
 
     // Assigns a task to the beaver slot. Returns task assignment slot

@@ -35,7 +35,7 @@ public enum Strategy {;
 
     // Call for resupply at this point.
     public static final int TANKFACTORY_LOW_SUPPLY = initialSupply(TANK);
-    public static final int TANKFACTORY_RESUPPLY_AMT = 10 * initialSupply(TANK);
+    public static final int TANKFACTORY_RESUPPLY_AMT = 3 * initialSupply(TANK);
 
     // Call for resupply at this point (mining factory)
     public static final int MINERFACTORY_LOW_SUPPLY = initialSupply(MINER);

@@ -56,7 +56,7 @@ public class Headquarters extends Structure {
         }
 
         // set the max number of mining units
-        rf.requestXUnits(RobotType.MINER, 20);
+        rf.requestXUnits(RobotType.MINER, 30);
 
         while (true) {
             Analyze.sampleTeamOre(rc);
