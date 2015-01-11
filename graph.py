@@ -1,12 +1,23 @@
+"""Graph some analysis.
+Usage:
+  graph.py <quantity> [<logfile>...]
+  graph.py (-h | --help)
+
+Examples:
+  graph.py team_ore match-analyze.log
+
+Options:
+  -h, --help
+"""
+
 import re
+from docopt import docopt
 import matplotlib
 # matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
-DATAFILE = "match-analyze.log"
-
 def parselog(filepath):
-    with open(DATAFILE) as f:
+    with open(filepath) as f:
         lines = f.read().splitlines()
     return map(decompose_logline, lines)
 
@@ -40,25 +51,38 @@ def extract_msg(msg, pattern):
     else:
         return {}
 
-def plot(log, field, round_max=float('inf')):
+def plot(log, field, label, round_max=float('inf')):
     xs = []
     ys = []
     for entry in log:
         if field in entry and entry['round'] <= round_max:
             xs.append(entry['round'])
             ys.append(entry[field])
-    plt.plot(xs, ys)
+    plt.plot(xs, ys, label=label)
     plt.xlabel("Round")
     plt.ylabel(field)
 
 def commit():
+    """ Save and show the figure. """
     fig = plt.gcf()
     fig.savefig("localgraphs/latest.png")
     print "Graph saved to localgraphs/latest.png"
     plt.show()
 
-log = parselog(DATAFILE)
-ROUND_MAX = 800
-plot(log, 'miners_alive', round_max=ROUND_MAX)
-# plot(log, 'team_ore', round_max=ROUND_MAX)
-commit()
+
+if __name__ == "__main__":
+    arguments = docopt(__doc__)
+    field = arguments['<quantity>']
+    logfiles = arguments['<logfile>']
+
+    ROUND_MAX = 2000
+    for logfile in logfiles:
+        log = parselog(logfile)
+        plot(log, field, logfile, round_max=ROUND_MAX)
+
+    commit()
+
+    # log = parselog(DATAFILE)
+    # plot(log, 'miners_alive', round_max=ROUND_MAX)
+    # # plot(log, 'team_ore', round_max=ROUND_MAX)
+    # commit()

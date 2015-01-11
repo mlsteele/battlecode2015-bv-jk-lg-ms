@@ -1,2 +1,7 @@
-ant analyze | tee match.log
-cat match.log | grep "ANALYZE" > match-analyze.log
+#!/usr/bin/env bash
+LOGFILE=match.log
+LOGANALYSISFILE=match-analyze.log
+ant analyze | tee $LOGFILE
+cat match.log | grep "ANALYZE" > $LOGANALYSISFILE
+echo "Match log saved to $LOGFILE"
+echo "Match log saved to $LOGANALYSISFILE"
