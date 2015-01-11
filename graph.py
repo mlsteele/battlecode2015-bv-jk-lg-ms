@@ -47,7 +47,9 @@ def decompose_logmsg(entry):
     entry.update(extract_msg(msg,
         "team ore (?P<team_ore>.*)"))
     entry.update(extract_msg(msg,
-        "count miners_alive (?P<miners_alive>.*)"))
+        "count miners (?P<miners>.*)"))
+    entry.update(extract_msg(msg,
+        "count tanks (?P<tanks>.*)"))
 
 def extract_msg(msg, pattern):
     m = re.search(pattern, msg)
