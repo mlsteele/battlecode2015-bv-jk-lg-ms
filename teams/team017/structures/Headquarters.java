@@ -48,6 +48,7 @@ public class Headquarters extends Structure {
 
         while (true) {
             Analyze.sampleTeamOre(rc);
+            Analyze.count("hq_supply", rc.getSupplyLevel());
 
             shootBaddies();
 

@@ -15,4 +15,8 @@ public enum Analyze {;
     public static void count(String label, int n) {
         System.out.println("ANALYZE count " + label + " " + n);
     }
+
+    public static void count(String label, double n) {
+        System.out.println("ANALYZE count " + label + " " + n);
+    }
 }
