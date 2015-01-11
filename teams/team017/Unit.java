@@ -164,4 +164,26 @@ public abstract class Unit extends Robot {
         }
         return false;
     }
+
+    // dump supplies to neighbor with the lowest supply
+    protected boolean dumpSuppliesToNeighbor() {
+        RobotInfo[] neighbors = rc.senseNearbyRobots(GameConstants.SUPPLY_TRANSFER_RADIUS_SQUARED, rc.getTeam());
+        if (neighbors.length == 0) return false;
+        RobotInfo neediestNeighbor = neighbors[0];
+        double lowestSupply = neighbors[0].supplyLevel;
+        for (RobotInfo neighbor : neighbors) {
+            if (neighbor.supplyLevel < lowestSupply) {
+                lowestSupply = neighbor.supplyLevel;
+                neediestNeighbor = neighbor;
+                if (lowestSupply == 0) break;
+            }
+        }
+        try {
+            rc.transferSupplies((int)rc.getSupplyLevel(), neediestNeighbor.location);
+            return true;
+        } catch (GameActionException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
