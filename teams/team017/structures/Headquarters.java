@@ -44,19 +44,7 @@ public class Headquarters extends Structure {
         taskQueue.add(new Task(TASK_TANKFACTORY));
         taskQueue.add(new Task(TASK_TANKFACTORY));
 
-        // Spawn the initial beavers
-        // TODO(miles): Interlace this into the main loop so the HQ can multitask.
-        for (int i = 0; i < BEAVER_POOL_SIZE; i++) {
-            while (true) {
-                if (rc.isCoreReady()) {
-                    if (spawnBeaverWithTask(TASK_NONE, null))
-                        break;
-                }
-            }
-        }
-
-        // set the max number of mining units
-        rf.requestXUnits(RobotType.MINER, 30);
+        rf.requestXUnits(MINER, 30);
 
         while (true) {
             Analyze.sampleTeamOre(rc);
@@ -65,19 +53,16 @@ public class Headquarters extends Structure {
 
             strategyUpdate();
 
+            if (rc.isCoreReady() && unitCount[BEAVER.ordinal()] < BEAVER_POOL_SIZE) {
+                spawnBeaverWithTask(TASK_NONE, null);
+            }
+
             taskUpkeep();
 
-            // Send out resupply beavers.
-            // TODO(miles): did I break this?
-            // TODO(miles): use existing beavers for resupply tasks.
-            // TODO(miles): what if there is no one in getResupplyLocation()?
-            // TODO(miles): integrate into task queue?
-            if(rc.isCoreReady() && taskQueue.isEmpty()) {
-                if (rf.resupplyFromTankFactoryRequested()) {
-                    if (spawnBeaverWithTask(TASK_RESUPPLY_TANKFACTORY, rf.getResupplyLocation())) {
-                        rf.clearResupplyRequest();
-                    }
-                }
+            // Collect resupply tasks.
+            if (rf.resupplyFromTankFactoryRequested()) {
+                taskQueue.add(new Task(TASK_RESUPPLY_TANKFACTORY, rf.getResupplyLocation()));
+                rf.clearResupplyRequest();
             }
 
             // Resupply miners that have run out and returned.

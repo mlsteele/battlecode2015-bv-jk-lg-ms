@@ -22,7 +22,7 @@ public enum Strategy {;
     public static final int RALLY_GROUP_2 = 1;  // for group 2
 
     // How many beavers to maintain for tasks.
-    public static final int BEAVER_POOL_SIZE = 2;
+    public static final int BEAVER_POOL_SIZE = 4;
 
     // Miners don't request supply if team has excess ore.
     public static final int TEAM_LOW_ORE = 1500;
