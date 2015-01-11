@@ -50,6 +50,8 @@ def decompose_logmsg(entry):
         "count miners (?P<miners>.*)"))
     entry.update(extract_msg(msg,
         "count tanks (?P<tanks>.*)"))
+    entry.update(extract_msg(msg,
+        "count drones (?P<drones>.*)"))
 
 def extract_msg(msg, pattern):
     m = re.search(pattern, msg)

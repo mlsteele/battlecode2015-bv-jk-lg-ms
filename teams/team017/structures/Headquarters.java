@@ -13,7 +13,7 @@ public class Headquarters extends Structure {
 
     private static final int MAX_BEAVER = 10;
     private static final int UPDATE_UNIT_COUNT_TIME = 10;
-    int[] unitCount;
+    private int[] unitCount;
 
     private boolean beaver_mining_spawned = false;
     private boolean beaver_barracks_spawned = false;
@@ -97,6 +97,7 @@ public class Headquarters extends Structure {
             unitCount = updateUnitCount();
             Analyze.count("miners", unitCount[MINER.ordinal()]);
             Analyze.count("tanks", unitCount[TANK.ordinal()]);
+            Analyze.count("drones", unitCount[DRONE.ordinal()]);
             // rc.setIndicatorString(0, Arrays.toString(cheese));
         }
 
