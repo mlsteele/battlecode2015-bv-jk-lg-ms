@@ -44,8 +44,8 @@ public class Headquarters extends Structure {
         rf.requestXUnits(MINER, 30);
 
         while (true) {
-            Analyze.sample("team_ore", rc.getTeamOre());
-            Analyze.sample("hq_supply", rc.getSupplyLevel());
+            if (Analyze.ON) Analyze.sample("team_ore", rc.getTeamOre());
+            if (Analyze.ON) Analyze.sample("hq_supply", rc.getSupplyLevel());
 
             shootBaddies();
 
@@ -78,11 +78,11 @@ public class Headquarters extends Structure {
         // Updates the unit count. Happens every UPDATE_UNIT_COUNT_TIME mod times
         if (Clock.getRoundNum() % UPDATE_UNIT_COUNT_TIME == 0) {
             unitCount = getUnitCount();
-            Analyze.sample("beavers", unitCount[BEAVER.ordinal()]);
-            Analyze.sample("miners", unitCount[MINER.ordinal()]);
-            Analyze.sample("tanks", unitCount[TANK.ordinal()]);
-            Analyze.sample("tfs", unitCount[TANKFACTORY.ordinal()]);
-            Analyze.sample("drones", unitCount[DRONE.ordinal()]);
+            if (Analyze.ON) Analyze.sample("beavers", unitCount[BEAVER.ordinal()]);
+            if (Analyze.ON) Analyze.sample("miners", unitCount[MINER.ordinal()]);
+            if (Analyze.ON) Analyze.sample("tanks", unitCount[TANK.ordinal()]);
+            if (Analyze.ON) Analyze.sample("tfs", unitCount[TANKFACTORY.ordinal()]);
+            if (Analyze.ON) Analyze.sample("drones", unitCount[DRONE.ordinal()]);
         }
 
         // Rally at 0.35 of the way there.
@@ -168,7 +168,7 @@ public class Headquarters extends Structure {
 
         Direction dir = spawn(BEAVER); // spawn the beaver
         if (dir == null) return false;
-        Analyze.sample("hq_spawn_beaver", 1);
+        if (Analyze.ON) Analyze.sample("hq_spawn_beaver", 1);
 
         int beaverTaskSlot = rf.assignBeaverTaskSlot(); // Assign a new beaver task slot
         if (beaverTaskSlot < 0) {

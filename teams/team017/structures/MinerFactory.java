@@ -20,7 +20,7 @@ public class MinerFactory extends Structure {
 
             // Request resupply when low
             double supply = rc.getSupplyLevel();
-            Analyze.aggregate("mfs_supply", supply);
+            if (Analyze.ON) Analyze.aggregate("mfs_supply", supply);
             if (supply <= MINERFACTORY_LOW_SUPPLY) {
                 if (!incomingResupply) {
                     if (rf.requestResupply(MINERFACTORY_RESUPPLY_AMT))

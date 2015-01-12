@@ -19,7 +19,7 @@ public class Miner extends Unit {
         waitForSupplies();
 
         while (true) {
-            Analyze.aggregate("miners_supply", rc.getSupplyLevel());
+            if (Analyze.ON) Analyze.aggregate("miners_supply", rc.getSupplyLevel());
 
             // Top priority is don't get shot.
             if (rc.isCoreReady()) runAway();

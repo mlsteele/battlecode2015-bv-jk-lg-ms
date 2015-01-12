@@ -91,6 +91,7 @@
       <jvmarg value="-Xmx256m"/> 
       <jvmarg value="-Djava.library.path=${path.lib}" />
       <jvmarg value="-Dbc.server.mode=headless"/>
+      <jvmarg value="-Dbc.testing.team017.analyze=ON"/>
       <arg line="-c conf/fightself.conf"/>
     </java>
   </target> 

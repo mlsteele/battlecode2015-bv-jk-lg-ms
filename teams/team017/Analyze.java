@@ -8,6 +8,8 @@ import java.util.*;
 // Format match output for analysis.
 // TODO(miles): Should we use matching logging or something for this?
 public enum Analyze {;
+    public static boolean ON = System.getProperty("bc.testing.team017.analyze") == "ON";
+
     // Record a quantity's value on a turn.
     // This should only happen once per label per round.
     // This is good for stuff measureable by one robot, like team ore.

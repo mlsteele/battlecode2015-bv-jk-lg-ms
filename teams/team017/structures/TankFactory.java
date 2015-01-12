@@ -19,7 +19,7 @@ public class TankFactory extends Structure {
         while (true) {
 
             double supply = rc.getSupplyLevel();
-            Analyze.aggregate("tfs_supply", supply);
+            if (Analyze.ON) Analyze.aggregate("tfs_supply", supply);
             if (supply <= TANKFACTORY_LOW_SUPPLY) {
                 if (!incomingResupply) {
                     if (rf.requestResupply(TANKFACTORY_RESUPPLY_AMT)) {
@@ -36,7 +36,7 @@ public class TankFactory extends Structure {
                 spawn(TANK);
 
             if (supply < initialSupply(TANK))
-                Analyze.aggregate("tankfactory_supplyblock", 1);
+                if (Analyze.ON) Analyze.aggregate("tankfactory_supplyblock", 1);
             supplyNearbyEmpty(null, TANK, initialSupply(TANK));
 
             rc.yield();
