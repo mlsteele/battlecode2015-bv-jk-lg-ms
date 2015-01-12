@@ -72,7 +72,7 @@ public abstract class Unit extends Robot {
 
     // Do whatever the default getting-to-rally-point movement is.
     protected boolean moveToRallyPoint(MapLocation loc) {
-        return moveToClump(loc);
+        return moveToClump(MOVEMENT_CLUMP_DEFAULT, loc);
     }
 
     protected boolean moveTowardBuggingBlocking(MapLocation loc) {
@@ -123,22 +123,12 @@ public abstract class Unit extends Robot {
         return false;
     }
 
-    // Encircle `loc` with a distance determined by MOVEMENT_CIRCLE_SIZE.
-    private boolean moveToCircle(MapLocation loc) {
-        return moveToCircle(MOVEMENT_CIRCLE_SIZE, loc);
-    }
-
     private boolean moveToCircle(int distanceSquaredTo, MapLocation loc) {
         if (rc.getLocation().distanceSquaredTo(loc) > distanceSquaredTo) {
             return moveTowardBugging(loc);
         } else {
             return false;
         }
-    }
-
-    // Move near to `loc` as determined by MOVEMENT_NEARNESS_THRESHOLD.
-    private boolean moveToClump(MapLocation loc) {
-        return moveToClump(MOVEMENT_NEARNESS_THRESHOLD, loc);
     }
 
     // Move to within `distanceSquared` of `loc`.
