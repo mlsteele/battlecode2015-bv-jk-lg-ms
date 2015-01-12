@@ -1,2 +1,3 @@
+cd $(dirname $0)
 cp -r team017 ghost
 find ghost -name "*.java" | xargs sed -i 's/team017/ghost/g'
