@@ -8,7 +8,7 @@ import java.util.*;
 // Format match output for analysis.
 // TODO(miles): Should we use matching logging or something for this?
 public enum Analyze {;
-    public static boolean ON = System.getProperty("bc.testing.team017.analyze").equals("ON");
+    public static boolean ON = "ON".equals(System.getProperty("bc.testing.team017.analyze"));
 
     // Record a quantity's value on a turn.
     // This should only happen once per label per round.
