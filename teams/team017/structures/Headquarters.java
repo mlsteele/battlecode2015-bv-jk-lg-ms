@@ -15,9 +15,6 @@ public class Headquarters extends Structure {
     private static final int UPDATE_UNIT_COUNT_TIME = 10;
     private int[] unitCount;
 
-    private boolean beaver_mining_spawned = false;
-    private boolean beaver_barracks_spawned = false;
-
     private MapLocation targetTower;
     private MapLocation earlyRallyLocation;
 
@@ -171,6 +168,7 @@ public class Headquarters extends Structure {
 
         Direction dir = spawn(BEAVER); // spawn the beaver
         if (dir == null) return false;
+        Analyze.sample("hq_spawn_beaver", 1);
 
         int beaverTaskSlot = rf.assignBeaverTaskSlot(); // Assign a new beaver task slot
         if (beaverTaskSlot < 0) {

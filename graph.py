@@ -104,7 +104,7 @@ def plot_sample(log, field, label, round_max=float('inf')):
         if entry['field'] == field and entry['round'] <= round_max:
             xs.append(entry['round'])
             ys.append(entry['value'])
-    plt.plot(xs, ys, label=label)
+    plt.plot(xs, ys, label=label, marker='.')
 
 def plot_aggregate(log, field, label, round_max=float('inf')):
     aggregates = {}
@@ -148,6 +148,9 @@ if __name__ == "__main__":
         log = parselogfile(logfile)
         label = os.path.splitext(logfile.split("/")[-1])[0]
         print label
+        if not field in log.types:
+            print "missing", field
+            continue
         if log.types[field] == 'sample':
             validate_sample(log, field)
             plot_sample(log, field, label, round_max=ROUND_MAX)

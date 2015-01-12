@@ -10,15 +10,17 @@ import java.util.*;
 public class MinerFactory extends Structure {
     MinerFactory(RobotController rc) { super(rc); }
 
-    int[] unitCount;
+    private int[] unitCount;
 
     @Override
     public void run() {
         boolean incomingResupply = false;
 
         while (true) {
+
             // Request resupply when low
             double supply = rc.getSupplyLevel();
+            Analyze.aggregate("mfs_supply", supply);
             if (supply <= MINERFACTORY_LOW_SUPPLY) {
                 if (!incomingResupply) {
                     if (rf.requestResupply(MINERFACTORY_RESUPPLY_AMT))

@@ -10,6 +10,8 @@ import java.util.*;
 public class TankFactory extends Structure {
     TankFactory(RobotController rc) { super(rc); }
 
+    private int[] unitCount;
+
     @Override
     public void run() {
         boolean incomingResupply = false;
