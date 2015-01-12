@@ -25,7 +25,7 @@ public abstract class Robot {
 
     abstract public void run();
 
-    // Chooses the robot
+    // Chooses which robot to attack.
     private static RobotInfo chooseTarget(RobotInfo[] enemies) {
         RobotInfo target = enemies[0];
         double    targetScore = -1;

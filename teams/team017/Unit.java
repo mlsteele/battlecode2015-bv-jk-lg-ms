@@ -96,7 +96,7 @@ public abstract class Unit extends Robot {
     // Tries to move forward while bugging.
     // Returns whether successful.
     // Assumes CoreReady
-    private boolean moveForwardBugging() {
+    protected boolean moveForwardBugging() {
         // try forwards
         if (moveForwardStrict()) return true;
 
@@ -157,12 +157,12 @@ public abstract class Unit extends Robot {
         return false;
     }
 
-    private boolean moveTowardStrict(MapLocation loc) {
+    protected boolean moveTowardStrict(MapLocation loc) {
         forward = rc.getLocation().directionTo(loc);
         return moveForwardStrict();
     }
 
-    private boolean moveForwardStrict() {
+    protected boolean moveForwardStrict() {
         if (rc.canMove(forward)) {
             try {
                 rc.move(forward);

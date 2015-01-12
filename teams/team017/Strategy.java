@@ -28,6 +28,10 @@ public enum Strategy {;
     public static final int TEAM_LOW_ORE = 1500;
 
     // Return to HQ to resupply if below this level.
+    // Call for resupply at this point (mining factory)
+    public static final int MINERFACTORY_LOW_SUPPLY = initialSupply(MINER);
+    public static final int MINERFACTORY_RESUPPLY_AMT = 5 * initialSupply(MINER);
+
     public static final int MINER_LOW_SUPPLY = 75;
     // Get this much from the HQ.
     public static final int MINER_RESUPPLY_FROM_HQ = 2000;
@@ -36,9 +40,8 @@ public enum Strategy {;
     public static final int TANKFACTORY_LOW_SUPPLY = initialSupply(TANK);
     public static final int TANKFACTORY_RESUPPLY_AMT = 3 * initialSupply(TANK);
 
-    // Call for resupply at this point (mining factory)
-    public static final int MINERFACTORY_LOW_SUPPLY = initialSupply(MINER);
-    public static final int MINERFACTORY_RESUPPLY_AMT = 5 * initialSupply(MINER);
+    // Number of early harassment drones.
+    public static final int DRONE_HARRASS_N = 5;
 
     public static final int RALLY_ARMY = 0;
 
@@ -47,6 +50,8 @@ public enum Strategy {;
 
     // How close to encircle a target point. (sqrads)
     public static final int MOVEMENT_CIRCLE_DEFAULT = 4*4;
+
+    public static final int MAXIMUM_ATTACK_RANGE_EVER = 6*6;
 
     public static int taskSupply(int task) {
         switch(task) {
@@ -74,7 +79,7 @@ public enum Strategy {;
             case SOLDIER:             return 1000;
             case BASHER:              return 1000;
 
-            case HELIPAD:             return 20 * initialSupply(DRONE);
+            case HELIPAD:             return DRONE_HARRASS_N * initialSupply(DRONE);
             case DRONE:               return 1000;
 
             case TANKFACTORY:         return 6 * initialSupply(TANK);

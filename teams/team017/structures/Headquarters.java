@@ -34,6 +34,7 @@ public class Headquarters extends Structure {
         rf.writeRally(Strategy.RALLY_GROUP_2, homeTower);
 
         taskQueue.add(new Task(TASK_MINERFACTORY));
+        taskQueue.add(new Task(TASK_HELIPAD));
         taskQueue.add(new Task(TASK_SUPPLYDEPOT));
         taskQueue.add(new Task(TASK_SUPPLYDEPOT));
         taskQueue.add(new Task(TASK_BARRACKS));
@@ -42,6 +43,7 @@ public class Headquarters extends Structure {
         taskQueue.add(new Task(TASK_TANKFACTORY));
 
         rf.requestXUnits(MINER, 30);
+        rf.requestXUnits(DRONE, DRONE_HARRASS_N);
 
         while (true) {
             if (Analyze.ON) Analyze.sample("team_ore", rc.getTeamOre());
