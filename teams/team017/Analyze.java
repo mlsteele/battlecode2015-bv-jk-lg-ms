@@ -26,4 +26,8 @@ public enum Analyze {;
     public static void aggregate(String label, int n) {
         System.out.println("ANALYZE aggregate " + label + " " + n);
     }
+
+    public static void aggregate(String label, double n) {
+        System.out.println("ANALYZE aggregate " + label + " " + n);
+    }
 }

@@ -84,6 +84,7 @@ public class Headquarters extends Structure {
             Analyze.sample("beavers", unitCount[BEAVER.ordinal()]);
             Analyze.sample("miners", unitCount[MINER.ordinal()]);
             Analyze.sample("tanks", unitCount[TANK.ordinal()]);
+            Analyze.sample("tfs", unitCount[TANKFACTORY.ordinal()]);
             Analyze.sample("drones", unitCount[DRONE.ordinal()]);
         }
 
