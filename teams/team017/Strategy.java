@@ -52,7 +52,7 @@ public enum Strategy {;
         switch(task) {
             case TASK_NONE:              return initialSupply(BEAVER);
             case TASK_MINE:              return initialSupply(BEAVER);
-            case TASK_BARRACKS:          return initialSupply(BEAVER) + initialSupply(BARRACKS);
+            case TASK_BARRACKS:          return initialSupply(BEAVER);
             case TASK_MINERFACTORY:      return initialSupply(BEAVER) + initialSupply(MINERFACTORY);
             case TASK_TANKFACTORY:       return initialSupply(BEAVER) + initialSupply(TANKFACTORY);
             case TASK_HELIPAD:           return initialSupply(BEAVER) + initialSupply(HELIPAD);
