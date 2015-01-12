@@ -47,8 +47,8 @@ public class Headquarters extends Structure {
         rf.requestXUnits(MINER, 30);
 
         while (true) {
-            Analyze.count("team_ore", rc.getTeamOre());
-            Analyze.count("hq_supply", rc.getSupplyLevel());
+            Analyze.sample("team_ore", rc.getTeamOre());
+            Analyze.sample("hq_supply", rc.getSupplyLevel());
 
             shootBaddies();
 
@@ -81,10 +81,10 @@ public class Headquarters extends Structure {
         // Updates the unit count. Happens every UPDATE_UNIT_COUNT_TIME mod times
         if (Clock.getRoundNum() % UPDATE_UNIT_COUNT_TIME == 0) {
             unitCount = getUnitCount();
-            Analyze.count("beavers", unitCount[BEAVER.ordinal()]);
-            Analyze.count("miners", unitCount[MINER.ordinal()]);
-            Analyze.count("tanks", unitCount[TANK.ordinal()]);
-            Analyze.count("drones", unitCount[DRONE.ordinal()]);
+            Analyze.sample("beavers", unitCount[BEAVER.ordinal()]);
+            Analyze.sample("miners", unitCount[MINER.ordinal()]);
+            Analyze.sample("tanks", unitCount[TANK.ordinal()]);
+            Analyze.sample("drones", unitCount[DRONE.ordinal()]);
         }
 
         // Rally at 0.35 of the way there.

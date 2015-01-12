@@ -8,11 +8,13 @@ import java.util.*;
 // Format match output for analysis.
 // TODO(miles): Should we use matching logging or something for this?
 public enum Analyze {;
-    public static void count(String label, int n) {
-        System.out.println("ANALYZE count " + label + " " + n);
+    // Record a quantity's value on a turn.
+    // This should only happen once per label per round.
+    public static void sample(String label, int n) {
+        System.out.println("ANALYZE sample " + label + " " + n);
     }
 
-    public static void count(String label, double n) {
-        System.out.println("ANALYZE count " + label + " " + n);
+    public static void sample(String label, double n) {
+        System.out.println("ANALYZE sample " + label + " " + n);
     }
 }
