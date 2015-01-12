@@ -47,7 +47,7 @@ public class Headquarters extends Structure {
         rf.requestXUnits(MINER, 30);
 
         while (true) {
-            Analyze.sampleTeamOre(rc);
+            Analyze.count("team_ore", rc.getTeamOre());
             Analyze.count("hq_supply", rc.getSupplyLevel());
 
             shootBaddies();

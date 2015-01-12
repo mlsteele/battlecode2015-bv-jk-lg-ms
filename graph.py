@@ -45,22 +45,13 @@ def decompose_logmsg(entry):
     "decompose just the user msg part of the logline"
     msg = entry['msg']
     entry.update(extract_msg(msg,
-        "team ore (?P<team_ore>.*)"))
-    entry.update(extract_msg(msg,
-        "count hq_supply (?P<hq_supply>.*)"))
-    entry.update(extract_msg(msg,
-        "count beavers (?P<beavers>.*)"))
-    entry.update(extract_msg(msg,
-        "count miners (?P<miners>.*)"))
-    entry.update(extract_msg(msg,
-        "count tanks (?P<tanks>.*)"))
-    entry.update(extract_msg(msg,
-        "count drones (?P<drones>.*)"))
+        "count (?P<field>\w+) (?P<value>.*)"))
 
 def extract_msg(msg, pattern):
     m = re.search(pattern, msg)
     if m != None:
-        return m.groupdict()
+        d = m.groupdict()
+        return {d['field']: d['value']}
     else:
         return {}
 
