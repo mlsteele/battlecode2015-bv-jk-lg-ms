@@ -40,6 +40,7 @@ public class Miner extends Unit {
                     if (resupplying) {
                         if(rc.getLocation().equals(lastSeen)) resupplying = false;
                         moveTowardBugging(lastSeen);
+                        rc.setIndicatorString(1, "Heading back to last seen best ore");
                     } else {
                         pursueMining();
                     }
