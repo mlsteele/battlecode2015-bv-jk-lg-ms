@@ -11,6 +11,7 @@ public class Miner extends Unit {
     Miner(RobotController rc) { super(rc); }
 
     private MapLocation lastSeen = rc.getLocation();
+    private double ORE_CUTOFF = 12;
     private int supplyRequest = 0;
     private boolean resupplying = false;
 
@@ -64,7 +65,8 @@ public class Miner extends Unit {
     }
 
     private void pursueMining() {
-        if (rc.senseOre(rc.getLocation()) > 0) {
+        double oreHere = rc.senseOre(rc.getLocation());
+        if (oreHere >= 12) {
             rc.setIndicatorString(1, "mining here");
             mineHere();
         } else {
@@ -112,7 +114,7 @@ public class Miner extends Unit {
         for (int i = 0; i < 8; i++) {
             d = possibleDirs[(i + ri) % 8];
             double ore = rc.senseOre(curLocation.add(d));
-            if (ore > bestOre && rc.canMove(d)) {
+            if ((ore > bestOre) && (ore > ORE_CUTOFF) && rc.canMove(d)) {
                 bestOre = ore;
                 bestDirection = d;
             }

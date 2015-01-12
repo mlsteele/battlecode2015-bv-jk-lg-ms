@@ -50,15 +50,15 @@ public enum Strategy {;
 
     public static int taskSupply(int task) {
         switch(task) {
-            case TASK_NONE:              return initialSupply(BEAVER);
-            case TASK_MINE:              return initialSupply(BEAVER);
-            case TASK_BARRACKS:          return initialSupply(BEAVER);
-            case TASK_MINERFACTORY:      return initialSupply(BEAVER) + initialSupply(MINERFACTORY);
-            case TASK_TANKFACTORY:       return initialSupply(BEAVER) + initialSupply(TANKFACTORY);
-            case TASK_HELIPAD:           return initialSupply(BEAVER) + initialSupply(HELIPAD);
-            case TASK_SUPPLYDEPOT:       return initialSupply(BEAVER) + initialSupply(SUPPLYDEPOT);
+            case TASK_NONE:                 return initialSupply(BEAVER);
+            case TASK_MINE:                 return initialSupply(BEAVER);
+            case TASK_BARRACKS:             return initialSupply(BEAVER);
+            case TASK_MINERFACTORY:         return initialSupply(BEAVER) + initialSupply(MINERFACTORY);
+            case TASK_TANKFACTORY:          return initialSupply(BEAVER) + initialSupply(TANKFACTORY);
+            case TASK_HELIPAD:              return initialSupply(BEAVER) + initialSupply(HELIPAD);
+            case TASK_SUPPLYDEPOT:          return initialSupply(BEAVER) + initialSupply(SUPPLYDEPOT);
             case TASK_RESUPPLY_TANKFACTORY: return initialSupply(BEAVER) + TANKFACTORY_RESUPPLY_AMT;
-            default:                     throw new NotImplementedException();
+            default:                        throw new NotImplementedException();
         }
     }
 
