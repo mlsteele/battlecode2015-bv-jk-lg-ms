@@ -31,6 +31,8 @@ public class TankFactory extends Structure {
             if (rc.isCoreReady())
                 spawn(TANK);
 
+            if (supply < initialSupply(TANK))
+                Analyze.aggregate("tankfactory_supplyblock", 1);
             supplyNearbyEmpty(null, TANK, initialSupply(TANK));
 
             rc.yield();
