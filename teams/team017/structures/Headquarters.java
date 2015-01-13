@@ -24,6 +24,7 @@ public class Headquarters extends Structure {
 
     private int desiredMiners = 30;
     private int desiredTankFactories = 3;
+    private boolean additionalSupplyDepots = true;
 
     // Amt of time HQ will wait for a building before requesting again
     private static final int waitTimeForSpawn(RobotType rtype) {
@@ -72,6 +73,14 @@ public class Headquarters extends Structure {
 
             if (Clock.getRoundNum() > 600)
                 maintainDesiredTankFactories();
+
+            if(rc.getTeamOre() > 1000 && additionalSupplyDepots) {
+                desiredTankFactories = 5;
+                taskQueue.add(new Task(TASK_SUPPLYDEPOT));
+                taskQueue.add(new Task(TASK_SUPPLYDEPOT));
+                taskQueue.add(new Task(TASK_SUPPLYDEPOT));
+                additionalSupplyDepots = false;
+            }
 
             taskUpkeep();
 
