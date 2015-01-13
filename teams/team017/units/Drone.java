@@ -8,10 +8,14 @@ import static team017.Strategy.*;
 import java.util.*;
 
 public class Drone extends Unit {
+    private boolean harassApproachDirection;
+
     Drone(RobotController rc) { super(rc); }
 
     @Override
     public void run() {
+        harassApproachDirection = rand.nextBoolean();
+
         waitForSupplies();
 
         // Main loop
@@ -36,9 +40,13 @@ public class Drone extends Unit {
         if (threatener != null)
             return getOutOfDodge(threatener);
 
-        // Go towards the HQ most of the time.
+        // Pick a direction.
+        // Go towards the HQ, or up the sidelines, or a random direction.
+        int r = rand.nextInt(10);
         forward = rc.getLocation().directionTo(rc.senseEnemyHQLocation());
-        if (rand.nextInt(2) == 0)
+        if (r < 7)
+            forward = harassApproachDirection ? forward.rotateRight() : forward.rotateLeft();
+        if (r < 3)
             forward = randomDirection();
 
         // Make sure it's safe.
