@@ -70,7 +70,7 @@ public class Headquarters extends Structure {
                 spawnBeaverWithTask(TASK_NONE, null);
             }
 
-            if (Clock.getRoundNum() > 400)
+            if (Clock.getRoundNum() > 600)
                 maintainDesiredTankFactories();
 
             taskUpkeep();
