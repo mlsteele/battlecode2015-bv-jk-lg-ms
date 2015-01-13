@@ -1,6 +1,7 @@
 package team017;
 
 import battlecode.common.*;
+import battlecode.common.Clock;
 import battlecode.common.GameActionException;
 import static battlecode.common.Direction.*;
 import static battlecode.common.RobotType.*;
@@ -21,6 +22,18 @@ public class Headquarters extends Structure {
     private Hashtable<Integer, Integer> assignedBeaverTaskSlots = new Hashtable<Integer, Integer>();
     private Queue<Task> taskQueue = new LinkedList<Task>();
 
+    private int desiredMiners = 30;
+    private int desiredTankFactories = 3;
+
+    // Amt of time HQ will wait for a building before requesting again
+    private static final int waitTimeForSpawn(RobotType rtype) {
+        return 15 + rtype.buildTurns;
+    }
+
+    // How long until we should ask again for a building?
+    private int lastBarracksRequestTime = 0;
+    private int lastFactoryRequestTime = 0;
+
     Headquarters(RobotController rc) { super(rc); }
 
     @Override
@@ -38,11 +51,11 @@ public class Headquarters extends Structure {
         taskQueue.add(new Task(TASK_SUPPLYDEPOT));
         taskQueue.add(new Task(TASK_SUPPLYDEPOT));
         taskQueue.add(new Task(TASK_BARRACKS));
-        taskQueue.add(new Task(TASK_TANKFACTORY));
-        taskQueue.add(new Task(TASK_TANKFACTORY));
-        taskQueue.add(new Task(TASK_TANKFACTORY));
 
-        rf.requestXUnits(MINER, 30);
+        for (int i=0; i<desiredTankFactories; i++)
+            taskQueue.add(new Task(TASK_TANKFACTORY));
+
+        rf.requestXUnits(MINER, desiredMiners);
         rf.requestXUnits(DRONE, DRONE_HARRASS_N);
 
         while (true) {
@@ -56,6 +69,9 @@ public class Headquarters extends Structure {
             if (rc.isCoreReady() && unitCount[BEAVER.ordinal()] < BEAVER_POOL_SIZE) {
                 spawnBeaverWithTask(TASK_NONE, null);
             }
+
+            if (Clock.getRoundNum() > 400)
+                maintainDesiredTankFactories();
 
             taskUpkeep();
 
@@ -161,7 +177,7 @@ public class Headquarters extends Structure {
         while (!supplyToID(null, robotID, Strategy.taskSupply(nextTask.taskNum))) continue;
         // we have given the supplies, we can remove the task now
         taskQueue.remove();
-        System.out.println("dispatched task ("+taskQueue.size()+" tasks remaining)");
+        //System.out.println("dispatched task ("+taskQueue.size()+" tasks remaining)");
     }
 
     // Assumes supply level desired
@@ -231,6 +247,38 @@ public class Headquarters extends Structure {
 
         }
 
+        return false;
+    }
+
+    // The boolean return here is sketchy. returns true if it "did something"
+    private boolean maintainDesiredTankFactories() {
+        unitCount = getUnitCount();
+        int numQueuedFactories = Collections.frequency(taskQueue, new Task(TASK_TANKFACTORY));
+        int numQueuedBarracks = Collections.frequency(taskQueue, new Task(TASK_BARRACKS));
+        int neededFactories = desiredTankFactories - unitCount[TANKFACTORY.ordinal()] - numQueuedFactories;
+
+        // if we don't have (or have queued) enough factories
+        if(neededFactories > 0) {
+            System.out.println("We need " + neededFactories + " factories");
+            // if we don't have (or have queued) a barracks
+            if(unitCount[BARRACKS.ordinal()] + numQueuedBarracks < 1) {
+                // If we've waited enough since we last tried for a barracks
+                if(lastBarracksRequestTime + waitTimeForSpawn(BARRACKS) <= Clock.getRoundNum()) {
+                    // queue a new barracks
+                    taskQueue.add(new Task(TASK_BARRACKS));
+                    lastBarracksRequestTime = Clock.getRoundNum();
+                    return true;
+                }
+            } else { // Barracks is all set.
+                // If we've waited enough since we last tried for a tank factory
+                if(lastFactoryRequestTime + waitTimeForSpawn(TANKFACTORY) <= Clock.getRoundNum()) {
+                    // queue a new tank factory
+                    taskQueue.add(new Task(TASK_TANKFACTORY));
+                    lastFactoryRequestTime = Clock.getRoundNum();
+                    return true;
+                }
+            }
+        }
         return false;
     }
 }

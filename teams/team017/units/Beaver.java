@@ -26,7 +26,7 @@ public class Beaver extends Unit {
 
         currentTask = rf.getTask(rf.myTaskSlot);
         rc.setIndicatorString(0, "slot:" + rf.myTaskSlot + " task:" + currentTask.taskNum);
-        System.out.println("BEAVER initial task " + currentTask.taskNum);
+        //System.out.println("BEAVER initial task " + currentTask.taskNum);
 
         waitForSupplies();
 
@@ -67,7 +67,7 @@ public class Beaver extends Unit {
 
             // Finished what it was doing
             rc.setIndicatorString(1, "finished task");
-            System.out.println("BEAVER finished task " + orderCode);
+            //System.out.println("BEAVER finished task " + orderCode);
             goToHQ();
             rc.setIndicatorString(1, "returned to hq");
             dumpSuppliesToHQ();
@@ -252,7 +252,7 @@ public class Beaver extends Unit {
         } while (currentTask == null);
 
         rc.setIndicatorString(1, "received task");
-        System.out.println("BEAVER received task " + currentTask.taskNum);
+        //System.out.println("BEAVER received task " + currentTask.taskNum);
     }
 
 }
