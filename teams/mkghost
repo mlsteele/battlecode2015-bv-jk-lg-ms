@@ -1,3 +1,13 @@
+#!/usr/bin/env bash
 cd $(dirname $0)
-cp -r team017 ghost
-find ghost -name "*.java" | xargs sed -i 's/team017/ghost/g'
+
+GHOSTNAME="ghost"
+
+if [ ! -z "$1" ]
+  then
+    GHOSTNAME="$1"
+fi
+
+echo "Creating ghost in teams/$GHOSTNAME"
+cp -r team017 "$GHOSTNAME"
+find "$GHOSTNAME" -name "*.java" | xargs sed -i "s/team017/$GHOSTNAME/g"
