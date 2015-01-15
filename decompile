@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+procyon-decompiler -jar lib/battlecode-server.jar -o lib-decompiled/battlecode-server
+procyon-decompiler -jar lib/battlecode-player.jar -o lib-decompiled/battlecode-player
+procyon-decompiler -jar lib/battlecode-client.jar -o lib-decompiled/battlecode-client
