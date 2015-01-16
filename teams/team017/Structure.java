@@ -112,7 +112,7 @@ public abstract class Structure extends Robot {
 
     // returns the current robot counts (includes units and structures)
     protected int[] getUnitCounts() {
-        int[] unitsOnField = new int[NUM_ROBOT_TYPES];
+        int[] unitsOnField = new int[Strategy.NUM_ROBOT_TYPES];
         RobotInfo[] robots = rc.senseNearbyRobots(Integer.MAX_VALUE, rc.getTeam());
         for (RobotInfo rob : robots) {
             unitsOnField[rob.type.ordinal()]++;
