@@ -44,7 +44,8 @@ public enum Strategy {;
 
     // There are X types of robots.
     // Hopefully rtype.ordinal() has a max value of X-1
-    public static final int NUM_ROBOT_TYPES = RobotType.values().length;
+    public static final int NUM_ROBOT_TYPES = 21;
+    // public static final int NUM_ROBOT_TYPES = RobotType.values().length;
 
     public static int taskSupply(int task) {
         switch(task) {
