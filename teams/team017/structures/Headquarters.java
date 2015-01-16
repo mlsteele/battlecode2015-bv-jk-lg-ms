@@ -109,6 +109,7 @@ public class Headquarters extends Structure {
             if (Analyze.ON) Analyze.sample("tanks", unitCounts[TANK.ordinal()]);
             if (Analyze.ON) Analyze.sample("tfs", unitCounts[TANKFACTORY.ordinal()]);
             if (Analyze.ON) Analyze.sample("drones", unitCounts[DRONE.ordinal()]);
+            if (Analyze.ON) Analyze.sample("dsupply", supplyGainRate());
         }
 
         // Rally at 0.35 of the way there.
@@ -288,5 +289,18 @@ public class Headquarters extends Structure {
             }
         }
         return false;
+    }
+
+    // Rate of supply gain.
+    // Requires that unitCounts be up to date
+    // with the number of supply depots.
+    private double supplyGainRate() {
+        // Formula copied from the engine.
+        // Be sure to be on the lookout for changes.
+        return GameConstants.SUPPLY_GEN_BASE *
+            (GameConstants.SUPPLY_GEN_MULTIPLIER +
+                Math.pow(
+                    unitCounts[SUPPLYDEPOT.ordinal()],
+                    GameConstants.SUPPLY_GEN_EXPONENT));
     }
 }
