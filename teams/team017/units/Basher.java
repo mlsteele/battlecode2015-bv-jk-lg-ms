@@ -16,8 +16,7 @@ public class Basher extends Unit {
 
         // Main loop
         while (true) {
-            rf.loadRally(rallyGroup);
-            if (rc.isCoreReady()) moveToRallyPoint(rf.getRally(rallyGroup));
+            if (rc.isCoreReady()) moveToRallyPoint(rf.rallypoints.get(rallyGroup));
 
             rc.yield();
         }

@@ -58,14 +58,14 @@ public abstract class Structure extends Robot {
         // special situation for miners
         if (rtype == MINER) {
             // Check to see if a miner is requesting supply
-            minerResupplyRequest = rf.checkMinerResupply();
+            minerResupplyRequest = rf.minerresupply.checkMinerResupply();
             if (minerResupplyRequest[0] == 0) return; // no one requested a resupply
 
             minerID    = minerResupplyRequest[0];
             supplyGoal = minerResupplyRequest[1];
 
             supplyToID(candidates, minerID, supplyGoal);
-            rf.clearMinerResupply();
+            rf.minerresupply.clearMinerResupply();
             return;
 
         } else {

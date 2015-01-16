@@ -20,8 +20,7 @@ public class Tank extends Unit {
         while (true) {
             shootBaddies();
 
-            rf.loadRally(rallyGroup);
-            if (rc.isCoreReady()) moveToRallyPoint(rf.getRally(rallyGroup));
+            if (rc.isCoreReady()) moveToRallyPoint(rf.rallypoints.get(rallyGroup));
 
             // At 10% health dump supplies
             // Maybe not helpful. Eleminate if we need to optimize.

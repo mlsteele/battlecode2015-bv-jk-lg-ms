@@ -44,8 +44,8 @@ public class Headquarters extends Structure {
 
         // Start by rallying at the closest tower
         MapLocation homeTower = closestTowerTo(rc.getLocation());
-        rf.writeRally(Strategy.RALLY_GROUP_1, homeTower);
-        rf.writeRally(Strategy.RALLY_GROUP_2, homeTower);
+        rf.rallypoints.set(Strategy.RALLY_GROUP_1, homeTower);
+        rf.rallypoints.set(Strategy.RALLY_GROUP_2, homeTower);
 
         taskQueue.add(new Task(Task.MINERFACTORY));
         taskQueue.add(new Task(Task.HELIPAD));
@@ -56,8 +56,8 @@ public class Headquarters extends Structure {
         for (int i=0; i<desiredTankFactories; i++)
             taskQueue.add(new Task(Task.TANKFACTORY));
 
-        rf.requestXUnits(MINER, desiredMiners);
-        rf.requestXUnits(DRONE, DRONE_HARRASS_N);
+        rf.xunits.set(MINER, desiredMiners);
+        rf.xunits.set(DRONE, DRONE_HARRASS_N);
 
         while (true) {
             if (Analyze.ON) Analyze.sample("team_ore", rc.getTeamOre());
@@ -85,9 +85,9 @@ public class Headquarters extends Structure {
             taskUpkeep();
 
             // Collect resupply tasks.
-            if (rf.resupplyFromTankFactoryRequested()) {
-                taskQueue.add(new Task(Task.RESUPPLY_TANKFACTORY, rf.getResupplyLocation()));
-                rf.clearResupplyRequest();
+            if (rf.resupply.requested()) {
+                taskQueue.add(new Task(Task.RESUPPLY_TANKFACTORY, rf.resupply.getLocation()));
+                rf.resupply.clearRequest();
             }
 
             // Resupply miners that have run out and returned.
@@ -114,37 +114,37 @@ public class Headquarters extends Structure {
 
         // Rally at 0.35 of the way there.
         if (Math.abs(Clock.getRoundNum() - Strategy.EARLY_RALLY_GROUP_1) <= 1) {
-            rf.writeRally(Strategy.RALLY_GROUP_1, earlyRallyLocation);
+            rf.rallypoints.set(Strategy.RALLY_GROUP_1, earlyRallyLocation);
             rc.setIndicatorString(1, "Early rally at " + earlyRallyLocation);
         }
 
         // Rally at an enemy tower, move up 2nd group
         if (Math.abs(Clock.getRoundNum() - Strategy.ATTACK_GROUP_1) <= 1) {
-            rf.writeRally(Strategy.RALLY_GROUP_1, targetTower);
-            rf.writeRally(Strategy.RALLY_GROUP_2, earlyRallyLocation);
+            rf.rallypoints.set(Strategy.RALLY_GROUP_1, targetTower);
+            rf.rallypoints.set(Strategy.RALLY_GROUP_2, earlyRallyLocation);
             rc.setIndicatorString(1, "Group 1 moves forward");
         }
 
         // Everyone should attack now
         if (Math.abs(Clock.getRoundNum() - ATTACK_GROUP_2) <= 1) {
-            rf.writeRally(Strategy.RALLY_GROUP_2, targetTower);
+            rf.rallypoints.set(Strategy.RALLY_GROUP_2, targetTower);
             rc.setIndicatorString(1, "Everyone attacks");
         }
 
         // If we have a new target tower, update rally points of attackers
         if (targetTower != oldTargetTower) {
             if (Clock.getRoundNum() > Strategy.ATTACK_GROUP_1 + 1) {
-                rf.writeRally(Strategy.RALLY_GROUP_1, targetTower);
+                rf.rallypoints.set(Strategy.RALLY_GROUP_1, targetTower);
             }
             if (Clock.getRoundNum() > Strategy.ATTACK_GROUP_2 + 1) {
-                rf.writeRally(Strategy.RALLY_GROUP_2, targetTower);
+                rf.rallypoints.set(Strategy.RALLY_GROUP_2, targetTower);
             }
         }
     }
 
     private void updateTargetTower() {
         // Target the tower closest to group 1
-        MapLocation rallyPoint = rf.getRally(Strategy.RALLY_GROUP_1);
+        MapLocation rallyPoint = rf.rallypoints.get(RALLY_GROUP_1);
         if (rallyPoint == null) rallyPoint = earlyRallyLocation;
         targetTower = closestEnemyTowerTo(rallyPoint);
         rc.setIndicatorDot(targetTower, 0, 255, 0);
@@ -173,7 +173,7 @@ public class Headquarters extends Structure {
         int taskSlot;
 
         // check if anyone wants tasks
-        taskSlot = rf.assignTaskToNextFree(nextTask);
+        taskSlot = rf.beavertasks.assignTaskToNextFree(nextTask);
         if (taskSlot < 0) {
             // no one can get tasks so leave it in the queue.
             return;
@@ -197,11 +197,11 @@ public class Headquarters extends Structure {
         if (dir == null) return false;
         if (Analyze.ON) Analyze.sample("hq_spawn_beaver", 1);
 
-        int beaverTaskSlot = rf.assignBeaverTaskSlot(); // Assign a new beaver task slot
+        int beaverTaskSlot = rf.beavertasks.assignBeaverTaskSlot(); // Assign a new beaver task slot
         if (beaverTaskSlot < 0) {
             return false; // someone hasnt claimed their task, shame on them
         }
-        rf.setTask(new Task(task, loc), beaverTaskSlot); // give the beaver a task
+        rf.beavertasks.setTask(new Task(task, loc), beaverTaskSlot); // give the beaver a task
 
         // Yield so that the spawned beaver exists.
         rc.yield();

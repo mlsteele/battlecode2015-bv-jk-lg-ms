@@ -23,7 +23,7 @@ public class MinerFactory extends Structure {
             if (Analyze.ON) Analyze.aggregate("mfs_supply", supply);
             if (supply <= MINERFACTORY_LOW_SUPPLY) {
                 if (!incomingResupply) {
-                    if (rf.requestResupply(MINERFACTORY_RESUPPLY_AMT))
+                    if (rf.resupply.request(MINERFACTORY_RESUPPLY_AMT))
                         incomingResupply = true;
                 }
             } else {
@@ -32,7 +32,7 @@ public class MinerFactory extends Structure {
 
             if (rc.isCoreReady() && rc.getSupplyLevel() >= Strategy.initialSupply(MINER)) {
                 unitCount = getUnitCount();
-                if(unitCount[MINER.ordinal()] < rf.checkXUnits(MINER)) {
+                if(unitCount[MINER.ordinal()] < rf.xunits.get(MINER)) {
                     spawn(MINER);
                 }
             }

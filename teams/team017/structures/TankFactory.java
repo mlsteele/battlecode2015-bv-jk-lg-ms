@@ -22,7 +22,7 @@ public class TankFactory extends Structure {
             if (Analyze.ON) Analyze.aggregate("tfs_supply", supply);
             if (supply <= TANKFACTORY_LOW_SUPPLY) {
                 if (!incomingResupply) {
-                    if (rf.requestResupply(TANKFACTORY_RESUPPLY_AMT)) {
+                    if (rf.resupply.request(TANKFACTORY_RESUPPLY_AMT)) {
                         incomingResupply = true;
                     }
                 }

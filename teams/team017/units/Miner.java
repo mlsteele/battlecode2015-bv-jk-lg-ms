@@ -35,7 +35,7 @@ public class Miner extends Unit {
                     goToHQ();
                     dumpSuppliesToHQ();
                     resupplying = true;
-                    rf.minerRequestResupply(supplyRequest);
+                    rf.minerresupply.request(supplyRequest);
                 } else {
                     if (resupplying) {
                         if(rc.getLocation().equals(lastSeen)) resupplying = false;

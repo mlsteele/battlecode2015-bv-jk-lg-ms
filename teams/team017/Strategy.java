@@ -42,6 +42,9 @@ public enum Strategy {;
 
     public static final int MAXIMUM_ATTACK_RANGE_EVER = 6*6;
 
+    // There are 21 types of robots.
+    public static final int ROBOT_TYPE_ORDINAL_MAX = 20;
+
     public static int taskSupply(int task) {
         switch(task) {
             case Task.NONE:                 return initialSupply(BEAVER);

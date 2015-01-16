@@ -18,14 +18,15 @@ public class Beaver extends Unit {
     // Don't build farther away than this
     private static final int MAX_DISTANCE_FROM_HQ = 100;
 
+    private int myTaskSlot;
     private Task currentTask = new Task(Task.NONE);
 
     @Override
     public void run() {
-        rf.myTaskSlot = rf.getBeaverTaskSlot();
+        myTaskSlot = rf.beavertasks.getBeaverTaskSlot();
 
-        currentTask = rf.getTask(rf.myTaskSlot);
-        rc.setIndicatorString(0, "slot:" + rf.myTaskSlot + " task:" + currentTask.taskNum);
+        currentTask = rf.beavertasks.getTask(myTaskSlot);
+        rc.setIndicatorString(0, "slot:" + myTaskSlot + " task:" + currentTask.taskNum);
         //System.out.println("BEAVER initial task " + currentTask.taskNum);
 
         waitForSupplies();
@@ -33,7 +34,7 @@ public class Beaver extends Unit {
         // This is NOT the inner loop.
         while (true) {
 
-            rc.setIndicatorString(0, "slot:" + rf.myTaskSlot + " task:" + currentTask.taskNum);
+            rc.setIndicatorString(0, "slot:" + myTaskSlot + " task:" + currentTask.taskNum);
 
             // Order code is which task to pursue.
             int orderCode = currentTask.taskNum;
@@ -244,11 +245,11 @@ public class Beaver extends Unit {
         // im near the hq, lets ask for a task and clear my task slot
         // wait for signal from HQ
         do {
-            rf.requestTask();
+            rf.beavertasks.requestTask(myTaskSlot);
             // yield so the request propogates, otherwise we might see our old task.
             // yield so that we don't request a task while having an assigned task.
             rc.yield();
-            currentTask = rf.getTask(rf.myTaskSlot);
+            currentTask = rf.beavertasks.getTask(myTaskSlot);
         } while (currentTask == null);
 
         rc.setIndicatorString(1, "received task");
