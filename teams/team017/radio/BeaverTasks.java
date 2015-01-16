@@ -19,7 +19,9 @@ public class BeaverTasks extends RadioModule {
 
     @Override
     public int slotsRequired() {
-        return ROBOT_TYPE_ORDINAL_MAX + 6;
+        // TODO(miles): I guess we probably won't have >1000
+        //              beavers but this is mad sketch.
+        return 1000;
     }
 
     // Assigns a task to the beaver slot. Returns task assignment slot

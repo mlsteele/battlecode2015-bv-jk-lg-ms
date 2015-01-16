@@ -18,7 +18,7 @@ public class MinerResupply extends RadioModule {
 
     @Override
     public int slotsRequired() {
-        return ROBOT_TYPE_ORDINAL_MAX + 6;
+        return 2;
     }
 
     // used by the miner to set a resupply request
