@@ -9,7 +9,7 @@ import java.lang.RuntimeException;
 // THIS MODULES IS NOT USED.
 // It costs at least 500 BTC/HQ/Turn because clearing the counters
 // is expensive. It's flaky because extra yields in units and the HQ
-// can cause miscounts, and we already have getUnitCount so why did I
+// can cause miscounts, and we already have getUnitCounts so why did I
 // even write this?
 //
 // Keeps track of the number of live units of every type.

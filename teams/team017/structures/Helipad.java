@@ -17,7 +17,7 @@ public class Helipad extends Structure {
             rc.setIndicatorString(0, null);
 
             if (rc.isCoreReady() && rc.getSupplyLevel() >= Strategy.initialSupply(DRONE)) {
-                unitCount = getUnitCount();
+                unitCount = getUnitCounts();
                 int unitsExist = unitCount[DRONE.ordinal()];
                 int unitsRequested = rf.xunits.get(DRONE);
                 rc.setIndicatorString(0, "units "+unitsExist+"/"+unitsRequested);

@@ -103,7 +103,7 @@ public class Headquarters extends Structure {
 
         // Updates the unit count. Happens every UPDATE_UNIT_COUNT_TIME mod times
         if (Clock.getRoundNum() % UPDATE_UNIT_COUNT_TIME == 0) {
-            unitCount = getUnitCount();
+            unitCount = getUnitCounts();
             if (Analyze.ON) Analyze.sample("beavers", unitCount[BEAVER.ordinal()]);
             if (Analyze.ON) Analyze.sample("miners", unitCount[MINER.ordinal()]);
             if (Analyze.ON) Analyze.sample("tanks", unitCount[TANK.ordinal()]);
@@ -260,7 +260,7 @@ public class Headquarters extends Structure {
 
     // The boolean return here is sketchy. returns true if it "did something"
     private boolean maintainDesiredTankFactories() {
-        unitCount = getUnitCount();
+        unitCount = getUnitCounts();
         int numQueuedFactories = Collections.frequency(taskQueue, new Task(Task.TANKFACTORY));
         int numQueuedBarracks = Collections.frequency(taskQueue, new Task(Task.BARRACKS));
         int neededFactories = desiredTankFactories - unitCount[TANKFACTORY.ordinal()] - numQueuedFactories;

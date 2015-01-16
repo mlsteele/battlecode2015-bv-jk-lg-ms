@@ -30,7 +30,7 @@ public class MinerFactory extends Structure {
             }
 
             if (rc.isCoreReady() && rc.getSupplyLevel() >= Strategy.initialSupply(MINER)) {
-                unitCount = getUnitCount();
+                unitCount = getUnitCounts();
                 if(unitCount[MINER.ordinal()] < rf.xunits.get(MINER)) {
                     spawn(MINER);
                 }
