@@ -9,7 +9,7 @@ import java.util.*;
 public class TankFactory extends Structure {
     TankFactory(RobotController rc) { super(rc); }
 
-    private int[] unitCount;
+    private int[] unitCounts;
 
     @Override
     public void run() {

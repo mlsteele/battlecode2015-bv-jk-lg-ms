@@ -9,7 +9,7 @@ import java.util.*;
 public class MinerFactory extends Structure {
     MinerFactory(RobotController rc) { super(rc); }
 
-    private int[] unitCount;
+    private int[] unitCounts;
 
     @Override
     public void run() {
@@ -30,8 +30,8 @@ public class MinerFactory extends Structure {
             }
 
             if (rc.isCoreReady() && rc.getSupplyLevel() >= Strategy.initialSupply(MINER)) {
-                unitCount = getUnitCounts();
-                if(unitCount[MINER.ordinal()] < rf.xunits.get(MINER)) {
+                unitCounts = getUnitCounts();
+                if(unitCounts[MINER.ordinal()] < rf.xunits.get(MINER)) {
                     spawn(MINER);
                 }
             }

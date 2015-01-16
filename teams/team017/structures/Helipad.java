@@ -9,7 +9,7 @@ import java.util.*;
 public class Helipad extends Structure {
     Helipad(RobotController rc) { super(rc); }
 
-    private int[] unitCount;
+    private int[] unitCounts;
 
     @Override
     public void run() {
@@ -17,8 +17,8 @@ public class Helipad extends Structure {
             rc.setIndicatorString(0, null);
 
             if (rc.isCoreReady() && rc.getSupplyLevel() >= Strategy.initialSupply(DRONE)) {
-                unitCount = getUnitCounts();
-                int unitsExist = unitCount[DRONE.ordinal()];
+                unitCounts = getUnitCounts();
+                int unitsExist = unitCounts[DRONE.ordinal()];
                 int unitsRequested = rf.xunits.get(DRONE);
                 rc.setIndicatorString(0, "units "+unitsExist+"/"+unitsRequested);
                 if (unitsExist < unitsRequested)

@@ -13,7 +13,7 @@ public class Headquarters extends Structure {
 
     private static final int MAX_BEAVER = 10;
     private static final int UPDATE_UNIT_COUNT_TIME = 10;
-    private int[] unitCount;
+    private int[] unitCounts;
 
     private MapLocation targetTower;
     private MapLocation earlyRallyLocation;
@@ -66,7 +66,7 @@ public class Headquarters extends Structure {
 
             strategyUpdate();
 
-            if (rc.isCoreReady() && unitCount[BEAVER.ordinal()] < BEAVER_POOL_SIZE) {
+            if (rc.isCoreReady() && unitCounts[BEAVER.ordinal()] < BEAVER_POOL_SIZE) {
                 spawnBeaverWithTask(Task.NONE, null);
             }
 
@@ -103,12 +103,12 @@ public class Headquarters extends Structure {
 
         // Updates the unit count. Happens every UPDATE_UNIT_COUNT_TIME mod times
         if (Clock.getRoundNum() % UPDATE_UNIT_COUNT_TIME == 0) {
-            unitCount = getUnitCounts();
-            if (Analyze.ON) Analyze.sample("beavers", unitCount[BEAVER.ordinal()]);
-            if (Analyze.ON) Analyze.sample("miners", unitCount[MINER.ordinal()]);
-            if (Analyze.ON) Analyze.sample("tanks", unitCount[TANK.ordinal()]);
-            if (Analyze.ON) Analyze.sample("tfs", unitCount[TANKFACTORY.ordinal()]);
-            if (Analyze.ON) Analyze.sample("drones", unitCount[DRONE.ordinal()]);
+            unitCounts = getUnitCounts();
+            if (Analyze.ON) Analyze.sample("beavers", unitCounts[BEAVER.ordinal()]);
+            if (Analyze.ON) Analyze.sample("miners", unitCounts[MINER.ordinal()]);
+            if (Analyze.ON) Analyze.sample("tanks", unitCounts[TANK.ordinal()]);
+            if (Analyze.ON) Analyze.sample("tfs", unitCounts[TANKFACTORY.ordinal()]);
+            if (Analyze.ON) Analyze.sample("drones", unitCounts[DRONE.ordinal()]);
         }
 
         // Rally at 0.35 of the way there.
@@ -260,16 +260,16 @@ public class Headquarters extends Structure {
 
     // The boolean return here is sketchy. returns true if it "did something"
     private boolean maintainDesiredTankFactories() {
-        unitCount = getUnitCounts();
+        unitCounts = getUnitCounts();
         int numQueuedFactories = Collections.frequency(taskQueue, new Task(Task.TANKFACTORY));
         int numQueuedBarracks = Collections.frequency(taskQueue, new Task(Task.BARRACKS));
-        int neededFactories = desiredTankFactories - unitCount[TANKFACTORY.ordinal()] - numQueuedFactories;
+        int neededFactories = desiredTankFactories - unitCounts[TANKFACTORY.ordinal()] - numQueuedFactories;
 
         // if we don't have (or have queued) enough factories
         if(neededFactories > 0) {
             System.out.println("We need " + neededFactories + " factories");
             // if we don't have (or have queued) a barracks
-            if(unitCount[BARRACKS.ordinal()] + numQueuedBarracks < 1) {
+            if(unitCounts[BARRACKS.ordinal()] + numQueuedBarracks < 1) {
                 // If we've waited enough since we last tried for a barracks
                 if(lastBarracksRequestTime + waitTimeForSpawn(BARRACKS) <= Clock.getRoundNum()) {
                     // queue a new barracks
