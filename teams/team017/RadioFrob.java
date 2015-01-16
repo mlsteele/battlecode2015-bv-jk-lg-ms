@@ -124,7 +124,7 @@ public class RadioFrob {
     // Returns null if it is in the requesting task state.
     public Task getTask(int taskSlot) {
         int taskSerial = rx(BEAVER_TASK_BASE + taskSlot);
-        if (taskSerial == TASK_REQUESTING_TASK) {
+        if (taskSerial == Task.REQUESTING_TASK) {
             return null;
         } else {
             return decodeTask(taskSerial);
@@ -140,14 +140,14 @@ public class RadioFrob {
     // used by beaver to request a task
     public void requestTask() {
         tx(BEAVER_TASK_BASE, myTaskSlot);
-        tx(BEAVER_TASK_BASE + myTaskSlot, TASK_REQUESTING_TASK);
+        tx(BEAVER_TASK_BASE + myTaskSlot, Task.REQUESTING_TASK);
     }
 
     // used by hq, returns the taskslot of the beaver assigned the task
     // returns -1 if it cant verify the beaver wants a job
     public int assignTaskToNextFree(Task task) {
         int taskSlot = rx(BEAVER_TASK_BASE);
-        if (taskSlot > 0 && (rx(BEAVER_TASK_BASE + taskSlot) == TASK_REQUESTING_TASK)) {
+        if (taskSlot > 0 && (rx(BEAVER_TASK_BASE + taskSlot) == Task.REQUESTING_TASK)) {
             tx(BEAVER_TASK_BASE, 0);
             setTask(task, taskSlot);
             return taskSlot;

@@ -47,14 +47,14 @@ public class Headquarters extends Structure {
         rf.writeRally(Strategy.RALLY_GROUP_1, homeTower);
         rf.writeRally(Strategy.RALLY_GROUP_2, homeTower);
 
-        taskQueue.add(new Task(TASK_MINERFACTORY));
-        taskQueue.add(new Task(TASK_HELIPAD));
-        taskQueue.add(new Task(TASK_SUPPLYDEPOT));
-        taskQueue.add(new Task(TASK_SUPPLYDEPOT));
-        taskQueue.add(new Task(TASK_BARRACKS));
+        taskQueue.add(new Task(Task.MINERFACTORY));
+        taskQueue.add(new Task(Task.HELIPAD));
+        taskQueue.add(new Task(Task.SUPPLYDEPOT));
+        taskQueue.add(new Task(Task.SUPPLYDEPOT));
+        taskQueue.add(new Task(Task.BARRACKS));
 
         for (int i=0; i<desiredTankFactories; i++)
-            taskQueue.add(new Task(TASK_TANKFACTORY));
+            taskQueue.add(new Task(Task.TANKFACTORY));
 
         rf.requestXUnits(MINER, desiredMiners);
         rf.requestXUnits(DRONE, DRONE_HARRASS_N);
@@ -68,7 +68,7 @@ public class Headquarters extends Structure {
             strategyUpdate();
 
             if (rc.isCoreReady() && unitCount[BEAVER.ordinal()] < BEAVER_POOL_SIZE) {
-                spawnBeaverWithTask(TASK_NONE, null);
+                spawnBeaverWithTask(Task.NONE, null);
             }
 
             if (Clock.getRoundNum() > 600)
@@ -76,9 +76,9 @@ public class Headquarters extends Structure {
 
             if(rc.getTeamOre() > 1000 && additionalSupplyDepots) {
                 desiredTankFactories = 5;
-                taskQueue.add(new Task(TASK_SUPPLYDEPOT));
-                taskQueue.add(new Task(TASK_SUPPLYDEPOT));
-                taskQueue.add(new Task(TASK_SUPPLYDEPOT));
+                taskQueue.add(new Task(Task.SUPPLYDEPOT));
+                taskQueue.add(new Task(Task.SUPPLYDEPOT));
+                taskQueue.add(new Task(Task.SUPPLYDEPOT));
                 additionalSupplyDepots = false;
             }
 
@@ -86,7 +86,7 @@ public class Headquarters extends Structure {
 
             // Collect resupply tasks.
             if (rf.resupplyFromTankFactoryRequested()) {
-                taskQueue.add(new Task(TASK_RESUPPLY_TANKFACTORY, rf.getResupplyLocation()));
+                taskQueue.add(new Task(Task.RESUPPLY_TANKFACTORY, rf.getResupplyLocation()));
                 rf.clearResupplyRequest();
             }
 
@@ -262,8 +262,8 @@ public class Headquarters extends Structure {
     // The boolean return here is sketchy. returns true if it "did something"
     private boolean maintainDesiredTankFactories() {
         unitCount = getUnitCount();
-        int numQueuedFactories = Collections.frequency(taskQueue, new Task(TASK_TANKFACTORY));
-        int numQueuedBarracks = Collections.frequency(taskQueue, new Task(TASK_BARRACKS));
+        int numQueuedFactories = Collections.frequency(taskQueue, new Task(Task.TANKFACTORY));
+        int numQueuedBarracks = Collections.frequency(taskQueue, new Task(Task.BARRACKS));
         int neededFactories = desiredTankFactories - unitCount[TANKFACTORY.ordinal()] - numQueuedFactories;
 
         // if we don't have (or have queued) enough factories
@@ -274,7 +274,7 @@ public class Headquarters extends Structure {
                 // If we've waited enough since we last tried for a barracks
                 if(lastBarracksRequestTime + waitTimeForSpawn(BARRACKS) <= Clock.getRoundNum()) {
                     // queue a new barracks
-                    taskQueue.add(new Task(TASK_BARRACKS));
+                    taskQueue.add(new Task(Task.BARRACKS));
                     lastBarracksRequestTime = Clock.getRoundNum();
                     return true;
                 }
@@ -282,7 +282,7 @@ public class Headquarters extends Structure {
                 // If we've waited enough since we last tried for a tank factory
                 if(lastFactoryRequestTime + waitTimeForSpawn(TANKFACTORY) <= Clock.getRoundNum()) {
                     // queue a new tank factory
-                    taskQueue.add(new Task(TASK_TANKFACTORY));
+                    taskQueue.add(new Task(Task.TANKFACTORY));
                     lastFactoryRequestTime = Clock.getRoundNum();
                     return true;
                 }

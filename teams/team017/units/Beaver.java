@@ -18,7 +18,7 @@ public class Beaver extends Unit {
     // Don't build farther away than this
     private static final int MAX_DISTANCE_FROM_HQ = 100;
 
-    private Task currentTask = new Task(TASK_NONE);
+    private Task currentTask = new Task(Task.NONE);
 
     @Override
     public void run() {
@@ -39,17 +39,17 @@ public class Beaver extends Unit {
             int orderCode = currentTask.taskNum;
 
             switch (orderCode) {
-                case (TASK_BARRACKS):
-                case (TASK_MINERFACTORY):
-                case (TASK_TANKFACTORY):
-                case (TASK_HELIPAD):
-                case (TASK_SUPPLYDEPOT):
+                case (Task.BARRACKS):
+                case (Task.MINERFACTORY):
+                case (Task.TANKFACTORY):
+                case (Task.HELIPAD):
+                case (Task.SUPPLYDEPOT):
                     buildStructureMission();
                     break;
-                case (TASK_RESUPPLY_TANKFACTORY):
+                case (Task.RESUPPLY_TANKFACTORY):
                     resupplyMission();
                     break;
-                case (TASK_MINE):
+                case (Task.MINE):
                     while (true) {
                         if (rc.getSupplyLevel() < LOW_SUPPLY) break;
 
@@ -59,7 +59,7 @@ public class Beaver extends Unit {
                         rc.yield();
                     }
                     break;
-                case (TASK_NONE):
+                case (Task.NONE):
                     break;
                 default:
                     System.err.println("ERROR: BEAVER sent on invalid mission ("+orderCode+"), please debug");
@@ -109,7 +109,7 @@ public class Beaver extends Unit {
     private void resupplyMission() {
         int amt;
         switch (currentTask.taskNum) {
-            case (Strategy.TASK_RESUPPLY_TANKFACTORY):
+            case (Task.RESUPPLY_TANKFACTORY):
                 amt = Strategy.TANKFACTORY_RESUPPLY_AMT;
                 break;
             default:
@@ -141,15 +141,15 @@ public class Beaver extends Unit {
 
     private boolean buildThenSupplyForCode(int orderCode) {
         switch (orderCode) {
-            case Strategy.TASK_BARRACKS:
+            case Task.BARRACKS:
                 return buildThenSupply(BARRACKS);
-            case Strategy.TASK_MINERFACTORY:
+            case Task.MINERFACTORY:
                 return buildThenSupply(MINERFACTORY);
-            case Strategy.TASK_TANKFACTORY:
+            case Task.TANKFACTORY:
                 return buildThenSupply(TANKFACTORY);
-            case Strategy.TASK_HELIPAD:
+            case Task.HELIPAD:
                 return buildThenSupply(HELIPAD);
-            case Strategy.TASK_SUPPLYDEPOT:
+            case Task.SUPPLYDEPOT:
                 return buildThenSupply(SUPPLYDEPOT);
             default:
                 System.err.println("error, invalid building code " + orderCode);
