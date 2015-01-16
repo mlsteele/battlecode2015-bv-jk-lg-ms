@@ -29,7 +29,7 @@ public class UnitCounts extends RadioModule {
     @Override
     public int slotsRequired() {
         // Add 6 just in case ;)
-        return ROBOT_TYPE_ORDINAL_MAX + 6;
+        return NUM_ROBOT_TYPES + 6;
     }
 
     public void increment(RobotType rtype) {
@@ -40,7 +40,7 @@ public class UnitCounts extends RadioModule {
     // Reset all the counters.
     // HQ ONLY.
     public void reset() {
-        for (int i = ROBOT_TYPE_ORDINAL_MAX; i != 0; i--) {
+        for (int i = NUM_ROBOT_TYPES-1; i != 0; i--) {
             tx(lowestSlot + i, 0);
         }
     }
@@ -48,8 +48,8 @@ public class UnitCounts extends RadioModule {
     // Read all counters from radio and save to cache.
     // HQ ONLY.
     public void saveToCache() {
-        unitCounts = new int[ROBOT_TYPE_ORDINAL_MAX+1];
-        for (int i = ROBOT_TYPE_ORDINAL_MAX; i != 0; i--) {
+        unitCounts = new int[NUM_ROBOT_TYPES];
+        for (int i = NUM_ROBOT_TYPES-1; i != 0; i--) {
             unitCounts[i] = rx(lowestSlot + i);
         }
     }
