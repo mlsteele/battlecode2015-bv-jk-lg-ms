@@ -196,7 +196,6 @@ public class Headquarters extends Structure {
     private boolean spawnBeaver() {
         // try to spawn the beaver.
         Direction dir = spawn(BEAVER);
-        System.out.println("beaver spawned to " + dir);
         if (dir == null) return false;
         if (Analyze.ON) Analyze.sample("hq_spawn_beaver", 1);
 
