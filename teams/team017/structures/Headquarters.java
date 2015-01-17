@@ -208,7 +208,7 @@ public class Headquarters extends Structure {
         }
 
         // give the beaver an empty task.
-        rf.beavertasks.setTask(new Task(Task.NONE), beaverTaskSlot);
+        rf.beavertasks.setTask(beaverTaskSlot, new Task(Task.NONE));
 
         // yield so that the spawned beaver exists.
         rc.yield();
