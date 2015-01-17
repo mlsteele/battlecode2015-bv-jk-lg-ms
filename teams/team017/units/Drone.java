@@ -142,7 +142,7 @@ public class Drone extends Unit {
     }
 
     // Chooses which robot to attack.
-    private RobotInfo chooseTarget(RobotInfo[] enemies) {
+    protected RobotInfo chooseTarget(RobotInfo[] enemies) {
         RobotInfo target = enemies[0];
         double    targetScore = -1;
         for (RobotInfo r : enemies) {

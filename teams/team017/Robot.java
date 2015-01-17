@@ -24,7 +24,7 @@ public abstract class Robot {
     abstract public void run();
 
     // Chooses which robot to attack.
-    private static RobotInfo chooseTarget(RobotInfo[] enemies) {
+    protected RobotInfo chooseTarget(RobotInfo[] enemies) {
         RobotInfo target = enemies[0];
         double    targetScore = -1;
         for (RobotInfo r : enemies) {
@@ -72,48 +72,6 @@ public abstract class Robot {
             dir = dir.rotateLeft();
         }
         return null;
-    }
-
-    protected void shootBaddies() {
-        // TODO(miles): attackRadiusSquared is not good for the HQ, must account for range buf
-        int range = rc.getType().attackRadiusSquared;
-        Team enemy = rc.getTeam().opponent();
-
-        // Keep scanning until either a hit or no enemies in sight.
-        // It's not good to shuffle around, causing further loading delay
-        // when an enemy is in range.
-        while (true) {
-            RobotInfo[] enemies = rc.senseNearbyRobots(range, enemy);
-
-            // Return if all clear.
-            if (enemies.length == 0)
-                return;
-
-            if (rc.isWeaponReady()) {
-                try {
-                    // Note: canAttackLocation seems useless (see engine source)
-                    rc.attackLocation(chooseTarget(enemies).location);
-                } catch (GameActionException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            rc.yield();
-        }
-    }
-
-    // Idle until any supplies are received.
-    // Also shoot.
-    // Return the amount of supplies received.
-    protected int waitForSupplies() {
-        double supplyLevel;
-
-        boolean shouldAttack = (rc.getType() != BASHER) && (rc.getType() != BEAVER);
-        while ((supplyLevel = rc.getSupplyLevel()) < 1) {
-            if (shouldAttack) shootBaddies();
-            rc.yield();
-        }
-        return (int)supplyLevel;
     }
 
     // Includes HQ in the list of possible locations

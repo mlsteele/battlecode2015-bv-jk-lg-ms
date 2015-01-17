@@ -25,6 +25,36 @@ public abstract class Unit extends Robot {
         buggingDirection = rand.nextBoolean();
     }
 
+    // Attacking for units.
+    // Blocks until no enemies are seen.
+    protected void shootBaddies() {
+        // TODO(miles): attackRadiusSquared is not good for the HQ, must account for range buf
+        int range = rc.getType().attackRadiusSquared;
+        Team enemy = rc.getTeam().opponent();
+
+        // Keep scanning until either a hit or no enemies in sight.
+        // It's not good to shuffle around, causing further loading delay
+        // when an enemy is in range.
+        while (true) {
+            RobotInfo[] enemies = rc.senseNearbyRobots(range, enemy);
+
+            // Return if all clear.
+            if (enemies.length == 0)
+                return;
+
+            if (rc.isWeaponReady()) {
+                try {
+                    // Note: canAttackLocation seems useless (see engine source)
+                    rc.attackLocation(chooseTarget(enemies).location);
+                } catch (GameActionException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            rc.yield();
+        }
+    }
+
     // Return to the HQ.
     // Blocking method.
     protected void goToHQ() {
@@ -41,6 +71,21 @@ public abstract class Unit extends Robot {
             rc.yield();
         }
     }
+
+    // Idle until any supplies are received.
+    // Also shoot.
+    // Return the amount of supplies received.
+    protected int waitForSupplies() {
+        double supplyLevel;
+
+        boolean shouldAttack = (rc.getType() != BASHER) && (rc.getType() != BEAVER);
+        while ((supplyLevel = rc.getSupplyLevel()) < 1) {
+            if (shouldAttack) shootBaddies();
+            rc.yield();
+        }
+        return (int)supplyLevel;
+    }
+
 
     protected void dumpSuppliesToHQ() {
         rc.setIndicatorString(1, "Dumping supplies...");

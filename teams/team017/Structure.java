@@ -9,6 +9,30 @@ import java.util.*;
 public abstract class Structure extends Robot {
     Structure(RobotController rc) { super(rc); }
 
+    // Attacking for structures.
+    // Does not block.
+    protected void shootBaddies() {
+        // TODO(miles): attackRadiusSquared is not good for the HQ, must account for range buf
+        int range = rc.getType().attackRadiusSquared;
+        Team enemy = rc.getTeam().opponent();
+
+        RobotInfo[] enemies = rc.senseNearbyRobots(range, enemy);
+
+        // Return if all clear.
+        if (enemies.length == 0)
+            return;
+
+        if (rc.isWeaponReady()) {
+            try {
+                // Note: canAttackLocation seems useless (see engine source)
+                rc.attackLocation(chooseTarget(enemies).location);
+            } catch (GameActionException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
     // Give supplies to nearby robots who have no supplies.
     // Attempt to transfer `supplyAmount` supplies to nearby robots of type `rtype` who have 0 supply.
     // If candidates is null, they will be fetched automatically.
