@@ -57,16 +57,17 @@ public abstract class Unit extends Robot {
 
     // Return to the HQ.
     // Blocking method.
+    // Does not move in already in range of HQ.
     protected void goToHQ() {
         rc.setIndicatorString(1, "Going back to HQ");
         while (true) {
-
-            if (rc.isCoreReady()) moveTowardBugging(hqLoc);
 
             if (hqLoc.distanceSquaredTo(rc.getLocation()) <= GameConstants.SUPPLY_TRANSFER_RADIUS_SQUARED) {
                 rc.setIndicatorString(1, "Back at HQ");
                 return;
             }
+
+            if (rc.isCoreReady()) moveTowardBugging(hqLoc);
 
             rc.yield();
         }

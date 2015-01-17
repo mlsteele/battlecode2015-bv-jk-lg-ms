@@ -49,7 +49,7 @@ public enum Strategy {;
 
     public static int taskSupply(int task) {
         switch(task) {
-            case Task.NONE:                 return initialSupply(BEAVER);
+            case Task.NONE:                 return 0;
             case Task.MINE:                 return initialSupply(BEAVER);
             case Task.BARRACKS:             return initialSupply(BEAVER);
             case Task.MINERFACTORY:         return initialSupply(BEAVER) + initialSupply(MINERFACTORY);

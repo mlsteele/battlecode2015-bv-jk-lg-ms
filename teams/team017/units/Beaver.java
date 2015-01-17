@@ -28,8 +28,6 @@ public class Beaver extends Unit {
         rc.setIndicatorString(0, "slot:" + myTaskSlot + " task:" + currentTask.taskNum);
         //System.out.println("BEAVER initial task " + currentTask.taskNum);
 
-        waitForSupplies();
-
         // This is NOT the inner loop.
         while (true) {
 

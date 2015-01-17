@@ -67,7 +67,11 @@ public class Headquarters extends Structure {
             strategyUpdate();
 
             if (rc.isCoreReady() && unitCounts[BEAVER.ordinal()] < BEAVER_POOL_SIZE) {
-                spawnBeaverWithTask(Task.NONE, null);
+                // Hardcode limit for now to only build 1 beaver early on.
+                // This gets us our first building faster.
+                if (unitCounts[BEAVER.ordinal()] == 0 || Clock.getRoundNum() > 100) {
+                    spawnBeaver();
+                }
             }
 
             if (Clock.getRoundNum() > 600)
@@ -189,36 +193,41 @@ public class Headquarters extends Structure {
         //System.out.println("dispatched task ("+taskQueue.size()+" tasks remaining)");
     }
 
-    // Assumes supply level desired
-    private boolean spawnBeaverWithTask(int task, MapLocation loc) {
-        if(rc.getSupplyLevel() < Strategy.taskSupply(task)) return false;
-
-        Direction dir = spawn(BEAVER); // spawn the beaver
+    private boolean spawnBeaver() {
+        // try to spawn the beaver.
+        Direction dir = spawn(BEAVER);
+        System.out.println("beaver spawned to " + dir);
         if (dir == null) return false;
         if (Analyze.ON) Analyze.sample("hq_spawn_beaver", 1);
 
         int beaverTaskSlot = rf.beavertasks.assignBeaverTaskSlot(); // Assign a new beaver task slot
         if (beaverTaskSlot < 0) {
-            return false; // someone hasnt claimed their task, shame on them
+            // someone hasnt claimed their task, shame on them
+            System.err.println("ERROR: unclaimed beaver task slot. This should not happen.");
+            return false;
         }
-        rf.beavertasks.setTask(new Task(task, loc), beaverTaskSlot); // give the beaver a task
 
-        // Yield so that the spawned beaver exists.
+        // give the beaver an empty task.
+        rf.beavertasks.setTask(new Task(Task.NONE), beaverTaskSlot);
+
+        // yield so that the spawned beaver exists.
         rc.yield();
 
         RobotInfo rob;
         try {
             rob = rc.senseRobotAtLocation(rc.getLocation().add(dir)); // gets its info
+            if (rob == null) {
+                System.err.println("ERROR: HQ could not sense new beaver. Dodging NPE, but please fix this.");
+                return false;
+            }
         } catch (GameActionException e) {
             e.printStackTrace();
             return false;
         }
 
-        RobotInfo[] candidates = {rob};
         assignedBeaverTaskSlots.put(beaverTaskSlot, rob.ID);
-        return supplyToID(candidates, rob.ID, Strategy.taskSupply(task));
+        return true;
     }
-
 
     private MapLocation avgLocations(MapLocation a, MapLocation b) {
         return new MapLocation((a.x + b.x) / 2, (a.y + b.y) / 2);
@@ -268,7 +277,7 @@ public class Headquarters extends Structure {
 
         // if we don't have (or have queued) enough factories
         if(neededFactories > 0) {
-            System.out.println("We need " + neededFactories + " factories");
+            // System.out.println("We need " + neededFactories + " factories");
             // if we don't have (or have queued) a barracks
             if(unitCounts[BARRACKS.ordinal()] + numQueuedBarracks < 1) {
                 // If we've waited enough since we last tried for a barracks
