@@ -90,7 +90,11 @@ public class Miner extends Unit {
     // Assumes there is ore
     private boolean mineHere() {
         try {
+            // Copied from engine.
             rc.mine();
+            double baseOre = rc.senseOre(rc.getLocation());
+            double oreGain = Math.max(Math.min(baseOre / GameConstants.MINER_MINE_RATE, GameConstants.MINER_MINE_MAX), GameConstants.MINIMUM_MINE_AMOUNT);
+            rf.miningrate.set(rf.miningrate.get() + (float)(oreGain));
             return true;
         } catch (GameActionException e) {
             e.printStackTrace();

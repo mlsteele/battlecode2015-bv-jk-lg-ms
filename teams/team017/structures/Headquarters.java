@@ -33,11 +33,12 @@ public class Headquarters extends Structure {
     private int lastBarracksRequestTime = 0;
     private int lastFactoryRequestTime = 0;
 
+    private float miningRate = 0;
+
     Headquarters(RobotController rc) { super(rc); }
 
     @Override
     public void run() {
-
         earlyRallyLocation = avgLocations(0.35, rc.senseHQLocation(), rc.senseEnemyHQLocation());
 
         // Start by rallying at the closest tower
@@ -58,8 +59,12 @@ public class Headquarters extends Structure {
         rf.xunits.set(DRONE, DRONE_HARRASS_N);
 
         while (true) {
+            miningRate = rf.miningrate.getAveraged();
+            rf.miningrate.set(0);
+
             if (Analyze.ON) Analyze.sample("team_ore", rc.getTeamOre());
             if (Analyze.ON) Analyze.sample("hq_supply", rc.getSupplyLevel());
+            if (Analyze.ON) Analyze.sample("miningrate", miningRate);
 
             rf.beavertasks.discoverBeaverTaskSlot(beaverMap);
 
