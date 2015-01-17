@@ -5,8 +5,6 @@ import battlecode.common.Clock;
 import static battlecode.common.Direction.*;
 import static battlecode.common.RobotType.*;
 import static team017.Strategy.*;
-
-import java.lang.System;
 import java.util.*;
 
 public class Headquarters extends Structure {
@@ -18,7 +16,8 @@ public class Headquarters extends Structure {
     private MapLocation targetTower;
     private MapLocation earlyRallyLocation;
 
-    private Hashtable<Integer, Integer> assignedBeaverTaskSlots = new Hashtable<Integer, Integer>();
+    // Mapping from taskSlot -> beaverID
+    private Hashtable<Integer, Integer> beaverMap = new Hashtable<Integer, Integer>();
     private Queue<Task> taskQueue = new LinkedList<Task>();
 
     private int desiredMiners = 30;
@@ -61,6 +60,8 @@ public class Headquarters extends Structure {
         while (true) {
             if (Analyze.ON) Analyze.sample("team_ore", rc.getTeamOre());
             if (Analyze.ON) Analyze.sample("hq_supply", rc.getSupplyLevel());
+
+            rf.beavertasks.discoverBeaverTaskSlot(beaverMap);
 
             shootBaddies();
 
@@ -165,66 +166,49 @@ public class Headquarters extends Structure {
         return sum;
     }
 
+    // Consume the task queue, assigning tasks to beavers.
     private void taskUpkeep() {
-        // check if there are any tasks
+        // Tasks waiting?
         if (taskQueue.isEmpty()) return;
         Task nextTask = taskQueue.peek();
 
+        // Task is ready to be assigned?
         if (rc.getSupplyLevel() < Strategy.taskSupply(nextTask.taskNum)) {
             return;
         }
 
-        int taskSlot;
-
-        // check if anyone wants tasks
-        taskSlot = rf.beavertasks.assignTaskToNextFree(nextTask);
+        // Beaver waiting for ask?
+        int taskSlot = rf.beavertasks.assignTaskToNextFree(nextTask);
         if (taskSlot < 0) {
-            // no one can get tasks so leave it in the queue.
+            // No one waiting for tasks, leave it in the queue.
             return;
         }
 
-        // we have given the beaver the task, lets transfer the supplies
-        int robotID = assignedBeaverTaskSlots.get((Integer) taskSlot);
-        // TODO(miles): block the hq? :( What if the beaver dies?
-        // Block until beaver gets supply
-        while (!supplyToID(null, robotID, Strategy.taskSupply(nextTask.taskNum))) continue;
-        // we have given the supplies, we can remove the task now
+        // Beaver has been assigned task.
+        Integer robotID_I = beaverMap.get((Integer) taskSlot);
+        if (robotID_I == null) {
+            System.err.println("ERROR: beaver id for task slot not in map.");
+            return;
+        }
+        int robotID = robotID_I;
+
+        // Try to supply beaver.
+        if (!supplyToID(null, robotID, Strategy.taskSupply(nextTask.taskNum))) {
+            // Failed to supply beaver. It might have died. Abort the task assignment.
+            System.out.println("WARNING: Failed to supply beaver ["+robotID+"] after assigning task ["+nextTask+"].");
+            rf.beavertasks.setTask(taskSlot, new Task(Task.NONE));
+            return;
+        }
+
+        // We have given the supplies, we can remove the task now
         taskQueue.remove();
-        //System.out.println("dispatched task ("+taskQueue.size()+" tasks remaining)");
     }
 
+    // Try to spawn the beaver.
     private boolean spawnBeaver() {
-        // try to spawn the beaver.
         Direction dir = spawn(BEAVER);
         if (dir == null) return false;
         if (Analyze.ON) Analyze.sample("hq_spawn_beaver", 1);
-
-        int beaverTaskSlot = rf.beavertasks.assignBeaverTaskSlot(); // Assign a new beaver task slot
-        if (beaverTaskSlot < 0) {
-            // someone hasnt claimed their task, shame on them
-            System.err.println("ERROR: unclaimed beaver task slot. This should not happen.");
-            return false;
-        }
-
-        // give the beaver an empty task.
-        rf.beavertasks.setTask(beaverTaskSlot, new Task(Task.NONE));
-
-        // yield so that the spawned beaver exists.
-        rc.yield();
-
-        RobotInfo rob;
-        try {
-            rob = rc.senseRobotAtLocation(rc.getLocation().add(dir)); // gets its info
-            if (rob == null) {
-                System.err.println("ERROR: HQ could not sense new beaver. Dodging NPE, but please fix this.");
-                return false;
-            }
-        } catch (GameActionException e) {
-            e.printStackTrace();
-            return false;
-        }
-
-        assignedBeaverTaskSlots.put(beaverTaskSlot, rob.ID);
         return true;
     }
 

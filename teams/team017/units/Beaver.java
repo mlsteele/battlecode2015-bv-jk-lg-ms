@@ -18,19 +18,17 @@ public class Beaver extends Unit {
     private static final int MAX_DISTANCE_FROM_HQ = 100;
 
     private int myTaskSlot;
-    private Task currentTask = new Task(Task.NONE);
+    private Task currentTask;
 
     @Override
     public void run() {
-        myTaskSlot = rf.beavertasks.getBeaverTaskSlot();
-
+        myTaskSlot = rf.beavertasks.acquireTaskSlot();
         currentTask = rf.beavertasks.getTask(myTaskSlot);
-        rc.setIndicatorString(0, "slot:" + myTaskSlot + " task:" + currentTask.taskNum);
-        //System.out.println("BEAVER initial task " + currentTask.taskNum);
+        rc.setIndicatorString(0, "slot:" + myTaskSlot + " task:initial");
 
         // This is NOT the inner loop.
         while (true) {
-
+            getTaskFromHQ();
             rc.setIndicatorString(0, "slot:" + myTaskSlot + " task:" + currentTask.taskNum);
 
             // Order code is which task to pursue.
@@ -63,13 +61,11 @@ public class Beaver extends Unit {
                     System.err.println("ERROR: BEAVER sent on invalid mission ("+orderCode+"), please debug");
             }
 
-            // Finished what it was doing
+            // Finished task.
             rc.setIndicatorString(1, "finished task");
-            //System.out.println("BEAVER finished task " + orderCode);
             goToHQ();
             rc.setIndicatorString(1, "returned to hq");
             dumpSuppliesToHQ();
-            getTaskFromHQ();
         }
     }
 
@@ -242,15 +238,14 @@ public class Beaver extends Unit {
         // im near the hq, lets ask for a task and clear my task slot
         // wait for signal from HQ
         do {
-            rf.beavertasks.requestTask(myTaskSlot);
+            rf.beavertasks.requestNewTask(myTaskSlot);
             // yield so the request propogates, otherwise we might see our old task.
-            // yield so that we don't request a task while having an assigned task.
+            // and so that we don't request a task while having an assigned task.
             rc.yield();
             currentTask = rf.beavertasks.getTask(myTaskSlot);
         } while (currentTask == null);
 
         rc.setIndicatorString(1, "received task");
-        //System.out.println("BEAVER received task " + currentTask.taskNum);
     }
 
 }

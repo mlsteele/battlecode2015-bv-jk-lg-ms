@@ -88,6 +88,7 @@ public abstract class Unit extends Robot {
     }
 
 
+    // Requires that we are within supply range of HQ.
     protected void dumpSuppliesToHQ() {
         rc.setIndicatorString(1, "Dumping supplies...");
         try {
