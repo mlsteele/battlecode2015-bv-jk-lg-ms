@@ -34,5 +34,7 @@ public class RadioFrob {
 
         minerresupply = new MinerResupply(rc, nextSlot);
         nextSlot += minerresupply.slotsRequired();
+
+        System.out.println("RadioFrob claimed " + nextSlot + " of " + GameConstants.BROADCAST_MAX_CHANNELS + " channels");
     }
 }
