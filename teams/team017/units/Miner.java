@@ -30,7 +30,7 @@ public class Miner extends Unit {
 
 			while (kamikaze) {
 				shootBaddies();
-				if (rc.isCoreReady()) moveTowardBugging(rc.senseEnemyHQLocation());
+				if (rc.isCoreReady()) moveTowardBugging(rc.senseEnemyHQLocation(), true);
 				rc.setIndicatorString(1, "ATTACKKK");
 			}
 
@@ -51,7 +51,7 @@ public class Miner extends Unit {
 					rf.minerresupply.request(supplyRequest);
 				} else {
 					if (resupplying) {
-						moveTowardBugging(lastSeen);
+						moveTowardBugging(lastSeen, true);
 						rc.setIndicatorString(1, "Heading back to last seen best ore");
 
 						// if we are where we came from, or we found some awesome ore, stop going back
@@ -75,15 +75,12 @@ public class Miner extends Unit {
 
 	// If an enemy robot is nearby, go the other direction
 	private void runAway() {
-		int range = rc.getType().sensorRadiusSquared;
-		Team enemy = rc.getTeam().opponent();
 
-		RobotInfo[] enemies = rc.senseNearbyRobots(range, enemy);
-
-		// Move away from first bad guy.
+		// Move away from bad things.
 		// TODO you could move smarter than this
-		if (enemies.length > 0)
-			moveTowardBugging(enemies[0].location.directionTo(rc.getLocation()));
+		MapLocation enemyLoc = isLocationSafe(rc.getLocation());
+		if (enemyLoc != null)
+			moveTowardBugging(enemyLoc.directionTo(rc.getLocation()), true);
 
 	}
 
@@ -102,6 +99,7 @@ public class Miner extends Unit {
 				try {
 					rc.setIndicatorString(1, "mining but moving to ore target");
 					forward = oreTarget;
+					if (isLocationSafe(rc.getLocation().add(forward))!=null) System.out.println("Miner lives the dangerous lifestyle");
 					rc.move(forward);
 				} catch (GameActionException e) {
 					e.printStackTrace();
@@ -146,14 +144,14 @@ public class Miner extends Unit {
 		for (int i = 0; i < 8; i++) {
 			d = possibleDirs[(i + ri) % 8];
 			double ore = rc.senseOre(curLocation.add(d));
-			if ((ore > bestOre) && (ore > ORE_CUTOFF || ore >= awesomeOreAmount) && rc.canMove(d)) {
+			if ((ore > bestOre) // better than other stuff around
+					&& (ore > ORE_CUTOFF || ore >= awesomeOreAmount) // good enough to be worth it
+					&& rc.canMove(d) // valid to move to
+					&& isLocationSafe(curLocation.add(d)) == null) { // won't get shot probably
 				bestOre = ore;
 				bestDirection = d;
 			}
 		}
-
-		//if (bestOre > awesomeOreAmount) awesomeOreAmount = bestOre;
-		//if (bestOre > bestOreInAWhile) bestOreInAWhile = bestOre;
 
 		return bestDirection;
 	}
