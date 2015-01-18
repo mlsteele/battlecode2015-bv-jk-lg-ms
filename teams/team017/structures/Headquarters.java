@@ -102,8 +102,8 @@ public class Headquarters extends Structure {
             taskUpkeep();
 
             // Collect resupply tasks.
-            if (rf.resupply.requested()) {
-                taskQueue.add(new Task(Task.RESUPPLY_TANKFACTORY, rf.resupply.getLocation()));
+            if (rf.resupply.isRequested()) {
+                taskQueue.add(new Task(Task.RESUPPLY_STRUCTURE, rf.resupply.getLocation(), rf.resupply.getAmount()));
                 rf.resupply.clearRequest();
             }
 
@@ -186,7 +186,7 @@ public class Headquarters extends Structure {
         Task nextTask = taskQueue.peek();
 
         // Task is ready to be assigned?
-        if (rc.getSupplyLevel() < Strategy.taskSupply(nextTask.taskNum)) {
+        if (rc.getSupplyLevel() < Strategy.taskSupply(nextTask)) {
             return;
         }
 
@@ -206,7 +206,7 @@ public class Headquarters extends Structure {
         int robotID = robotID_I;
 
         // Try to supply beaver.
-        if (!supplyToID(null, robotID, Strategy.taskSupply(nextTask.taskNum))) {
+        if (!supplyToID(null, robotID, Strategy.taskSupply(nextTask))) {
             // Failed to supply beaver. It might have died. Abort the task assignment.
             System.out.println("WARNING: Failed to supply beaver ["+robotID+"] after assigning task ["+nextTask+"].");
             rf.beavertasks.setTask(taskSlot, new Task(Task.NONE));

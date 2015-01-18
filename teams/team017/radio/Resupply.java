@@ -2,9 +2,10 @@ package team017.radio;
 
 import battlecode.common.*;
 
+// Resupply requests for structures.
+// One request can be outstanding at a time.
+// Methods are marked with which unit should use them.
 public class Resupply extends RadioModule {
-    public static final int NUM_RALLY_POINTS = 10;
-
     private final int location_slot;
     private final int amount_slot;
 
@@ -19,8 +20,38 @@ public class Resupply extends RadioModule {
         return 2;
     }
 
-    // Used for requesting resupply from the robots location.
-    // Return whether the request was issued.
+    // Whether a resupply has been requested.
+    // HQ ONLY
+    public boolean isRequested() {
+        return rx(location_slot) != 0;
+    }
+
+    // Acknowledge a supply request.
+    // Unblocks the channel so others can request.
+    // HQ ONLY
+    public void clearRequest() {
+        tx(location_slot, 0);
+    }
+
+    // Get the location of the resupply request.
+    // Valid only if isRequested is true.
+    // HQ ONLY
+    public MapLocation getLocation() {
+        int encodedLoc = rx(location_slot);
+        if (encodedLoc == 0) return null;
+        return decodeLocation(encodedLoc);
+    }
+
+    // Get the amount requested.
+    // Valid only if isRequested is true.
+    // HQ ONLY
+    public int getAmount() {
+        return rx(amount_slot);
+    }
+
+    // Request a supply delivery at our location.
+    // Returns whether the request was issued.
+    // NON-HQ ONLY
     public boolean request(int amount) {
         // Don't overwrite someone else's request.
         if (rx(location_slot) != 0)
@@ -28,21 +59,5 @@ public class Resupply extends RadioModule {
         tx(location_slot, encodeLocation(rc.getLocation()));
         tx(amount_slot, amount);
         return true;
-    }
-
-    // Whether a resupply has been requested.
-    public boolean requested() {
-        return rx(location_slot) != 0;
-    }
-
-    public void clearRequest() {
-        tx(location_slot, 0);
-    }
-
-    // Get the location of the resupply request.
-    public MapLocation getLocation() {
-        int encodedLoc = rx(location_slot);
-        if (encodedLoc == 0) return null;
-        return decodeLocation(encodedLoc);
     }
 }

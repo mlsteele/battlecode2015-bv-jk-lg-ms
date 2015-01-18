@@ -2,6 +2,7 @@ package team017.structures;
 
 import static battlecode.common.RobotType.*;
 import team017.*;
+import static team017.Strategy.*;
 import battlecode.common.*;
 
 public class MinerFactory extends Structure {
@@ -11,22 +12,10 @@ public class MinerFactory extends Structure {
 
     @Override
     public void run() {
-        boolean incomingResupply = false;
-
         while (true) {
             callForHelp();
 
-            // Request resupply when low
-            double supply = rc.getSupplyLevel();
-            if (Analyze.ON) Analyze.aggregate("mfs_supply", supply);
-            if (supply <= Strategy.MINERFACTORY_LOW_SUPPLY) {
-                if (!incomingResupply) {
-                    if (rf.resupply.request(Strategy.MINERFACTORY_RESUPPLY_AMT))
-                        incomingResupply = true;
-                }
-            } else {
-                incomingResupply = false;
-            }
+            requestResupplyIfLow(MINERFACTORY_LOW_SUPPLY, MINERFACTORY_RESUPPLY_AMT);
 
             if (rc.isCoreReady() && rc.getSupplyLevel() >= Strategy.initialSupply(MINER)) {
                 unitCounts = getUnitCounts();

@@ -43,7 +43,7 @@ public class Beaver extends Unit {
                 case (Task.TRAININGFIELD):
                     buildStructureMission();
                     break;
-                case (Task.RESUPPLY_TANKFACTORY):
+                case (Task.RESUPPLY_STRUCTURE):
                     resupplyMission();
                     break;
                 case (Task.MINE):
@@ -105,15 +105,8 @@ public class Beaver extends Unit {
     }
 
     private void resupplyMission() {
-        int amt;
-        switch (currentTask.taskNum) {
-            case (Task.RESUPPLY_TANKFACTORY):
-                amt = Strategy.TANKFACTORY_RESUPPLY_AMT;
-                break;
-            default:
-                throw new NotImplementedException("Unknown resupply mission");
+        int amt = Strategy.TANKFACTORY_RESUPPLY_AMT;
 
-        }
         while (true) {
             callForHelp();
 
@@ -234,6 +227,12 @@ public class Beaver extends Unit {
             // and so that we don't request a task while having an assigned task.
             rc.yield();
             currentTask = rf.beavertasks.getTask(myTaskSlot);
+
+            // Safety to ignore some corrupt tasks.
+            if (currentTask != null && currentTask.taskNum == Task.RESUPPLY_STRUCTURE && currentTask.loc == null) {
+                System.err.println("ERROR: resupply structure mission received with null location");
+                currentTask = null;
+            }
         } while (currentTask == null);
 
         rc.setIndicatorString(1, "received task");

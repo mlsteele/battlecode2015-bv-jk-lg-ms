@@ -17,7 +17,7 @@ public class Launcher extends Unit {
             MapLocation missileTarget = findTarget();
             launchMissile(missileTarget);
 
-            if (rc.isCoreReady()) {
+            if (missileTarget == null && rc.isCoreReady()) {
                 MapLocation target = rf.rallypoints.get(rallyGroup);
                 if (target != null) {
                     moveToRallyPoint(target);

@@ -15,6 +15,10 @@ public class AerospaceLab extends Structure {
         while (true) {
             callForHelp();
 
+            requestResupplyIfLow(Strategy.initialSupply(LAUNCHER), Strategy.initialSupply(AEROSPACELAB));
+
+            // Launchers take so long to build that we should build
+            // them even if we don't have the supply to fuel them.
             if (rc.isCoreReady() && rf.limitproduction.shouldBuild(LAUNCHER))
                 spawn(LAUNCHER);
 

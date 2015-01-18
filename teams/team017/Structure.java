@@ -5,6 +5,10 @@ import battlecode.common.*;
 
 // Subclass for units that move and shoot and stuff.
 public abstract class Structure extends Robot {
+    // Whether a resupply has requested and not fulfilled.
+    // TODO(miles): add a round timeout as well in case something goes wrong.
+    private boolean resupplyInbound = false;
+
     public Structure(RobotController rc) { super(rc); }
 
     // Attacking for structures.
@@ -140,6 +144,22 @@ public abstract class Structure extends Robot {
             unitsOnField[rob.type.ordinal()]++;
         }
         return unitsOnField;
+    }
+
+    // Requests resupply if current supply is below `lowSupplyThreshold`.
+    // Requests enough to fill up to `desiredSupply`.
+    // Makes sure not to have multiple outstanding requests.
+    protected void requestResupplyIfLow(int lowSupplyThreshold, int desiredSupply) {
+        final double supply = rc.getSupplyLevel();
+        if (supply <= lowSupplyThreshold) {
+            if (!resupplyInbound) {
+                if (rf.resupply.request((int)(desiredSupply - supply))) {
+                    resupplyInbound = true;
+                }
+            }
+        } else {
+            resupplyInbound = false;
+        }
     }
 
 }

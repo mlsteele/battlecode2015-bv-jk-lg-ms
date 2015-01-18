@@ -19,19 +19,40 @@ public class Task {
     public static final int AEROSPACELAB = 7;
     public static final int TECHNOLOGYINSTITUTE = 8;
     public static final int TRAININGFIELD = 9;
-    public static final int RESUPPLY_TANKFACTORY = 10;
+    public static final int RESUPPLY_STRUCTURE = 10;
 
     public final int taskNum;
     public final MapLocation loc;
+    public final int amount;
+
+    // `taskNum` must [0, 15] (4 bits)
+    // `amount` must be in [0, 409500] (12 bits)
+    // `amount` will be rounded to a multiple of 100
+    public Task(int taskNum, MapLocation loc, int amount) {
+        if (taskNum < 0 || taskNum > 15)
+            System.err.println("ERROR: taskNum out of bounds");
+        amount = (amount / 100) * 100;
+        if (amount < 0 || amount > 409500)
+            System.err.println("ERROR: amount out of bounds");
+        this.taskNum = taskNum;
+        this.loc = loc;
+        this.amount = amount;
+
+        if (taskNum == RESUPPLY_STRUCTURE && loc == null)
+            System.err.println("ERROR: resupply structure mission instantiated with null location");
+    }
 
     public Task(int taskNum) {
-        this.taskNum = taskNum;
-        this.loc = null;
+        this(taskNum, null, 0);
     }
 
     public Task(int taskNum, MapLocation loc) {
-        this.taskNum = taskNum;
-        this.loc = loc;
+        this(taskNum, loc, 0);
+    }
+
+    @Override
+    public String toString() {
+        return "Task(" + taskNum + ", " + loc + ", " + amount + ")";
     }
 
     @Override
@@ -39,15 +60,15 @@ public class Task {
         if (!(other instanceof Task)) return false;
         if (other == this) return true;
         Task that = (Task) other;
-        if (that.taskNum == this.taskNum) {
-            if (loc == null) return (that.loc == null);
-            else             return (that.loc == this.loc);
-        }
-        return false;
+
+        return
+        taskNum == that.taskNum &&
+        (loc == null ? (that.loc == null) : loc.equals(that.loc)) &&
+        amount == that.amount;
     }
 
     @Override
     public int hashCode() {
-        return taskNum + (loc == null? 0 : loc.hashCode());
+        return taskNum + (loc == null? 0 : loc.hashCode()) + amount;
     }
 }

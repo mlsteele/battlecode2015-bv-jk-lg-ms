@@ -20,6 +20,7 @@ public abstract class RadioModule {
     // Please do not implement this to depend on instance parameters.
     abstract public int slotsRequired();
 
+    // Encode a location into the lower 16 bits of an int.
     protected int encodeLocation(MapLocation loc) {
         if (loc == null) return 0;
         // The maximum map size is 120x120 [bcd10]
@@ -40,15 +41,19 @@ public abstract class RadioModule {
     }
 
     protected int encodeTask(Task task) {
-        if (task.loc == null) return task.taskNum;
-        return (encodeLocation(task.loc) << 16) | task.taskNum;
+        // See Task for bit counts.
+        // [16 bits] [12 bits] [4 bits ]
+        // [loc    ] [amount ] [taskNum]
+        int loc    = (task.loc != null) ? encodeLocation(task.loc) : 0;
+        int amount = task.amount / 100;
+        return (loc << 16) | (amount << 4) | task.taskNum;
     }
 
     protected Task decodeTask(int task) {
-        int encodedLoc = task >> 16;
-        if (encodedLoc == 0) return new Task(task);
-        int taskNum = task & 0xFFFF;
-        return new Task(taskNum, decodeLocation(encodedLoc));
+        return new Task(
+            task & 0xF,
+            decodeLocation(task >>> 16),
+            (task >>> 4 & 0xFFF) * 100);
     }
 
     // Receive from radio.

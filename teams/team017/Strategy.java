@@ -52,8 +52,8 @@ public enum Strategy {;
     public static final int NUM_ROBOT_TYPES = 21;
     // public static final int NUM_ROBOT_TYPES = RobotType.values().length;
 
-    public static int taskSupply(int task) {
-        switch(task) {
+    public static int taskSupply(Task task) {
+        switch(task.taskNum) {
             case Task.NONE:                 return 0;
             case Task.MINE:                 return initialSupply(BEAVER);
             case Task.BARRACKS:             return initialSupply(BEAVER);
@@ -64,7 +64,7 @@ public enum Strategy {;
             case Task.TRAININGFIELD:        return initialSupply(BEAVER) + initialSupply(TRAININGFIELD);
             case Task.SUPPLYDEPOT:          return initialSupply(BEAVER) + initialSupply(SUPPLYDEPOT);
             case Task.AEROSPACELAB:         return initialSupply(BEAVER) + initialSupply(AEROSPACELAB);
-            case Task.RESUPPLY_TANKFACTORY: return initialSupply(BEAVER) + TANKFACTORY_RESUPPLY_AMT;
+            case Task.RESUPPLY_STRUCTURE:   return initialSupply(BEAVER) + task.amount;
             default:                        throw new NotImplementedException();
         }
     }
@@ -93,7 +93,7 @@ public enum Strategy {;
             case TANK:                return 4000;
 
             case AEROSPACELAB:        return 5 * initialSupply(LAUNCHER);
-            case LAUNCHER:            return 1000;
+            case LAUNCHER:            return 7000;
             case MISSILE:             return 0;
 
             case SUPPLYDEPOT:         return 0;
