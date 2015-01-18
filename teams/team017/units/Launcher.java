@@ -14,7 +14,7 @@ public class Launcher extends Unit {
 
         // Main loop
         while (true) {
-            MapLocation missileTarget = rc.getLocation().add(-5, 5);
+            MapLocation missileTarget = findTarget();
             launchMissile(missileTarget);
 
             if (rc.isCoreReady()) {
@@ -28,7 +28,28 @@ public class Launcher extends Unit {
         }
     }
 
+    private MapLocation findTarget() {
+        RobotInfo[] enemies = rc.senseNearbyRobots(
+            25,
+            rc.getTeam().opponent());
+
+        if (enemies.length == 0) return null;
+
+        RobotInfo target = enemies[0];
+        double    targetScore = -1;
+        for (RobotInfo r : enemies) {
+            double damage_per_whatever = r.type.attackPower / r.type.attackDelay;
+            double score = damage_per_whatever; // 1060
+            if (score > targetScore) {
+                target = r;
+                targetScore = score;
+            }
+        }
+        return target.location;
+    }
+
     private void launchMissile(MapLocation target) {
+        if (target == null) return;
         if (rc.getMissileCount() == 0) return;
         Direction dir = rc.getLocation().directionTo(target);
 
