@@ -31,7 +31,7 @@ public class Drone extends Unit {
                 } else {
                     boolean areWeThereYet = rc.getLocation().distanceSquaredTo(helpTarget) <= rc.getType().sensorRadiusSquared;
                     if (areWeThereYet) {
-                        if (isEnemiesNearby()) {
+                        if (isEnemiesNearby(helpTarget, 35)) {
                             pursueMobileEnemy();
                         } else {
                             rf.rallypoints.set(RALLY_HELP_DEFEND, null);
