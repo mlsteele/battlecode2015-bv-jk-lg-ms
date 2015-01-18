@@ -11,6 +11,7 @@ public class Miner extends Unit {
     private double ORE_CUTOFF = 12;
     private int supplyRequest = 0;
     private boolean resupplying = false;
+    private boolean kamikaze = false;
 
     @Override
     public void run() {
@@ -18,6 +19,14 @@ public class Miner extends Unit {
 
         while (true) {
             if (Analyze.ON) Analyze.aggregate("miners_supply", rc.getSupplyLevel());
+
+            if (Math.abs(Clock.getRoundNum() - Strategy.ATTACK_GROUP_2) <= 1) kamikaze = true;
+
+            while (kamikaze) {
+                shootBaddies();
+                if (rc.isCoreReady()) moveTowardBugging(rc.senseEnemyHQLocation());
+                rc.setIndicatorString(1, "ATTACKKK");
+            }
 
             // Top priority is don't get shot.
             if (rc.isCoreReady()) runAway();
