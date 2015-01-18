@@ -7,8 +7,10 @@ import java.util.*;
 
 // Strategy constants
 public enum Strategy {;
-    public static final int RALLY_GROUP_1 = 0; // for group 1
-    public static final int RALLY_GROUP_2 = 1;  // for group 2
+    public static final int RALLY_GROUP_1 = 0;
+    public static final int RALLY_GROUP_2 = 1;
+    // Group responsible for helping beavers and miners under duress.
+    public static final int RALLY_HELP_MINIONS = 2;
 
     // How many beavers to maintain for tasks.
     public static final int BEAVER_POOL_SIZE = 4;

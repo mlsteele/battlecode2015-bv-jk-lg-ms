@@ -6,6 +6,8 @@ import static battlecode.common.RobotType.*;
 import static team017.Strategy.*;
 import java.lang.RuntimeException;
 
+// Store MapLocations on the radio.
+// Each rally point starts as NULL and is nullable.
 public class RallyPoints extends RadioModule {
     public static final int NUM_RALLY_POINTS = 10;
 

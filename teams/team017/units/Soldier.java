@@ -17,7 +17,12 @@ public class Soldier extends Unit {
         while (true) {
             shootBaddies();
 
-            if (rc.isCoreReady()) moveToRallyPoint(rf.rallypoints.get(rallyGroup));
+            if (rc.isCoreReady()) {
+                MapLocation target = rf.rallypoints.get(rallyGroup);
+                if (target != null) {
+                    moveToRallyPoint(target);
+                }
+            }
 
             rc.yield();
         }

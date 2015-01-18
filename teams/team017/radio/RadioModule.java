@@ -24,6 +24,7 @@ public abstract class RadioModule {
     abstract public int slotsRequired();
 
     protected int encodeLocation(MapLocation loc) {
+        if (loc == null) return 0;
         // The maximum map size is 120x120 [bcd10]
         // We need ~6.9 bits to represent each axis.
         // Map coordinate boundaries are random (or at least ugly)
@@ -36,6 +37,7 @@ public abstract class RadioModule {
     }
 
     protected MapLocation decodeLocation(int loc) {
+        if (loc == 0) return null;
         MapLocation rel = new MapLocation(loc & 0xFF, loc >> 8);
         return rel.add(hqLoc.x, hqLoc.y).add(-120, -120);
     }
