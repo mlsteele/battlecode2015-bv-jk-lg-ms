@@ -1,6 +1,7 @@
 /bin/
 /lib-decompiled/
-/lib-src/
+/lib-custom/
+/lib-custom-src/
 /.idea/
 /submission.jar
 /matches/
