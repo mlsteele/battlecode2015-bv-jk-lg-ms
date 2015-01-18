@@ -16,6 +16,8 @@ public class RadioFrob {
     public RadioFrob(RobotController rc) {
         int nextSlot = 0;
 
+        // NOTE: Rally points MUST be located at channel 0.
+        //       Because missiles use a rally point but don't use the frob.
         rallypoints = new RallyPoints(rc, nextSlot);
         nextSlot += rallypoints.slotsRequired();
 

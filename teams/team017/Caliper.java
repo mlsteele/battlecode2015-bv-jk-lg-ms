@@ -15,12 +15,12 @@ public class Caliper {
     private String label;
     private int start;
 
-    Caliper(String label) {
+    public Caliper(String label) {
         this.label = label;
         start = Clock.getBytecodeNum();
     }
 
-    void end() {
+    public void end() {
         System.out.println(
             "Caliper " + label + " " +
             (Clock.getBytecodeNum() - start - subtractSelf));

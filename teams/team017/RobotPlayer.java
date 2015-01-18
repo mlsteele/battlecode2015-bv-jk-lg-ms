@@ -8,41 +8,33 @@ import battlecode.common.*;
 // Dispatches to one of the Robot classes.
 public class RobotPlayer {
     public static void run(RobotController rc) {
-        Robot r = resolveRobotType(rc);
-
-        if (r != null) {
-            // Should never return.
-            r.run();
-        } else {
-            // Unimplemented or unknown robot type
-            rc.setIndicatorString(0, "Having existential crisis.");
-            while (true) {
-                rc.yield();
-            }
-        }
-    }
-
-    private static Robot resolveRobotType(RobotController rc) {
         switch (rc.getType()) {
-            case HQ: return new Headquarters(rc);
-            case TOWER: return new Tower(rc);
+            case HQ:           new Headquarters(rc) .run (); break ;
+            case TOWER:        new Tower(rc)        .run (); break ;
 
-            case MINERFACTORY: return new MinerFactory(rc);
-            case SUPPLYDEPOT: return new SupplyDepot(rc);
-            case BARRACKS: return new Barracks(rc);
-            case HELIPAD: return new Helipad(rc);
-            case TANKFACTORY: return new TankFactory(rc);
-            case AEROSPACELAB: return new AerospaceLab(rc);
+            case MINERFACTORY: new MinerFactory(rc) .run (); break ;
+            case SUPPLYDEPOT:  new SupplyDepot(rc)  .run (); break ;
+            case BARRACKS:     new Barracks(rc)     .run (); break ;
+            case HELIPAD:      new Helipad(rc)      .run (); break ;
+            case TANKFACTORY:  new TankFactory(rc)  .run (); break ;
+            case AEROSPACELAB: new AerospaceLab(rc) .run (); break ;
 
-            case BEAVER: return new Beaver(rc);
-            case MINER: return new Miner(rc);
-            case SOLDIER: return new Soldier(rc);
-            case BASHER: return new Basher(rc);
-            case DRONE: return new Drone(rc);
-            case TANK: return new Tank(rc);
-            case LAUNCHER: return new Launcher(rc);
+            case BEAVER:       new Beaver(rc)       .run (); break ;
+            case MINER:        new Miner(rc)        .run (); break ;
+            case SOLDIER:      new Soldier(rc)      .run (); break ;
+            case BASHER:       new Basher(rc)       .run (); break ;
+            case DRONE:        new Drone(rc)        .run (); break ;
+            case TANK:         new Tank(rc)         .run (); break ;
+            case LAUNCHER:     new Launcher(rc)     .run (); break ;
 
-            default: return null;
+            case MISSILE:      Missile.run(rc); break ;
+
+            default:
+                // Unimplemented or unknown robot type
+                rc.setIndicatorString(0, "Having existential crisis.");
+                while (true) {
+                    rc.yield();
+                }
         }
     }
 }

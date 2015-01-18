@@ -9,6 +9,8 @@ public enum Strategy {;
     public static final int RALLY_GROUP_2 = 1;
     // Group responsible for helping defenseless robots under duress.
     public static final int RALLY_HELP_DEFEND = 2;
+    // Location for missiles to target, not really a group.
+    public static final int RALLY_MISSILE_STRIKE = 3;
 
     // How many beavers to maintain for tasks.
     public static final int BEAVER_POOL_SIZE = 4;
@@ -82,6 +84,7 @@ public enum Strategy {;
 
             case AEROSPACELAB:        return 5 * initialSupply(LAUNCHER);
             case LAUNCHER:            return 1000;
+            case MISSILE:             return 0;
 
             case SUPPLYDEPOT:         return 0;
 
@@ -89,7 +92,6 @@ public enum Strategy {;
             case COMPUTER:            throw new NotImplementedException();
             case HANDWASHSTATION:     throw new NotImplementedException();
             case HQ:                  throw new NotImplementedException();
-            case MISSILE:             throw new NotImplementedException();
             case TECHNOLOGYINSTITUTE: throw new NotImplementedException();
             case TOWER:               throw new NotImplementedException();
             case TRAININGFIELD:       throw new NotImplementedException();
