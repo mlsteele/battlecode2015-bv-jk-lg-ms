@@ -12,6 +12,8 @@ public class Barracks extends Structure {
     @Override
     public void run() {
         while (true) {
+            callForHelp();
+
             if (false) {
                 if (rc.isCoreReady()) spawnCombatant();
 

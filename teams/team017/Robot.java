@@ -3,9 +3,9 @@ package team017;
 import battlecode.common.*;
 import static battlecode.common.Direction.*;
 import static battlecode.common.RobotType.*;
-
-import java.lang.RuntimeException;
+import static team017.Strategy.*;
 import java.util.*;
+import java.lang.RuntimeException;
 
 // Base class for Robot minds.
 // Stores the RobotController as an instance object.
@@ -28,6 +28,23 @@ public abstract class Robot {
         RobotInfo target = enemies[0];
         double    targetScore = -1;
         for (RobotInfo r : enemies) {
+            double damage_per_whatever = r.type.attackPower / r.type.attackDelay;
+            double score = damage_per_whatever; // 1060
+            if (score > targetScore) {
+                target = r;
+                targetScore = score;
+            }
+        }
+        return target;
+    }
+
+    // Chooses which mobile robot to attack.
+    protected RobotInfo chooseMobileTarget(RobotInfo[] enemies) {
+        RobotInfo target = enemies[0];
+        double    targetScore = -1;
+        for (RobotInfo r : enemies) {
+            if (r.type.isBuilding) continue;
+
             double damage_per_whatever = r.type.attackPower / r.type.attackDelay;
             double score = damage_per_whatever; // 1060
             if (score > targetScore) {
@@ -107,6 +124,25 @@ public abstract class Robot {
             }
         }
         return closest;
+    }
+
+    protected boolean isEnemiesNearby() {
+        return rc.senseNearbyRobots(
+            rc.getType().sensorRadiusSquared,
+            rc.getTeam().opponent())
+            .length > 0;
+    }
+
+    // Call for help if enemies are nearby.
+    // No-op if no enemies nearby.
+    protected void callForHelp() {
+        RobotInfo[] enemies = rc.senseNearbyRobots(
+            rc.getType().sensorRadiusSquared,
+            rc.getTeam().opponent());
+
+        if (enemies.length > 0) {
+            rf.rallypoints.set(RALLY_HELP_DEFEND, enemies[0].location);
+        }
     }
 
 }

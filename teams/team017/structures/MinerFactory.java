@@ -16,6 +16,7 @@ public class MinerFactory extends Structure {
         boolean incomingResupply = false;
 
         while (true) {
+            callForHelp();
 
             // Request resupply when low
             double supply = rc.getSupplyLevel();

@@ -28,7 +28,6 @@ public abstract class Unit extends Robot {
     // Attacking for units.
     // Blocks until no enemies are seen.
     protected void shootBaddies() {
-        // TODO(miles): attackRadiusSquared is not good for the HQ, must account for range buf
         int range = rc.getType().attackRadiusSquared;
         Team enemy = rc.getTeam().opponent();
 
@@ -52,6 +51,17 @@ public abstract class Unit extends Robot {
             }
 
             rc.yield();
+        }
+    }
+
+    // Move towards a mobile enemy.
+    protected void pursueMobileEnemy() {
+        RobotInfo[] enemies = rc.senseNearbyRobots(
+            rc.getType().sensorRadiusSquared,
+            rc.getTeam().opponent());
+
+        if (enemies.length > 0) {
+            moveTowardBugging(chooseMobileTarget(enemies).location);
         }
     }
 

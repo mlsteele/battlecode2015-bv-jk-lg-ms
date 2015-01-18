@@ -9,8 +9,8 @@ import java.util.*;
 public enum Strategy {;
     public static final int RALLY_GROUP_1 = 0;
     public static final int RALLY_GROUP_2 = 1;
-    // Group responsible for helping beavers and miners under duress.
-    public static final int RALLY_HELP_MINIONS = 2;
+    // Group responsible for helping defenseless robots under duress.
+    public static final int RALLY_HELP_DEFEND = 2;
 
     // How many beavers to maintain for tasks.
     public static final int BEAVER_POOL_SIZE = 4;

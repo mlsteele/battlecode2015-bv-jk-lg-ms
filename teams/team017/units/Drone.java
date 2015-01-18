@@ -23,7 +23,25 @@ public class Drone extends Unit {
 
             shootBaddies();
 
-            if (rc.isCoreReady()) wander();
+            if (rc.isCoreReady()) {
+                MapLocation helpTarget = rf.rallypoints.get(RALLY_HELP_DEFEND);
+
+                if (helpTarget == null) {
+                    wander();
+                } else {
+                    boolean areWeThereYet = rc.getLocation().distanceSquaredTo(helpTarget) <= rc.getType().sensorRadiusSquared;
+                    if (areWeThereYet) {
+                        if (isEnemiesNearby()) {
+                            pursueMobileEnemy();
+                        } else {
+                            rf.rallypoints.set(RALLY_HELP_DEFEND, null);
+                        }
+                    } else {
+                        moveToRallyPoint(helpTarget);
+                    }
+                }
+
+            }
 
             rc.yield();
         }
@@ -122,8 +140,9 @@ public class Drone extends Unit {
     }
 
     // Drones work differently from most units, so this is overridden.
-    // Drones can move 'while' shooting.
-    protected void shootBaddies() {
+    // This was written before the drone nerf, so it incorrectly assumes
+    // that drones can move 'while' shooting.
+    protected void shootBaddies2() {
         // Abort if no weapon
         if (!rc.isWeaponReady()) return;
 

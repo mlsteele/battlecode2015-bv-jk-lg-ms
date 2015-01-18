@@ -12,8 +12,8 @@ public class Tower extends Structure {
     @Override
     public void run() {
         while (true) {
+            callForHelp();
             shootBaddies();
-
             rc.yield();
         }
     }

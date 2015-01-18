@@ -16,6 +16,7 @@ public class TankFactory extends Structure {
         boolean incomingResupply = false;
 
         while (true) {
+            callForHelp();
 
             double supply = rc.getSupplyLevel();
             if (Analyze.ON) Analyze.aggregate("tfs_supply", supply);

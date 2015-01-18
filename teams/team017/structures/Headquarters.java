@@ -60,6 +60,8 @@ public class Headquarters extends Structure {
         rf.xunits.set(DRONE, DRONE_HARRASS_N);
 
         while (true) {
+            callForHelp();
+
             miningRate = rf.miningrate.getAveraged();
             rf.miningrate.set(0);
 

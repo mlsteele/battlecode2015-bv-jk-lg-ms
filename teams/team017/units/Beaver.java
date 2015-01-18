@@ -47,6 +47,7 @@ public class Beaver extends Unit {
                     break;
                 case (Task.MINE):
                     while (true) {
+                        callForHelp();
                         if (rc.getSupplyLevel() < LOW_SUPPLY) break;
 
                         if (rc.isCoreReady()) mine();
@@ -71,6 +72,8 @@ public class Beaver extends Unit {
 
     private void buildStructureMission() {
         while (true) {
+            callForHelp();
+
             int distanceFromHQ = rc.getLocation().distanceSquaredTo(hqLoc);
 
             if (rc.isCoreReady()) {
@@ -110,7 +113,9 @@ public class Beaver extends Unit {
                 throw new NotImplementedException("Unknown resupply mission");
 
         }
-        while(true) {
+        while (true) {
+            callForHelp();
+
             if (rc.isCoreReady()) {
                 if (rc.getLocation().distanceSquaredTo(currentTask.loc) > GameConstants.SUPPLY_TRANSFER_RADIUS_SQUARED) {
                     moveTowardBugging(currentTask.loc);
@@ -126,9 +131,9 @@ public class Beaver extends Unit {
                         return;
                     }
                 }
-            } else {
-                rc.yield();
             }
+
+            rc.yield();
         }
 
     }
@@ -214,6 +219,8 @@ public class Beaver extends Unit {
     private void waitForBuildCompletion(MapLocation loc) {
         RobotInfo ri = null;
         do {
+            callForHelp();
+
             try {
                 ri = rc.senseRobotAtLocation(loc);
             } catch (GameActionException e) {
@@ -238,6 +245,8 @@ public class Beaver extends Unit {
         // im near the hq, lets ask for a task and clear my task slot
         // wait for signal from HQ
         do {
+            callForHelp();
+
             rf.beavertasks.requestNewTask(myTaskSlot);
             // yield so the request propogates, otherwise we might see our old task.
             // and so that we don't request a task while having an assigned task.

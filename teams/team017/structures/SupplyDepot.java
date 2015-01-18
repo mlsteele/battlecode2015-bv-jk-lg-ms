@@ -12,6 +12,7 @@ public class SupplyDepot extends Structure {
     @Override
     public void run() {
         while (true) {
+            callForHelp();
             rc.yield();
         }
     }
