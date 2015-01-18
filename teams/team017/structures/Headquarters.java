@@ -258,7 +258,6 @@ public class Headquarters extends Structure {
 
     // The boolean return here is sketchy. returns true if it "did something"
     private boolean maintainDesiredTankFactories() {
-        unitCounts = getUnitCounts();
         int numQueuedFactories = Collections.frequency(taskQueue, new Task(Task.TANKFACTORY));
         int numQueuedBarracks = Collections.frequency(taskQueue, new Task(Task.BARRACKS));
         int neededFactories = desiredTankFactories - unitCounts[TANKFACTORY.ordinal()] - numQueuedFactories;
