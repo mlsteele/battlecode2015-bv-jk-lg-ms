@@ -39,6 +39,8 @@ public class Beaver extends Unit {
                 case (Task.TANKFACTORY):
                 case (Task.HELIPAD):
                 case (Task.AEROSPACELAB):
+                case (Task.TECHNOLOGYINSTITUTE):
+                case (Task.TRAININGFIELD):
                     buildStructureMission();
                     break;
                 case (Task.RESUPPLY_TANKFACTORY):
@@ -151,6 +153,10 @@ public class Beaver extends Unit {
                 return buildThenSupply(HELIPAD);
             case Task.AEROSPACELAB:
                 return buildThenSupply(AEROSPACELAB);
+            case Task.TECHNOLOGYINSTITUTE:
+                return buildThenSupply(TECHNOLOGYINSTITUTE);
+            case Task.TRAININGFIELD:
+                return buildThenSupply(TRAININGFIELD);
             default:
                 System.err.println("ERROR: invalid building code " + orderCode);
                 return false;

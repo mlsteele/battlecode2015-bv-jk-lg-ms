@@ -34,6 +34,9 @@ public enum Strategy {;
     // Number of early harassment drones.
     public static final int DRONE_HARRASS_N = 5;
 
+    // Maximum times we will build a commander
+    public static final int MAX_COMMANDER_SPAWN_COUNT = 3;
+
     public static final int RALLY_ARMY = 0;
 
     // How close must be to target point. (sqrads)
@@ -57,6 +60,8 @@ public enum Strategy {;
             case Task.MINERFACTORY:         return initialSupply(BEAVER) + initialSupply(MINERFACTORY);
             case Task.TANKFACTORY:          return initialSupply(BEAVER) + initialSupply(TANKFACTORY);
             case Task.HELIPAD:              return initialSupply(BEAVER) + initialSupply(HELIPAD);
+            case Task.TECHNOLOGYINSTITUTE:  return initialSupply(BEAVER);
+            case Task.TRAININGFIELD:        return initialSupply(BEAVER) + initialSupply(TRAININGFIELD);
             case Task.SUPPLYDEPOT:          return initialSupply(BEAVER) + initialSupply(SUPPLYDEPOT);
             case Task.AEROSPACELAB:         return initialSupply(BEAVER) + initialSupply(AEROSPACELAB);
             case Task.RESUPPLY_TANKFACTORY: return initialSupply(BEAVER) + TANKFACTORY_RESUPPLY_AMT;
@@ -79,6 +84,11 @@ public enum Strategy {;
             case HELIPAD:             return DRONE_HARRASS_N * initialSupply(DRONE);
             case DRONE:               return 3000;
 
+            case TECHNOLOGYINSTITUTE: return 0;
+
+            case TRAININGFIELD:       return initialSupply(COMMANDER);
+            case COMMANDER:           return 3000;
+
             case TANKFACTORY:         return 6 * initialSupply(TANK);
             case TANK:                return 4000;
 
@@ -88,13 +98,10 @@ public enum Strategy {;
 
             case SUPPLYDEPOT:         return 0;
 
-            case COMMANDER:           throw new NotImplementedException();
             case COMPUTER:            throw new NotImplementedException();
             case HANDWASHSTATION:     throw new NotImplementedException();
             case HQ:                  throw new NotImplementedException();
-            case TECHNOLOGYINSTITUTE: throw new NotImplementedException();
             case TOWER:               throw new NotImplementedException();
-            case TRAININGFIELD:       throw new NotImplementedException();
             default:                  throw new NotImplementedException();
         }
     }

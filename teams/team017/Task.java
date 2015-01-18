@@ -17,7 +17,9 @@ public class Task {
     public static final int TANKFACTORY = 5;
     public static final int HELIPAD = 6;
     public static final int AEROSPACELAB = 7;
-    public static final int RESUPPLY_TANKFACTORY = 8;
+    public static final int TECHNOLOGYINSTITUTE = 8;
+    public static final int TRAININGFIELD = 9;
+    public static final int RESUPPLY_TANKFACTORY = 10;
 
     public final int taskNum;
     public final MapLocation loc;

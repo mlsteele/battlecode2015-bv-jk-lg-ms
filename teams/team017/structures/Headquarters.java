@@ -49,6 +49,8 @@ public class Headquarters extends Structure {
         rf.rallypoints.set(Strategy.RALLY_GROUP_2, homeTower);
 
         taskQueue.add(new Task(Task.MINERFACTORY));
+        taskQueue.add(new Task(Task.TECHNOLOGYINSTITUTE));
+        taskQueue.add(new Task(Task.TRAININGFIELD));
         taskQueue.add(new Task(Task.HELIPAD));
         taskQueue.add(new Task(Task.SUPPLYDEPOT));
         taskQueue.add(new Task(Task.SUPPLYDEPOT));

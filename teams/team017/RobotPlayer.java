@@ -9,15 +9,17 @@ import battlecode.common.*;
 public class RobotPlayer {
     public static void run(RobotController rc) {
         switch (rc.getType()) {
-            case HQ:           new Headquarters(rc) .run (); break ;
-            case TOWER:        new Tower(rc)        .run (); break ;
+            case HQ:                  new Headquarters(rc)        .run (); break ;
+            case TOWER:               new Tower(rc)               .run (); break ;
 
-            case MINERFACTORY: new MinerFactory(rc) .run (); break ;
-            case SUPPLYDEPOT:  new SupplyDepot(rc)  .run (); break ;
-            case BARRACKS:     new Barracks(rc)     .run (); break ;
-            case HELIPAD:      new Helipad(rc)      .run (); break ;
-            case TANKFACTORY:  new TankFactory(rc)  .run (); break ;
-            case AEROSPACELAB: new AerospaceLab(rc) .run (); break ;
+            case MINERFACTORY:        new MinerFactory(rc)        .run (); break ;
+            case SUPPLYDEPOT:         new SupplyDepot(rc)         .run (); break ;
+            case BARRACKS:            new Barracks(rc)            .run (); break ;
+            case HELIPAD:             new Helipad(rc)             .run (); break ;
+            case TANKFACTORY:         new TankFactory(rc)         .run (); break ;
+            case AEROSPACELAB:        new AerospaceLab(rc)        .run (); break ;
+            case TECHNOLOGYINSTITUTE: new TechnologyInstitute(rc) .run (); break ;
+            case TRAININGFIELD:       new TrainingField(rc)       .run (); break ;
 
             case BEAVER:       new Beaver(rc)       .run (); break ;
             case MINER:        new Miner(rc)        .run (); break ;
@@ -26,6 +28,7 @@ public class RobotPlayer {
             case DRONE:        new Drone(rc)        .run (); break ;
             case TANK:         new Tank(rc)         .run (); break ;
             case LAUNCHER:     new Launcher(rc)     .run (); break ;
+            case COMMANDER:    new Commander(rc)    .run (); break ;
 
             case MISSILE:      Missile.run(rc); break ;
 
