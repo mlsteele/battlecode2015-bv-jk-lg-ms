@@ -33,11 +33,12 @@ public class Beaver extends Unit {
             int orderCode = currentTask.taskNum;
 
             switch (orderCode) {
-                case (Task.BARRACKS):
                 case (Task.MINERFACTORY):
+                case (Task.SUPPLYDEPOT):
+                case (Task.BARRACKS):
                 case (Task.TANKFACTORY):
                 case (Task.HELIPAD):
-                case (Task.SUPPLYDEPOT):
+                case (Task.AEROSPACELAB):
                     buildStructureMission();
                     break;
                 case (Task.RESUPPLY_TANKFACTORY):
@@ -138,18 +139,20 @@ public class Beaver extends Unit {
 
     private boolean buildThenSupplyForCode(int orderCode) {
         switch (orderCode) {
-            case Task.BARRACKS:
-                return buildThenSupply(BARRACKS);
             case Task.MINERFACTORY:
                 return buildThenSupply(MINERFACTORY);
+            case Task.SUPPLYDEPOT:
+                return buildThenSupply(SUPPLYDEPOT);
+            case Task.BARRACKS:
+                return buildThenSupply(BARRACKS);
             case Task.TANKFACTORY:
                 return buildThenSupply(TANKFACTORY);
             case Task.HELIPAD:
                 return buildThenSupply(HELIPAD);
-            case Task.SUPPLYDEPOT:
-                return buildThenSupply(SUPPLYDEPOT);
+            case Task.AEROSPACELAB:
+                return buildThenSupply(AEROSPACELAB);
             default:
-                System.err.println("error, invalid building code " + orderCode);
+                System.err.println("ERROR: invalid building code " + orderCode);
                 return false;
         }
     }
@@ -170,14 +173,14 @@ public class Beaver extends Unit {
     }
 
     // Attempt to build and then supply a building
-    private boolean buildThenSupply(RobotType rob, int supply) {
+    private boolean buildThenSupply(RobotType rob) {
         Direction dir = randomDirection();
         if (rc.canBuild(dir, rob)) {
             try {
                 rc.build(dir, rob);
                 MapLocation buildLoc = rc.getLocation().add(dir);
                 rc.yield(); // Wait one turn for the building to spawn.
-                rc.transferSupplies(supply, buildLoc);
+                rc.transferSupplies(Strategy.initialSupply(rob), buildLoc);
                 waitForBuildCompletion(buildLoc);
                 return true;
             } catch (GameActionException e) {
@@ -185,31 +188,6 @@ public class Beaver extends Unit {
             }
         }
         return false;
-    }
-
-    // Gives the default starting supply to contructed building
-    private boolean buildThenSupply(RobotType rob) {
-        int supply = 0;
-        switch (rob) {
-            case BARRACKS:
-                supply = Strategy.initialSupply(BARRACKS);
-                break;
-            case MINERFACTORY:
-                supply = Strategy.initialSupply(MINERFACTORY);
-                break;
-            case TANKFACTORY:
-                supply = Strategy.initialSupply(TANKFACTORY);
-                break;
-            case HELIPAD:
-                supply = Strategy.initialSupply(HELIPAD);
-                break;
-            case SUPPLYDEPOT:
-                supply = Strategy.initialSupply(SUPPLYDEPOT);
-                break;
-            default:
-                supply = 0;
-        }
-        return buildThenSupply(rob, supply);
     }
 
     // Wait (blocking) for a structure to finish being built by this robot.

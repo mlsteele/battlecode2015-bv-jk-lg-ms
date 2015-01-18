@@ -134,6 +134,20 @@ public abstract class Robot {
             .length > 0;
     }
 
+    protected boolean isEnemiesNearby(int distanceSquared) {
+        return rc.senseNearbyRobots(
+            distanceSquared,
+            rc.getTeam().opponent())
+            .length > 0;
+    }
+
+    protected boolean isEnemiesNearby(MapLocation loc, int distanceSquared) {
+        return rc.senseNearbyRobots(loc,
+            distanceSquared,
+            rc.getTeam().opponent())
+            .length > 0;
+    }
+
     // Call for help if enemies are nearby.
     // No-op if no enemies nearby.
     protected void callForHelp() {

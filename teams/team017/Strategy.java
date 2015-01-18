@@ -56,6 +56,7 @@ public enum Strategy {;
             case Task.TANKFACTORY:          return initialSupply(BEAVER) + initialSupply(TANKFACTORY);
             case Task.HELIPAD:              return initialSupply(BEAVER) + initialSupply(HELIPAD);
             case Task.SUPPLYDEPOT:          return initialSupply(BEAVER) + initialSupply(SUPPLYDEPOT);
+            case Task.AEROSPACELAB:         return initialSupply(BEAVER) + initialSupply(AEROSPACELAB);
             case Task.RESUPPLY_TANKFACTORY: return initialSupply(BEAVER) + TANKFACTORY_RESUPPLY_AMT;
             default:                        throw new NotImplementedException();
         }
@@ -79,14 +80,15 @@ public enum Strategy {;
             case TANKFACTORY:         return 6 * initialSupply(TANK);
             case TANK:                return 4000;
 
+            case AEROSPACELAB:        return 5 * initialSupply(LAUNCHER);
+            case LAUNCHER:            return 1000;
+
             case SUPPLYDEPOT:         return 0;
 
-            case AEROSPACELAB:        throw new NotImplementedException();
             case COMMANDER:           throw new NotImplementedException();
             case COMPUTER:            throw new NotImplementedException();
             case HANDWASHSTATION:     throw new NotImplementedException();
             case HQ:                  throw new NotImplementedException();
-            case LAUNCHER:            throw new NotImplementedException();
             case MISSILE:             throw new NotImplementedException();
             case TECHNOLOGYINSTITUTE: throw new NotImplementedException();
             case TOWER:               throw new NotImplementedException();

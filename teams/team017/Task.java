@@ -11,12 +11,13 @@ public class Task {
     public static final int REQUESTING_TASK = -1;
     public static final int NONE = 0;
     public static final int MINE = 1;
-    public static final int BARRACKS = 2;
-    public static final int MINERFACTORY = 3;
-    public static final int TANKFACTORY = 4;
-    public static final int HELIPAD = 5;
-    public static final int SUPPLYDEPOT = 6;
-    public static final int RESUPPLY_TANKFACTORY = 7;
+    public static final int MINERFACTORY = 2;
+    public static final int SUPPLYDEPOT = 3;
+    public static final int BARRACKS = 4;
+    public static final int TANKFACTORY = 5;
+    public static final int HELIPAD = 6;
+    public static final int AEROSPACELAB = 7;
+    public static final int RESUPPLY_TANKFACTORY = 8;
 
     public final int taskNum;
     public final MapLocation loc;

@@ -26,17 +26,22 @@ public class RobotPlayer {
         switch (rc.getType()) {
             case HQ: return new Headquarters(rc);
             case TOWER: return new Tower(rc);
-            case BEAVER: return new Beaver(rc);
+
+            case MINERFACTORY: return new MinerFactory(rc);
+            case SUPPLYDEPOT: return new SupplyDepot(rc);
             case BARRACKS: return new Barracks(rc);
+            case HELIPAD: return new Helipad(rc);
+            case TANKFACTORY: return new TankFactory(rc);
+            case AEROSPACELAB: return new AerospaceLab(rc);
+
+            case BEAVER: return new Beaver(rc);
+            case MINER: return new Miner(rc);
             case SOLDIER: return new Soldier(rc);
             case BASHER: return new Basher(rc);
-            case MINER: return new Miner(rc);
-            case MINERFACTORY: return new MinerFactory(rc);
-            case TANK: return new Tank(rc);
-            case TANKFACTORY: return new TankFactory(rc);
-            case HELIPAD: return new Helipad(rc);
             case DRONE: return new Drone(rc);
-            case SUPPLYDEPOT: return new SupplyDepot(rc);
+            case TANK: return new Tank(rc);
+            case LAUNCHER: return new Launcher(rc);
+
             default: return null;
         }
     }
