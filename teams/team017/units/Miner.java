@@ -10,8 +10,13 @@ public class Miner extends Unit {
 	private MapLocation lastSeen = rc.getLocation();
 	private final double ORE_CUTOFF = 12;
 	private double awesomeOreAmount = 0; // best seen so far
+
+	private final int ITS_BEEN_A_WHILE = 100; // num turns till give up on dreams
+	private int roundLastMined = 0;
+	private double bestOreInAWhile = 0;
 	private int supplyRequest = 0;
 	private boolean resupplying = false;
+	private int resupplyStartRound = 0;
 	private boolean kamikaze = false;
 
 	@Override
@@ -42,14 +47,23 @@ public class Miner extends Unit {
 					goToHQ();
 					dumpSuppliesToHQ();
 					resupplying = true;
+					resupplyStartRound = Clock.getRoundNum();
 					rf.minerresupply.request(supplyRequest);
 				} else {
 					if (resupplying) {
 						moveTowardBugging(lastSeen);
 						rc.setIndicatorString(1, "Heading back to last seen best ore");
+
 						// if we are where we came from, or we found some awesome ore, stop going back
-						if(rc.getLocation().equals(lastSeen) || rc.senseOre(rc.getLocation().add(optimalOreDirection())) >= awesomeOreAmount)
+						Direction nearbyGoodOre = optimalOreDirection();
+						if(rc.getLocation().equals(lastSeen) ||
+								(nearbyGoodOre != null && rc.senseOre(rc.getLocation().add(nearbyGoodOre)) >= awesomeOreAmount)) {
 							resupplying = false;
+							// Fudge last mining time so resupplying won't make us forget our dreams
+							int resupplyTime = Clock.getRoundNum() - resupplyStartRound;
+							roundLastMined += resupplyTime;
+							System.out.println("Resupplying took " + resupplyTime + " turns.");
+						}
 					} else {
 						pursueMining();
 					}
@@ -77,8 +91,12 @@ public class Miner extends Unit {
 	private void pursueMining() {
 		double oreHere = rc.senseOre(rc.getLocation());
 		if (oreHere > awesomeOreAmount) awesomeOreAmount = oreHere;
-		if (oreHere >= 12) {
+		if (oreHere > bestOreInAWhile) bestOreInAWhile = oreHere;
+		int roundsSinceLastMine = Clock.getRoundNum() - roundLastMined;
+		System.out.println("I haven't mined in " + roundsSinceLastMine + " turns");
+		if (oreHere >= 12 || roundsSinceLastMine >= ITS_BEEN_A_WHILE || oreHere >= awesomeOreAmount) {
 			rc.setIndicatorString(1, "mining here");
+			bestOreInAWhile = oreHere;
 			mineHere();
 		} else {
 			Direction oreTarget = optimalOreDirection();
@@ -106,6 +124,7 @@ public class Miner extends Unit {
 			double baseOre = rc.senseOre(rc.getLocation());
 			double oreGain = Math.max(Math.min(baseOre / GameConstants.MINER_MINE_RATE, GameConstants.MINER_MINE_MAX), GameConstants.MINIMUM_MINE_AMOUNT);
 			rf.miningrate.set(rf.miningrate.get() + (float)(oreGain));
+			roundLastMined = Clock.getRoundNum();
 			return true;
 		} catch (GameActionException e) {
 			e.printStackTrace();
@@ -129,13 +148,15 @@ public class Miner extends Unit {
 		for (int i = 0; i < 8; i++) {
 			d = possibleDirs[(i + ri) % 8];
 			double ore = rc.senseOre(curLocation.add(d));
-			if ((ore > bestOre) && (ore > ORE_CUTOFF) && rc.canMove(d)) {
+			if ((ore > bestOre) && (ore > ORE_CUTOFF || ore >= awesomeOreAmount) && rc.canMove(d)) {
 				bestOre = ore;
 				bestDirection = d;
 			}
 		}
 
-		if (bestOre > awesomeOreAmount) awesomeOreAmount = bestOre;
+		//if (bestOre > awesomeOreAmount) awesomeOreAmount = bestOre;
+		//if (bestOre > bestOreInAWhile) bestOreInAWhile = bestOre;
+
 		return bestDirection;
 	}
 }
