@@ -1,9 +1,6 @@
 package team017;
 
-import battlecode.common.*;
 import battlecode.common.MapLocation;
-
-import java.lang.Override;
 
 /**
  * Tasks are given by Headquarters to Beavers, who use them to perform tasks.
@@ -24,12 +21,12 @@ public class Task {
     public final int taskNum;
     public final MapLocation loc;
 
-    Task(int taskNum) {
+    public Task(int taskNum) {
         this.taskNum = taskNum;
         this.loc = null;
     }
 
-    Task(int taskNum, MapLocation loc) {
+    public Task(int taskNum, MapLocation loc) {
         this.taskNum = taskNum;
         this.loc = loc;
     }

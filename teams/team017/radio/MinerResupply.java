@@ -1,10 +1,6 @@
-package team017;
+package team017.radio;
 
-import battlecode.common.*;
-import static battlecode.common.Direction.*;
-import static battlecode.common.RobotType.*;
-import static team017.Strategy.*;
-import java.lang.RuntimeException;
+import battlecode.common.RobotController;
 
 public class MinerResupply extends RadioModule {
     private int MINER_REQUEST_RESUPPLY_ID_SLOT;

@@ -1,9 +1,5 @@
 package team017;
 
-import battlecode.common.*;
-import static battlecode.common.Direction.*;
-import static battlecode.common.RobotType.*;
-import java.util.*;
 
 // Format match output for analysis.
 // TODO(miles): Should we use matching logging or something for this?

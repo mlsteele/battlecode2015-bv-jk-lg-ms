@@ -1,15 +1,20 @@
-package team017;
+package team017.units;
 
-import battlecode.common.*;
 import static battlecode.common.Direction.*;
 import static battlecode.common.RobotType.*;
 import static team017.Strategy.*;
-import java.util.*;
+import team017.Unit;
+import battlecode.common.Direction;
+import battlecode.common.GameActionException;
+import battlecode.common.MapLocation;
+import battlecode.common.RobotController;
+import battlecode.common.RobotInfo;
+import battlecode.common.Team;
 
 public class Drone extends Unit {
     private boolean harassApproachDirection;
 
-    Drone(RobotController rc) { super(rc); }
+    public Drone(RobotController rc) { super(rc); }
 
     @Override
     public void run() {

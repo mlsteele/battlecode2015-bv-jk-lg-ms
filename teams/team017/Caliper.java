@@ -1,10 +1,6 @@
 package team017;
 
-import battlecode.common.*;
-import static battlecode.common.Direction.*;
-import static battlecode.common.RobotType.*;
-import static team017.Strategy.*;
-import java.util.*;
+import battlecode.common.Clock;
 
 // Bytecode caliper for measuring how many bytecodes tasks take.
 // Doesn't work so hot across turn boundaries.

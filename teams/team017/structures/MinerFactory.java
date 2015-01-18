@@ -1,13 +1,13 @@
-package team017;
+package team017.structures;
 
-import battlecode.common.*;
-import static battlecode.common.Direction.*;
-import static battlecode.common.RobotType.*;
-import static team017.Strategy.*;
-import java.util.*;
+import static battlecode.common.RobotType.MINER;
+import team017.Analyze;
+import team017.Strategy;
+import team017.Structure;
+import battlecode.common.RobotController;
 
 public class MinerFactory extends Structure {
-    MinerFactory(RobotController rc) { super(rc); }
+    public MinerFactory(RobotController rc) { super(rc); }
 
     private int[] unitCounts;
 
@@ -21,9 +21,9 @@ public class MinerFactory extends Structure {
             // Request resupply when low
             double supply = rc.getSupplyLevel();
             if (Analyze.ON) Analyze.aggregate("mfs_supply", supply);
-            if (supply <= MINERFACTORY_LOW_SUPPLY) {
+            if (supply <= Strategy.MINERFACTORY_LOW_SUPPLY) {
                 if (!incomingResupply) {
-                    if (rf.resupply.request(MINERFACTORY_RESUPPLY_AMT))
+                    if (rf.resupply.request(Strategy.MINERFACTORY_RESUPPLY_AMT))
                         incomingResupply = true;
                 }
             } else {

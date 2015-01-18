@@ -1,13 +1,12 @@
-package team017;
+package team017.structures;
 
-import battlecode.common.*;
-import static battlecode.common.Direction.*;
-import static battlecode.common.RobotType.*;
-import static team017.Strategy.*;
-import java.util.*;
+import static battlecode.common.RobotType.DRONE;
+import team017.Strategy;
+import team017.Structure;
+import battlecode.common.RobotController;
 
 public class Helipad extends Structure {
-    Helipad(RobotController rc) { super(rc); }
+    public Helipad(RobotController rc) { super(rc); }
 
     private int[] unitCounts;
 

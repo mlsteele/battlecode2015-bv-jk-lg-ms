@@ -1,13 +1,24 @@
-package team017;
+package team017.units;
 
-import battlecode.common.*;
-import static battlecode.common.Direction.*;
-import static battlecode.common.RobotType.*;
-import static team017.Strategy.*;
-import java.util.*;
+import static battlecode.common.RobotType.BARRACKS;
+import static battlecode.common.RobotType.HELIPAD;
+import static battlecode.common.RobotType.MINERFACTORY;
+import static battlecode.common.RobotType.SUPPLYDEPOT;
+import static battlecode.common.RobotType.TANKFACTORY;
+import team017.NotImplementedException;
+import team017.Strategy;
+import team017.Task;
+import team017.Unit;
+import battlecode.common.Direction;
+import battlecode.common.GameActionException;
+import battlecode.common.GameConstants;
+import battlecode.common.MapLocation;
+import battlecode.common.RobotController;
+import battlecode.common.RobotInfo;
+import battlecode.common.RobotType;
 
 public class Beaver extends Unit {
-    Beaver(RobotController rc) { super(rc); }
+    public Beaver(RobotController rc) { super(rc); }
 
     private static final int LOW_SUPPLY = 50;
 

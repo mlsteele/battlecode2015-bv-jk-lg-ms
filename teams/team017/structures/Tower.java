@@ -1,13 +1,10 @@
-package team017;
+package team017.structures;
 
-import battlecode.common.*;
-import static battlecode.common.Direction.*;
-import static battlecode.common.RobotType.*;
-import static team017.Strategy.*;
-import java.util.*;
+import team017.Structure;
+import battlecode.common.RobotController;
 
 public class Tower extends Structure {
-    Tower(RobotController rc) { super(rc); }
+    public Tower(RobotController rc) { super(rc); }
 
     @Override
     public void run() {

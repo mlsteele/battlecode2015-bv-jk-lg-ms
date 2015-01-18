@@ -1,5 +1,6 @@
-package team017;
+package team017.radio;
 
+import team017.Strategy;
 import battlecode.common.RobotController;
 import battlecode.common.RobotType;
 

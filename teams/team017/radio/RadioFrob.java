@@ -1,10 +1,8 @@
-package team017;
+package team017.radio;
 
-import battlecode.common.*;
-import static battlecode.common.Direction.*;
-import static battlecode.common.RobotType.*;
-import static team017.Strategy.*;
-import java.lang.RuntimeException;
+import static battlecode.common.RobotType.HQ;
+import battlecode.common.GameConstants;
+import battlecode.common.RobotController;
 
 // Radio module to abstract away our radio protocol.
 public class RadioFrob {
@@ -16,10 +14,7 @@ public class RadioFrob {
     public FloatSlot miningrate;
     public LimitProduction limitproduction;
 
-    private RobotController rc;
-
-    RadioFrob(RobotController rc) {
-        this.rc = rc;
+    public RadioFrob(RobotController rc) {
         int nextSlot = 0;
 
         rallypoints = new RallyPoints(rc, nextSlot);

@@ -1,10 +1,8 @@
-package team017;
+package team017.radio;
 
-import battlecode.common.*;
-import static battlecode.common.Direction.*;
-import static battlecode.common.RobotType.*;
-import static team017.Strategy.*;
-import java.lang.RuntimeException;
+import static team017.Strategy.NUM_ROBOT_TYPES;
+import battlecode.common.RobotController;
+import battlecode.common.RobotType;
 
 // THIS MODULES IS NOT USED.
 // It costs at least 500 BTC/HQ/Turn because clearing the counters

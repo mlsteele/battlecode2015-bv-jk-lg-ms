@@ -1,10 +1,7 @@
-package team017;
+package team017.radio;
 
-import battlecode.common.*;
-import static battlecode.common.Direction.*;
-import static battlecode.common.RobotType.*;
-import static team017.Strategy.*;
-import java.lang.RuntimeException;
+import battlecode.common.MapLocation;
+import battlecode.common.RobotController;
 
 // Store MapLocations on the radio.
 // Each rally point starts as NULL and is nullable.

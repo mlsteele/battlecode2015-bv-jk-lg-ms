@@ -9,3 +9,5 @@
 /match.rms
 /match.log
 /match-analyze.log
+/.externalToolBuilders/
+.project

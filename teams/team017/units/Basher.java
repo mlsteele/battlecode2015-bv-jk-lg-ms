@@ -1,13 +1,11 @@
-package team017;
+package team017.units;
 
-import battlecode.common.*;
-import static battlecode.common.Direction.*;
-import static battlecode.common.RobotType.*;
-import static team017.Strategy.*;
-import java.util.*;
+import team017.Unit;
+import battlecode.common.MapLocation;
+import battlecode.common.RobotController;
 
 public class Basher extends Unit {
-    Basher(RobotController rc) { super(rc); }
+    public Basher(RobotController rc) { super(rc); }
 
     @Override
     public void run() {

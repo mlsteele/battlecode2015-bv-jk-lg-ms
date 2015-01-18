@@ -1,11 +1,34 @@
-package team017;
+package team017.structures;
 
-import battlecode.common.*;
+import static battlecode.common.RobotType.BARRACKS;
+import static battlecode.common.RobotType.BEAVER;
+import static battlecode.common.RobotType.DRONE;
+import static battlecode.common.RobotType.MINER;
+import static battlecode.common.RobotType.SUPPLYDEPOT;
+import static battlecode.common.RobotType.TANK;
+import static battlecode.common.RobotType.TANKFACTORY;
+import static team017.Strategy.ATTACK_GROUP_2;
+import static team017.Strategy.BEAVER_POOL_SIZE;
+import static team017.Strategy.DRONE_HARRASS_N;
+import static team017.Strategy.RALLY_GROUP_1;
+
+import java.util.Collections;
+import java.util.Hashtable;
+import java.util.LinkedList;
+import java.util.Queue;
+
+import team017.Analyze;
+import team017.Strategy;
+import team017.Structure;
+import team017.Task;
 import battlecode.common.Clock;
-import static battlecode.common.Direction.*;
-import static battlecode.common.RobotType.*;
-import static team017.Strategy.*;
-import java.util.*;
+import battlecode.common.Direction;
+import battlecode.common.GameActionException;
+import battlecode.common.GameConstants;
+import battlecode.common.MapLocation;
+import battlecode.common.RobotController;
+import battlecode.common.RobotInfo;
+import battlecode.common.RobotType;
 
 public class Headquarters extends Structure {
 
@@ -36,7 +59,7 @@ public class Headquarters extends Structure {
 
     private float miningRate = 0;
 
-    Headquarters(RobotController rc) { super(rc); }
+    public Headquarters(RobotController rc) { super(rc); }
 
     @Override
     public void run() {

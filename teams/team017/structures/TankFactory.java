@@ -1,13 +1,15 @@
-package team017;
+package team017.structures;
 
-import battlecode.common.*;
-import static battlecode.common.Direction.*;
-import static battlecode.common.RobotType.*;
-import static team017.Strategy.*;
-import java.util.*;
+import static battlecode.common.RobotType.TANK;
+import static team017.Strategy.TANKFACTORY_LOW_SUPPLY;
+import static team017.Strategy.TANKFACTORY_RESUPPLY_AMT;
+import static team017.Strategy.initialSupply;
+import team017.Analyze;
+import team017.Structure;
+import battlecode.common.RobotController;
 
 public class TankFactory extends Structure {
-    TankFactory(RobotController rc) { super(rc); }
+    public TankFactory(RobotController rc) { super(rc); }
 
     private int[] unitCounts;
 

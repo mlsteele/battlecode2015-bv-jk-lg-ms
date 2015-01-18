@@ -1,13 +1,15 @@
-package team017;
+package team017.structures;
 
-import battlecode.common.*;
-import static battlecode.common.Direction.*;
-import static battlecode.common.RobotType.*;
-import static team017.Strategy.*;
-import java.util.*;
+import static battlecode.common.RobotType.BASHER;
+import static battlecode.common.RobotType.SOLDIER;
+import team017.Strategy;
+import team017.Structure;
+import battlecode.common.GameConstants;
+import battlecode.common.RobotController;
+import battlecode.common.RobotInfo;
 
 public class Barracks extends Structure {
-    Barracks(RobotController rc) { super(rc); }
+    public Barracks(RobotController rc) { super(rc); }
 
     @Override
     public void run() {
