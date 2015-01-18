@@ -31,7 +31,7 @@ public class TankFactory extends Structure {
 
             // Tanks take so long to build that we should build
             // them even if we don't have the supply to fuel them.
-            if (rc.isCoreReady())
+            if (rc.isCoreReady() && rf.limitproduction.shouldBuild(TANK))
                 spawn(TANK);
 
             if (supply < initialSupply(TANK))

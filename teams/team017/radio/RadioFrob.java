@@ -14,6 +14,7 @@ public class RadioFrob {
     public BeaverTasks beavertasks;
     public MinerResupply minerresupply;
     public FloatSlot miningrate;
+    public LimitProduction limitproduction;
 
     private RobotController rc;
 
@@ -38,6 +39,9 @@ public class RadioFrob {
 
         miningrate = new FloatSlot(rc, nextSlot, 40);
         nextSlot += miningrate.slotsRequired();
+
+        limitproduction = new LimitProduction(rc, nextSlot);
+        nextSlot += limitproduction.slotsRequired();
 
         if (rc.getType() == HQ) {
             System.out.println("RadioFrob claimed " + nextSlot + " of " + GameConstants.BROADCAST_MAX_CHANNELS + " channels");

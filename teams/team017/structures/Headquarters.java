@@ -23,6 +23,7 @@ public class Headquarters extends Structure {
     private int desiredMiners = 30;
     private int desiredTankFactories = 3;
     private boolean additionalSupplyDepots = true;
+    private double desiredTankDroneRatio = 3;
 
     // Amt of time HQ will wait for a building before requesting again
     private static final int waitTimeForSpawn(RobotType rtype) {
@@ -80,8 +81,10 @@ public class Headquarters extends Structure {
                 }
             }
 
-            if (Clock.getRoundNum() > 600)
+            if (Clock.getRoundNum() > 600 && Clock.getRoundNum() % UPDATE_UNIT_COUNT_TIME == 0) {
                 maintainDesiredTankFactories();
+                //maintainTankDroneRatio(desiredTankDroneRatio);
+            }
 
             if(rc.getTeamOre() > 1000 && additionalSupplyDepots) {
                 desiredTankFactories = 5;
@@ -235,8 +238,8 @@ public class Headquarters extends Structure {
             return false;
 
         RobotInfo[] candidates = rc.senseNearbyRobots(
-                    GameConstants.SUPPLY_TRANSFER_RADIUS_SQUARED,
-                    rc.getTeam());
+                GameConstants.SUPPLY_TRANSFER_RADIUS_SQUARED,
+                rc.getTeam());
 
         for (RobotInfo r : candidates) {
             // Only send to the correct type of bot.
@@ -298,5 +301,36 @@ public class Headquarters extends Structure {
                 Math.pow(
                     unitCounts[SUPPLYDEPOT.ordinal()],
                     GameConstants.SUPPLY_GEN_EXPONENT));
+    }
+
+    private void maintainTankDroneRatio(double desiredRatio) {
+        if(shouldRationOre()) {
+            int numTanks = unitCounts[TANK.ordinal()];
+            int numDrones = unitCounts[DRONE.ordinal()];
+            double wiggleRoom = 0.1;
+            double existingRatio;
+            if (numDrones == 0) existingRatio = 999; // avoid divide by zero
+            else existingRatio = (numTanks*1.0)/numDrones;
+            System.out.println("Existing tank/drone ratio is " + existingRatio);
+            if (existingRatio - wiggleRoom > desiredRatio) {
+                // Too many tanks
+                rf.limitproduction.stopBuilding(TANK);
+                rf.limitproduction.resumeBuilding(DRONE);
+            } else if (existingRatio + wiggleRoom < desiredRatio) {
+                // Too many drones.
+                rf.limitproduction.stopBuilding(DRONE);
+                rf.limitproduction.resumeBuilding(TANK);
+            } else {
+                // Good. build both
+                rf.limitproduction.resumeBuilding(TANK);
+                rf.limitproduction.resumeBuilding(DRONE);
+            }
+        }
+    }
+
+    private boolean shouldRationOre() {
+        final int PLENTY_OF_ORE = desiredTankFactories * TANK.oreCost + 4 * DRONE.oreCost + 200;
+        System.out.println(PLENTY_OF_ORE + " is plenty of ore.");
+        return rc.getTeamOre() < PLENTY_OF_ORE;
     }
 }
