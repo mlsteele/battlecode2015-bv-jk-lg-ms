@@ -62,7 +62,6 @@ public class Miner extends Unit {
 							// Fudge last mining time so resupplying won't make us forget our dreams
 							int resupplyTime = Clock.getRoundNum() - resupplyStartRound;
 							roundLastMined += resupplyTime;
-							System.out.println("Resupplying took " + resupplyTime + " turns.");
 						}
 					} else {
 						pursueMining();
@@ -93,7 +92,6 @@ public class Miner extends Unit {
 		if (oreHere > awesomeOreAmount) awesomeOreAmount = oreHere;
 		if (oreHere > bestOreInAWhile) bestOreInAWhile = oreHere;
 		int roundsSinceLastMine = Clock.getRoundNum() - roundLastMined;
-		System.out.println("I haven't mined in " + roundsSinceLastMine + " turns");
 		if (oreHere >= 12 || roundsSinceLastMine >= ITS_BEEN_A_WHILE || oreHere >= awesomeOreAmount) {
 			rc.setIndicatorString(1, "mining here");
 			bestOreInAWhile = oreHere;
