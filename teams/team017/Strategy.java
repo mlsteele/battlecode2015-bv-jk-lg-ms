@@ -74,7 +74,7 @@ public enum Strategy {;
             case BASHER:              return 1000;
 
             case HELIPAD:             return DRONE_HARRASS_N * initialSupply(DRONE);
-            case DRONE:               return 1000;
+            case DRONE:               return 3000;
 
             case TANKFACTORY:         return 6 * initialSupply(TANK);
             case TANK:                return 4000;

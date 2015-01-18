@@ -127,8 +127,8 @@ public class Headquarters extends Structure {
                 rf.resupply.clearRequest();
             }
 
-            // Resupply miners that have run out and returned.
             resupplyNearby(null, MINER, Strategy.MINER_LOW_SUPPLY, Strategy.MINER_RESUPPLY_FROM_HQ);
+            resupplyNearby(null, DRONE, Strategy.initialSupply(DRONE), Strategy.initialSupply(DRONE));
 
             rc.yield();
         }
