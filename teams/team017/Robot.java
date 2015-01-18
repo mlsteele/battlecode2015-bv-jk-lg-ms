@@ -136,6 +136,11 @@ public abstract class Robot {
     // Call for help if enemies are nearby.
     // No-op if no enemies nearby.
     protected void callForHelp() {
+        // Take turns on the phone
+        if (rf.rallypoints.get(RALLY_HELP_DEFEND) != null) {
+            return;
+        }
+
         RobotInfo[] enemies = rc.senseNearbyRobots(
             rc.getType().sensorRadiusSquared,
             rc.getTeam().opponent());
