@@ -1,7 +1,6 @@
 package team017.radio;
 
-import battlecode.common.MapLocation;
-import battlecode.common.RobotController;
+import battlecode.common.*;
 
 public class Resupply extends RadioModule {
     public static final int NUM_RALLY_POINTS = 10;

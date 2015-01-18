@@ -1,9 +1,9 @@
 package team017.radio;
 
-import java.util.Hashtable;
+import java.util.*;
 
-import team017.Task;
-import battlecode.common.RobotController;
+import team017.*;
+import battlecode.common.*;
 
 // Task assignment system for Beavers.
 // This module is used by the HQ and Beavers.

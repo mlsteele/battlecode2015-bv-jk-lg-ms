@@ -1,25 +1,9 @@
 package team017;
 
-import static battlecode.common.Direction.EAST;
-import static battlecode.common.Direction.NORTH;
-import static battlecode.common.Direction.NORTH_EAST;
-import static battlecode.common.Direction.NORTH_WEST;
-import static battlecode.common.Direction.OMNI;
-import static battlecode.common.Direction.SOUTH;
-import static battlecode.common.Direction.SOUTH_EAST;
-import static battlecode.common.Direction.SOUTH_WEST;
-import static battlecode.common.Direction.WEST;
-import static battlecode.common.RobotType.BASHER;
-import static battlecode.common.RobotType.BEAVER;
-import static team017.Strategy.MOVEMENT_CLUMP_DEFAULT;
-import battlecode.common.Clock;
-import battlecode.common.Direction;
-import battlecode.common.GameActionException;
-import battlecode.common.GameConstants;
-import battlecode.common.MapLocation;
-import battlecode.common.RobotController;
-import battlecode.common.RobotInfo;
-import battlecode.common.Team;
+import static battlecode.common.Direction.*;
+import static battlecode.common.RobotType.*;
+import static team017.Strategy.*;
+import battlecode.common.*;
 
 // Subclass for units that move and shoot and stuff.
 public abstract class Unit extends Robot {

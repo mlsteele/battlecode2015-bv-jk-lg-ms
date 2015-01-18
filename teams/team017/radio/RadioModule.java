@@ -1,9 +1,7 @@
 package team017.radio;
 
-import team017.Task;
-import battlecode.common.GameActionException;
-import battlecode.common.MapLocation;
-import battlecode.common.RobotController;
+import team017.*;
+import battlecode.common.*;
 
 public abstract class RadioModule {
     protected RobotController rc;

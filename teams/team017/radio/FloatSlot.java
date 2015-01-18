@@ -1,6 +1,6 @@
 package team017.radio;
 
-import battlecode.common.RobotController;
+import battlecode.common.*;
 
 public class FloatSlot extends RadioModule {
     private int nSamples;

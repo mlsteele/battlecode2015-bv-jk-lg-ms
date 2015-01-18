@@ -1,18 +1,8 @@
 package team017;
 
-import team017.structures.Barracks;
-import team017.structures.Headquarters;
-import team017.structures.Helipad;
-import team017.structures.MinerFactory;
-import team017.structures.TankFactory;
-import team017.structures.Tower;
-import team017.units.Basher;
-import team017.units.Beaver;
-import team017.units.Drone;
-import team017.units.Miner;
-import team017.units.Soldier;
-import team017.units.Tank;
-import battlecode.common.RobotController;
+import team017.structures.*;
+import team017.units.*;
+import battlecode.common.*;
 
 // Entry point for robots.
 // Dispatches to one of the Robot classes.

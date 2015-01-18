@@ -1,12 +1,7 @@
 package team017;
 
-import static battlecode.common.RobotType.MINER;
-import battlecode.common.GameActionException;
-import battlecode.common.GameConstants;
-import battlecode.common.RobotController;
-import battlecode.common.RobotInfo;
-import battlecode.common.RobotType;
-import battlecode.common.Team;
+import static battlecode.common.RobotType.*;
+import battlecode.common.*;
 
 // Subclass for units that move and shoot and stuff.
 public abstract class Structure extends Robot {

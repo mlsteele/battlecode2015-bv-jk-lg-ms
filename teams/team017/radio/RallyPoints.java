@@ -1,7 +1,6 @@
 package team017.radio;
 
-import battlecode.common.MapLocation;
-import battlecode.common.RobotController;
+import battlecode.common.*;
 
 // Store MapLocations on the radio.
 // Each rally point starts as NULL and is nullable.

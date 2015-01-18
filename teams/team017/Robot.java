@@ -1,17 +1,12 @@
 package team017;
 
 import static battlecode.common.Direction.*;
-import static team017.Strategy.RALLY_HELP_DEFEND;
+import static team017.Strategy.*;
 
-import java.util.Random;
+import java.util.*;
 
-import team017.radio.RadioFrob;
-import battlecode.common.Direction;
-import battlecode.common.GameActionException;
-import battlecode.common.MapLocation;
-import battlecode.common.RobotController;
-import battlecode.common.RobotInfo;
-import battlecode.common.RobotType;
+import team017.radio.*;
+import battlecode.common.*;
 
 // Base class for Robot minds.
 // Stores the RobotController as an instance object.

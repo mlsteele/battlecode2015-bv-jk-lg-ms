@@ -1,7 +1,7 @@
 package team017;
 
 import static battlecode.common.RobotType.*;
-import battlecode.common.RobotType;
+import battlecode.common.*;
 
 // Strategy constants
 public enum Strategy {;

@@ -1,8 +1,7 @@
 package team017.units;
 
-import team017.Unit;
-import battlecode.common.MapLocation;
-import battlecode.common.RobotController;
+import team017.*;
+import battlecode.common.*;
 
 public class Tank extends Unit {
     public Tank(RobotController rc) { super(rc); }

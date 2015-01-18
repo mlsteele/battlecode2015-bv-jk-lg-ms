@@ -1,8 +1,7 @@
 package team017.radio;
 
-import team017.Strategy;
-import battlecode.common.RobotController;
-import battlecode.common.RobotType;
+import team017.*;
+import battlecode.common.*;
 
 /**
  * LimitProduction disables the production of units.

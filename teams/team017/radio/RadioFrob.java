@@ -1,8 +1,7 @@
 package team017.radio;
 
-import static battlecode.common.RobotType.HQ;
-import battlecode.common.GameConstants;
-import battlecode.common.RobotController;
+import static battlecode.common.RobotType.*;
+import battlecode.common.*;
 
 // Radio module to abstract away our radio protocol.
 public class RadioFrob {

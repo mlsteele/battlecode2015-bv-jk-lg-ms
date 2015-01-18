@@ -1,21 +1,8 @@
 package team017.units;
 
-import static battlecode.common.RobotType.BARRACKS;
-import static battlecode.common.RobotType.HELIPAD;
-import static battlecode.common.RobotType.MINERFACTORY;
-import static battlecode.common.RobotType.SUPPLYDEPOT;
-import static battlecode.common.RobotType.TANKFACTORY;
-import team017.NotImplementedException;
-import team017.Strategy;
-import team017.Task;
-import team017.Unit;
-import battlecode.common.Direction;
-import battlecode.common.GameActionException;
-import battlecode.common.GameConstants;
-import battlecode.common.MapLocation;
-import battlecode.common.RobotController;
-import battlecode.common.RobotInfo;
-import battlecode.common.RobotType;
+import static battlecode.common.RobotType.*;
+import team017.*;
+import battlecode.common.*;
 
 public class Beaver extends Unit {
     public Beaver(RobotController rc) { super(rc); }

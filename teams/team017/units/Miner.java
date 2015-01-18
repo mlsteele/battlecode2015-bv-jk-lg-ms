@@ -1,23 +1,8 @@
 package team017.units;
 
-import static battlecode.common.Direction.EAST;
-import static battlecode.common.Direction.NORTH;
-import static battlecode.common.Direction.NORTH_EAST;
-import static battlecode.common.Direction.NORTH_WEST;
-import static battlecode.common.Direction.SOUTH;
-import static battlecode.common.Direction.SOUTH_EAST;
-import static battlecode.common.Direction.SOUTH_WEST;
-import static battlecode.common.Direction.WEST;
-import team017.Analyze;
-import team017.Strategy;
-import team017.Unit;
-import battlecode.common.Direction;
-import battlecode.common.GameActionException;
-import battlecode.common.GameConstants;
-import battlecode.common.MapLocation;
-import battlecode.common.RobotController;
-import battlecode.common.RobotInfo;
-import battlecode.common.Team;
+import static battlecode.common.Direction.*;
+import team017.*;
+import battlecode.common.*;
 
 public class Miner extends Unit {
     public Miner(RobotController rc) { super(rc); }

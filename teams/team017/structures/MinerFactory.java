@@ -1,10 +1,8 @@
 package team017.structures;
 
-import static battlecode.common.RobotType.MINER;
-import team017.Analyze;
-import team017.Strategy;
-import team017.Structure;
-import battlecode.common.RobotController;
+import static battlecode.common.RobotType.*;
+import team017.*;
+import battlecode.common.*;
 
 public class MinerFactory extends Structure {
     public MinerFactory(RobotController rc) { super(rc); }

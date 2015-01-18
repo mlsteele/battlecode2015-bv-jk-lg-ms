@@ -1,8 +1,7 @@
 package team017.radio;
 
-import static team017.Strategy.NUM_ROBOT_TYPES;
-import battlecode.common.RobotController;
-import battlecode.common.RobotType;
+import static team017.Strategy.*;
+import battlecode.common.*;
 
 public class XUnits extends RadioModule {
     XUnits(RobotController rc, int lowestSlot) {

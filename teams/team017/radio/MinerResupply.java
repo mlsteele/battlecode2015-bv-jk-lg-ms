@@ -1,6 +1,6 @@
 package team017.radio;
 
-import battlecode.common.RobotController;
+import battlecode.common.*;
 
 public class MinerResupply extends RadioModule {
     private int MINER_REQUEST_RESUPPLY_ID_SLOT;

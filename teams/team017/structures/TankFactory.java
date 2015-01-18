@@ -1,12 +1,9 @@
 package team017.structures;
 
-import static battlecode.common.RobotType.TANK;
-import static team017.Strategy.TANKFACTORY_LOW_SUPPLY;
-import static team017.Strategy.TANKFACTORY_RESUPPLY_AMT;
-import static team017.Strategy.initialSupply;
-import team017.Analyze;
-import team017.Structure;
-import battlecode.common.RobotController;
+import static battlecode.common.RobotType.*;
+import static team017.Strategy.*;
+import team017.*;
+import battlecode.common.*;
 
 public class TankFactory extends Structure {
     public TankFactory(RobotController rc) { super(rc); }

@@ -1,34 +1,12 @@
 package team017.structures;
 
-import static battlecode.common.RobotType.BARRACKS;
-import static battlecode.common.RobotType.BEAVER;
-import static battlecode.common.RobotType.DRONE;
-import static battlecode.common.RobotType.MINER;
-import static battlecode.common.RobotType.SUPPLYDEPOT;
-import static battlecode.common.RobotType.TANK;
-import static battlecode.common.RobotType.TANKFACTORY;
-import static team017.Strategy.ATTACK_GROUP_2;
-import static team017.Strategy.BEAVER_POOL_SIZE;
-import static team017.Strategy.DRONE_HARRASS_N;
-import static team017.Strategy.RALLY_GROUP_1;
+import static battlecode.common.RobotType.*;
+import static team017.Strategy.*;
 
-import java.util.Collections;
-import java.util.Hashtable;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
-import team017.Analyze;
-import team017.Strategy;
-import team017.Structure;
-import team017.Task;
-import battlecode.common.Clock;
-import battlecode.common.Direction;
-import battlecode.common.GameActionException;
-import battlecode.common.GameConstants;
-import battlecode.common.MapLocation;
-import battlecode.common.RobotController;
-import battlecode.common.RobotInfo;
-import battlecode.common.RobotType;
+import team017.*;
+import battlecode.common.*;
 
 public class Headquarters extends Structure {
 

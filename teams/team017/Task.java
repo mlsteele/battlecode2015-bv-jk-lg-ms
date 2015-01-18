@@ -1,6 +1,6 @@
 package team017;
 
-import battlecode.common.MapLocation;
+import battlecode.common.*;
 
 /**
  * Tasks are given by Headquarters to Beavers, who use them to perform tasks.

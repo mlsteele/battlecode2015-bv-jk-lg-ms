@@ -1,7 +1,7 @@
 package team017.structures;
 
-import team017.Structure;
-import battlecode.common.RobotController;
+import team017.*;
+import battlecode.common.*;
 
 public class Tower extends Structure {
     public Tower(RobotController rc) { super(rc); }
