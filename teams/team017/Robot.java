@@ -40,9 +40,11 @@ public abstract class Robot {
     }
 
     // Chooses which mobile robot to attack.
-    protected RobotInfo chooseMobileTarget(RobotInfo[] enemies) {
+    // `enemies` must be a non-empty list.
+    // Returns NULL if there are no mobile targets in the list.
+    protected static RobotInfo chooseMobileTarget(RobotInfo[] enemies) {
         RobotInfo target = enemies[0];
-        double    targetScore = -1;
+        double targetScore = -1;
         for (RobotInfo r : enemies) {
             if (r.type.isBuilding) continue;
 
@@ -53,7 +55,11 @@ public abstract class Robot {
                 targetScore = score;
             }
         }
-        return target;
+        if (target.type.isBuilding) {
+            return null;
+        } else {
+            return target;
+        }
     }
 
     protected Direction randomDirection() {

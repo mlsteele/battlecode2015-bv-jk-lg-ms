@@ -62,9 +62,13 @@ public abstract class Unit extends Robot {
             rc.getType().sensorRadiusSquared,
             rc.getTeam().opponent());
 
-        if (enemies.length > 0) {
-            moveTowardBugging(chooseMobileTarget(enemies).location);
-        }
+        if (enemies.length == 0) return;
+        RobotInfo target = chooseMobileTarget(enemies);
+        if (target == null) return;
+        Bugging.setParams(
+            target.location,
+            0, false);
+        Bugging.move();
     }
 
     // Return to the HQ.

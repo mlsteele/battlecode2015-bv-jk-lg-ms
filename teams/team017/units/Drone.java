@@ -27,8 +27,10 @@ public class Drone extends Unit {
                 MapLocation helpTarget = rf.rallypoints.get(RALLY_HELP_DEFEND);
 
                 if (helpTarget == null) {
+                    // Not in help mode, wander towards hq.
                     wander();
                 } else {
+                    // Help mode, find the evil bastards.
                     boolean areWeThereYet = rc.getLocation().distanceSquaredTo(helpTarget) <= rc.getType().sensorRadiusSquared;
                     if (areWeThereYet) {
                         if (isEnemiesNearby(helpTarget, 35)) {
