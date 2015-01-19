@@ -48,16 +48,16 @@ public class Headquarters extends Structure {
         rf.rallypoints.set(Strategy.RALLY_GROUP_1, homeTower);
         rf.rallypoints.set(Strategy.RALLY_GROUP_2, homeTower);
 
+        taskQueue.add(new Task(Task.HELIPAD));
         taskQueue.add(new Task(Task.MINERFACTORY));
+        taskQueue.add(new Task(Task.BARRACKS));
+        taskQueue.add(new Task(Task.TANKFACTORY));
+        taskQueue.add(new Task(Task.TANKFACTORY));
         taskQueue.add(new Task(Task.TECHNOLOGYINSTITUTE));
         taskQueue.add(new Task(Task.TRAININGFIELD));
-        taskQueue.add(new Task(Task.HELIPAD));
         taskQueue.add(new Task(Task.SUPPLYDEPOT));
         taskQueue.add(new Task(Task.SUPPLYDEPOT));
-        taskQueue.add(new Task(Task.BARRACKS));
-
-        for (int i=0; i<desiredTankFactories; i++)
-            taskQueue.add(new Task(Task.TANKFACTORY));
+        taskQueue.add(new Task(Task.TANKFACTORY));
 
         rf.xunits.set(MINER, desiredMiners);
         rf.xunits.set(DRONE, DRONE_HARRASS_N);
