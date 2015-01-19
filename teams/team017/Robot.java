@@ -77,6 +77,7 @@ public abstract class Robot {
     // Assumes CoreReady
     protected Direction spawn(RobotType rtype) {
         Direction dir = randomDirection();
+
         for (int i = 0; i < 8; i++) {
             if (rc.canSpawn(dir, rtype)) {
                 try {

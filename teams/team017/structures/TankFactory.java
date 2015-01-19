@@ -19,7 +19,8 @@ public class TankFactory extends Structure {
 
             // Tanks take so long to build that we should build
             // them even if we don't have the supply to fuel them.
-            if (rc.isCoreReady() && rf.limitproduction.shouldBuild(TANK))
+            if (rc.isCoreReady() && rf.limitproduction.shouldBuild(TANK) &&
+                    rc.getTeamOre() > rf.beavertasks.getReservedOre())
                 spawn(TANK);
 
             if (rc.getSupplyLevel() < initialSupply(TANK))

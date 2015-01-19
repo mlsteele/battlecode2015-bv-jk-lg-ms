@@ -17,6 +17,7 @@ public class Beaver extends Unit {
 
     private int myTaskSlot;
     private Task currentTask;
+    private boolean requestedOre = false;
 
     @Override
     public void run() {
@@ -174,9 +175,17 @@ public class Beaver extends Unit {
     // Attempt to build and then supply a building
     private boolean buildThenSupply(RobotType rob) {
         Direction dir = randomDirection();
+        if (!requestedOre) {
+            rf.beavertasks.incReservedOre(rob.oreCost);
+            requestedOre = true;
+        }
         if (rc.canBuild(dir, rob)) {
             try {
                 rc.build(dir, rob);
+                // We have built the structure, lets clear the requested ore
+                rf.beavertasks.lowerReservedOre(rob.oreCost);
+                requestedOre = false;
+
                 MapLocation buildLoc = rc.getLocation().add(dir);
                 rc.yield(); // Wait one turn for the building to spawn.
                 rc.transferSupplies(Strategy.initialSupply(rob), buildLoc);

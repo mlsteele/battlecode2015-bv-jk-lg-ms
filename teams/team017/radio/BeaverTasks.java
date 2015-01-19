@@ -34,21 +34,40 @@ public class BeaverTasks extends RadioModule {
     private int AWAITING_TASK_SLOT;
     // Array for assigning tasks to beavers.
     private int TASK_ARRAY_BASE;
+    // Slot for storing the amount of ore to reserve for currently constructing buildings
+    private int RESERVE_ORE_SLOT;
 
     BeaverTasks(RobotController rc, int lowestSlot) {
         super(rc, lowestSlot);
-        NEXT_FREE_TASKSLOT_SLOT = lowestSlot;
-        REPORT_ID_SLOT          = lowestSlot + 1;
-        AWAITING_TASK_SLOT      = lowestSlot + 2;
-        TASK_ARRAY_BASE         = lowestSlot + 3;
+        RESERVE_ORE_SLOT        = lowestSlot;
+        NEXT_FREE_TASKSLOT_SLOT = lowestSlot + 1;
+        REPORT_ID_SLOT          = lowestSlot + 2;
+        AWAITING_TASK_SLOT      = lowestSlot + 3;
+        TASK_ARRAY_BASE         = lowestSlot + 4;
     }
 
     @Override
     public int slotsRequired() {
         // TODO(miles): I guess we probably won't have >1000
         //              beavers but this is mad sketch.
-        return 3 + 1000;
+        return 3 + 1000 + 1;
     }
+
+    // Reserve ore. This means buildings that spawn units cant spawn them if the team ore is less
+    // than the reserved ore
+    public int incReservedOre(int amount) {
+        int oreCount = rx(RESERVE_ORE_SLOT) + amount;
+        tx(RESERVE_ORE_SLOT, oreCount);
+        return oreCount;
+    }
+
+    public int lowerReservedOre(int amount) {
+        int oreCount = rx(RESERVE_ORE_SLOT) - amount;
+        tx(RESERVE_ORE_SLOT, oreCount);
+        return oreCount;
+    }
+
+    public int getReservedOre() { return rx(RESERVE_ORE_SLOT); }
 
     // Discover a new beaver.
     // Discovered beavers have already found itself a task slot.
