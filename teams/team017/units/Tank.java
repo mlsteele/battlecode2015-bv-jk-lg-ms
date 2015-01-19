@@ -24,13 +24,29 @@ public class Tank extends Unit {
             shootBaddies();
 
             if (rc.isCoreReady()) {
-                MapLocation target = rf.rallypoints.get(rallyGroup);
-                Bugging.setParams(
-                        target,
-                        MOVEMENT_CLUMP_DEFAULT, false);
-                if (target != null) {
-                    Bugging.move();
+                MapLocation helpTarget = rf.rallypoints.get(RALLY_HELP_DEFEND);
+                if (helpTarget == null) {
+                    // Not in help mode, follow rally point.
+                    MapLocation target = rf.rallypoints.get(rallyGroup);
+                    Bugging.setParams(target, MOVEMENT_CLUMP_DEFAULT, false);
+                    if (target != null) {
+                        Bugging.move();
+                    }
+                } else {
+                    // Help mode, find the evil bastards.
+                    boolean areWeThereYet = rc.getLocation().distanceSquaredTo(helpTarget) <= rc.getType().sensorRadiusSquared;
+                    if (areWeThereYet) {
+                        if (isEnemiesNearby(helpTarget, 35)) {
+                            pursueMobileEnemy();
+                        } else {
+                            rf.rallypoints.set(RALLY_HELP_DEFEND, null);
+                        }
+                    } else {
+                        Bugging.setParams(helpTarget, 0, false);
+                        Bugging.move();
+                    }
                 }
+
             }
 
             // At 10% health dump supplies
