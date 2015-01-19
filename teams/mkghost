@@ -1,13 +1,16 @@
 #!/usr/bin/env bash
+set -e
 cd $(dirname $0)
 
 GHOSTNAME="ghost"
 
-if [ ! -z "$1" ]
-  then
+if [ ! -z "$1" ]; then
     GHOSTNAME="$1"
 fi
 
 echo "Creating ghost in teams/$GHOSTNAME"
+if [ -d "$GHOSTNAME" ]; then
+    trash-put "$GHOSTNAME"
+fi
 cp -r team017 "$GHOSTNAME"
 find "$GHOSTNAME" -name "*.java" | xargs sed -i "s/team017/$GHOSTNAME/g"
