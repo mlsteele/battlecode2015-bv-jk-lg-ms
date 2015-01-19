@@ -30,6 +30,7 @@ public class Miner extends Unit {
 
             while (kamikaze) {
                 shootBaddies();
+                Bugging.setParams(rc.senseEnemyHQLocation(), 0, false);
                 if (rc.isCoreReady()) moveTowardBugging(rc.senseEnemyHQLocation(), true);
                 rc.setIndicatorString(1, "ATTACKKK");
             }
@@ -51,7 +52,8 @@ public class Miner extends Unit {
                     rf.minerresupply.request(supplyRequest);
                 } else {
                     if (resupplying) {
-                        moveTowardBugging(lastSeen, true);
+                        Bugging.setParams(lastSeen, 0, true);
+                        Bugging.move();
                         rc.setIndicatorString(1, "Heading back to last seen best ore");
 
                         // if we are where we came from, or we found some awesome ore, stop going back

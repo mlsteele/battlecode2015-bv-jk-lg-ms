@@ -72,6 +72,7 @@ public abstract class Unit extends Robot {
     // Does not move in already in range of HQ.
     protected void goToHQ() {
         rc.setIndicatorString(1, "Going back to HQ");
+        Bugging.setParams(hqLoc, GameConstants.SUPPLY_TRANSFER_RADIUS_SQUARED, false);
         while (true) {
 
             if (hqLoc.distanceSquaredTo(rc.getLocation()) <= GameConstants.SUPPLY_TRANSFER_RADIUS_SQUARED) {
@@ -79,7 +80,8 @@ public abstract class Unit extends Robot {
                 return;
             }
 
-            if (rc.isCoreReady()) moveTowardBugging(hqLoc);
+            if (rc.isCoreReady())
+                Bugging.move();
 
             rc.yield();
         }
@@ -272,13 +274,13 @@ public abstract class Unit extends Robot {
 
     // Returns NULL if the location is safe, or the location of one of the enemies threatening the location.
     // NOTE: Considers being under fire by BEAVERS and MINERS safe.
-    protected MapLocation isLocationSafe(MapLocation loc) {
+    public static MapLocation isLocationSafe(MapLocation loc) {
         // TODO(miles): consider enemy weapons cooldown.
         int range = MAXIMUM_ATTACK_RANGE_EVER;
-        Team enemy = rc.getTeam().opponent();
-        RobotInfo[] enemies      = rc.senseNearbyRobots(loc, range, enemy);
-        MapLocation[] towers     = rc.senseEnemyTowerLocations();
-        MapLocation   evilHqLoc  = rc.senseEnemyHQLocation();
+        Team enemy = S.rc.getTeam().opponent();
+        RobotInfo[] enemies      = S.rc.senseNearbyRobots(loc, range, enemy);
+        MapLocation[] towers     = S.rc.senseEnemyTowerLocations();
+        MapLocation   evilHqLoc  = S.rc.senseEnemyHQLocation();
 
         // Consider HQ
         // TODO(miles): consider HQ boost radius.

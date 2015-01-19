@@ -1,7 +1,14 @@
 package team017.units;
 
-import team017.*;
+import java.util.*;
 import battlecode.common.*;
+import static battlecode.common.Direction.*;
+import static battlecode.common.RobotType.*;
+import team017.*;
+import team017.radio.*;
+import team017.structures.*;
+import team017.units.*;
+import static team017.Strategy.*;
 
 public class Tank extends Unit {
     public Tank(RobotController rc) { super(rc); }
@@ -17,8 +24,11 @@ public class Tank extends Unit {
             shootBaddies();
 
             if (rc.isCoreReady()) {
-                Bugging.target = rf.rallypoints.get(rallyGroup);
-                if (Bugging.target != null) {
+                MapLocation target = rf.rallypoints.get(rallyGroup);
+                Bugging.setParams(
+                        target,
+                        MOVEMENT_CLUMP_DEFAULT, false);
+                if (target != null) {
                     Bugging.move();
                 }
             }
