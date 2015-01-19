@@ -8,6 +8,8 @@ import battlecode.common.*;
 // Dispatches to one of the Robot classes.
 public class RobotPlayer {
     public static void run(RobotController rc) {
+        S.rc = rc;
+
         switch (rc.getType()) {
             case HQ:                  new Headquarters(rc)        .run (); break ;
             case TOWER:               new Tower(rc)               .run (); break ;

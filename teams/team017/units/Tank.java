@@ -17,9 +17,9 @@ public class Tank extends Unit {
             shootBaddies();
 
             if (rc.isCoreReady()) {
-                MapLocation target = rf.rallypoints.get(rallyGroup);
-                if (target != null) {
-                    moveToRallyPoint(target);
+                Bugging.target = rf.rallypoints.get(rallyGroup);
+                if (Bugging.target != null) {
+                    Bugging.move();
                 }
             }
 
