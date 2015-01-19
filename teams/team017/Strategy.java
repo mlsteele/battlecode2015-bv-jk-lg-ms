@@ -97,11 +97,11 @@ public enum Strategy {;
 
             case SUPPLYDEPOT:         return 0;
 
-            case COMPUTER:            throw new NotImplementedException();
-            case HANDWASHSTATION:     throw new NotImplementedException();
-            case HQ:                  throw new NotImplementedException();
-            case TOWER:               throw new NotImplementedException();
-            default:                  throw new NotImplementedException();
+            case COMPUTER:            return 0;
+            case HANDWASHSTATION:     return 0;
+            default:
+                System.err.println("ERROR: invalid initialSupply(" + rtype + ")");
+                return 0;
         }
     }
 
