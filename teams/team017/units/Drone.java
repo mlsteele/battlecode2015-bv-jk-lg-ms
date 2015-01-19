@@ -39,7 +39,8 @@ public class Drone extends Unit {
                             rf.rallypoints.set(RALLY_HELP_DEFEND, null);
                         }
                     } else {
-                        moveToRallyPoint(helpTarget);
+                        Bugging.setParams(helpTarget, 0, true);
+                        Bugging.move();
                     }
                 }
 
