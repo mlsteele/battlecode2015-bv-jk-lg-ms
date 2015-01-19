@@ -197,6 +197,9 @@ public class Headquarters extends Structure {
         if (rc.getSupplyLevel() < Strategy.taskSupply(nextTask)) {
             return false;
         }
+        if ((rc.getTeamOre() - rf.beavertasks.getReservedOre()) < nextTask.requiredOre()) {
+            return false;
+        }
 
         // Beaver waiting for task?
         int taskSlot = rf.beavertasks.assignTaskToNextFree(nextTask);

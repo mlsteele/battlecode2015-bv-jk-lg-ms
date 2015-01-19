@@ -50,6 +50,20 @@ public class Task {
         this(taskNum, loc, 0);
     }
 
+    public int requiredOre() {
+        switch (taskNum) {
+            case MINERFACTORY:        return RobotType.MINERFACTORY.oreCost;
+            case SUPPLYDEPOT:         return RobotType.SUPPLYDEPOT.oreCost;
+            case BARRACKS:            return RobotType.BARRACKS.oreCost;
+            case TANKFACTORY:         return RobotType.TANKFACTORY.oreCost;
+            case HELIPAD:             return RobotType.HELIPAD.oreCost;
+            case AEROSPACELAB:        return RobotType.AEROSPACELAB.oreCost;
+            case TECHNOLOGYINSTITUTE: return RobotType.TECHNOLOGYINSTITUTE.oreCost;
+            case TRAININGFIELD:       return RobotType.TRAININGFIELD.oreCost;
+            default:                  return 0;
+        }
+    }
+
     @Override
     public String toString() {
         return "Task(" + taskNum + ", " + loc + ", " + amount + ")";
