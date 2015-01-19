@@ -32,7 +32,7 @@ public enum Strategy {;
     public static final int TANKFACTORY_RESUPPLY_AMT = 3 * initialSupply(TANK);
 
     // Number of early harassment drones.
-    public static final int DRONE_HARRASS_N = 5;
+    public static final int DRONE_HARASS_N = 5;
 
     // Maximum times we will build a commander
     public static final int MAX_COMMANDER_SPAWN_COUNT = 3;
@@ -71,28 +71,27 @@ public enum Strategy {;
 
     public static int initialSupply(RobotType rtype) {
         switch (rtype) {
-            // TODO(miles): decrease this by a metrick fuckton.
-            case BEAVER:              return 1000;
+            case BEAVER:              return 500;
 
-            case MINERFACTORY:        return 10 * initialSupply(MINER);
+            case MINERFACTORY:        return 0;
             case MINER:               return 1000;
 
-            case BARRACKS:            return 10 * initialSupply(SOLDIER);
+            case BARRACKS:            return 0;
             case SOLDIER:             return 1000;
             case BASHER:              return 1000;
 
-            case HELIPAD:             return DRONE_HARRASS_N * initialSupply(DRONE);
+            case HELIPAD:             return 0;
             case DRONE:               return 3000;
 
             case TECHNOLOGYINSTITUTE: return 0;
 
-            case TRAININGFIELD:       return initialSupply(COMMANDER);
+            case TRAININGFIELD:       return 0;
             case COMMANDER:           return 3000;
 
-            case TANKFACTORY:         return 6 * initialSupply(TANK);
+            case TANKFACTORY:         return 0;
             case TANK:                return 4000;
 
-            case AEROSPACELAB:        return 5 * initialSupply(LAUNCHER);
+            case AEROSPACELAB:        return 0;
             case LAUNCHER:            return 7000;
             case MISSILE:             return 0;
 

@@ -19,7 +19,8 @@ public class Headquarters extends Structure {
 
     // Mapping from taskSlot -> beaverID
     private Hashtable<Integer, Integer> beaverMap = new Hashtable<Integer, Integer>();
-    private Queue<Task> taskQueue = new LinkedList<Task>();
+    private Queue<Task> buildQueue = new LinkedList<Task>();
+    private Queue<Task> resupplyQueue = new LinkedList<Task>();
 
     private int desiredMiners = 30;
     private int desiredTankFactories = 3;
@@ -48,19 +49,19 @@ public class Headquarters extends Structure {
         rf.rallypoints.set(Strategy.RALLY_GROUP_1, homeTower);
         rf.rallypoints.set(Strategy.RALLY_GROUP_2, homeTower);
 
-        taskQueue.add(new Task(Task.HELIPAD));
-        taskQueue.add(new Task(Task.MINERFACTORY));
-        taskQueue.add(new Task(Task.BARRACKS));
-        taskQueue.add(new Task(Task.TANKFACTORY));
-        taskQueue.add(new Task(Task.TANKFACTORY));
-        taskQueue.add(new Task(Task.TECHNOLOGYINSTITUTE));
-        taskQueue.add(new Task(Task.TRAININGFIELD));
-        taskQueue.add(new Task(Task.SUPPLYDEPOT));
-        taskQueue.add(new Task(Task.SUPPLYDEPOT));
-        taskQueue.add(new Task(Task.TANKFACTORY));
+        buildQueue.add(new Task(Task.HELIPAD));
+        buildQueue.add(new Task(Task.MINERFACTORY));
+        buildQueue.add(new Task(Task.BARRACKS));
+        buildQueue.add(new Task(Task.TANKFACTORY));
+        buildQueue.add(new Task(Task.TANKFACTORY));
+        // buildQueue.add(new Task(Task.TECHNOLOGYINSTITUTE));
+        // buildQueue.add(new Task(Task.TRAININGFIELD));
+        buildQueue.add(new Task(Task.SUPPLYDEPOT));
+        buildQueue.add(new Task(Task.SUPPLYDEPOT));
+        buildQueue.add(new Task(Task.TANKFACTORY));
 
         rf.xunits.set(MINER, desiredMiners);
-        rf.xunits.set(DRONE, DRONE_HARRASS_N);
+        rf.xunits.set(DRONE, DRONE_HARASS_N);
 
         while (true) {
             callForHelp();
@@ -95,17 +96,20 @@ public class Headquarters extends Structure {
 
             if(rc.getTeamOre() > 1000 && additionalSupplyDepots) {
                 desiredTankFactories = 5;
-                taskQueue.add(new Task(Task.SUPPLYDEPOT));
-                taskQueue.add(new Task(Task.SUPPLYDEPOT));
-                taskQueue.add(new Task(Task.SUPPLYDEPOT));
+                buildQueue.add(new Task(Task.SUPPLYDEPOT));
+                buildQueue.add(new Task(Task.SUPPLYDEPOT));
+                buildQueue.add(new Task(Task.SUPPLYDEPOT));
                 additionalSupplyDepots = false;
             }
 
-            taskUpkeep();
+            // Assign tasks from queues.
+            boolean taskAssigned = false;
+            taskAssigned = taskAssigned ? true : assignTaskFromQueue(buildQueue);
+            taskAssigned = taskAssigned ? true : assignTaskFromQueue(resupplyQueue);
 
             // Collect resupply tasks.
             if (rf.resupply.isRequested()) {
-                taskQueue.add(new Task(Task.RESUPPLY_STRUCTURE, rf.resupply.getLocation(), rf.resupply.getAmount()));
+                resupplyQueue.add(new Task(Task.RESUPPLY_STRUCTURE, rf.resupply.getLocation(), rf.resupply.getAmount()));
                 rf.resupply.clearRequest();
             }
 
@@ -182,28 +186,30 @@ public class Headquarters extends Structure {
     }
 
     // Consume the task queue, assigning tasks to beavers.
-    private void taskUpkeep() {
+    // Returns whether the task was assigned;
+    // Pops the task from queue if assigned.
+    private boolean assignTaskFromQueue(Queue<Task> q) {
         // Tasks waiting?
-        if (taskQueue.isEmpty()) return;
-        Task nextTask = taskQueue.peek();
+        if (q.isEmpty()) return false;
+        Task nextTask = q.peek();
 
         // Task is ready to be assigned?
         if (rc.getSupplyLevel() < Strategy.taskSupply(nextTask)) {
-            return;
+            return false;
         }
 
-        // Beaver waiting for ask?
+        // Beaver waiting for task?
         int taskSlot = rf.beavertasks.assignTaskToNextFree(nextTask);
         if (taskSlot < 0) {
             // No one waiting for tasks, leave it in the queue.
-            return;
+            return false;
         }
 
         // Beaver has been assigned task.
         Integer robotID_I = beaverMap.get((Integer) taskSlot);
         if (robotID_I == null) {
             System.err.println("ERROR: beaver id for task slot not in map.");
-            return;
+            return false;
         }
         int robotID = robotID_I;
 
@@ -212,11 +218,12 @@ public class Headquarters extends Structure {
             // Failed to supply beaver. It might have died. Abort the task assignment.
             System.out.println("WARNING: Failed to supply beaver ["+robotID+"] after assigning task ["+nextTask+"].");
             rf.beavertasks.setTask(taskSlot, new Task(Task.NONE));
-            return;
+            return false;
         }
 
         // We have given the supplies, we can remove the task now
-        taskQueue.remove();
+        q.remove();
+        return true;
     }
 
     // Try to spawn the beaver.
@@ -268,8 +275,8 @@ public class Headquarters extends Structure {
 
     // The boolean return here is sketchy. returns true if it "did something"
     private boolean maintainDesiredTankFactories() {
-        int numQueuedFactories = Collections.frequency(taskQueue, new Task(Task.TANKFACTORY));
-        int numQueuedBarracks = Collections.frequency(taskQueue, new Task(Task.BARRACKS));
+        int numQueuedFactories = Collections.frequency(buildQueue, new Task(Task.TANKFACTORY));
+        int numQueuedBarracks = Collections.frequency(buildQueue, new Task(Task.BARRACKS));
         int neededFactories = desiredTankFactories - unitCounts[TANKFACTORY.ordinal()] - numQueuedFactories;
 
         // if we don't have (or have queued) enough factories
@@ -280,7 +287,7 @@ public class Headquarters extends Structure {
                 // If we've waited enough since we last tried for a barracks
                 if(lastBarracksRequestTime + waitTimeForSpawn(BARRACKS) <= Clock.getRoundNum()) {
                     // queue a new barracks
-                    taskQueue.add(new Task(Task.BARRACKS));
+                    buildQueue.add(new Task(Task.BARRACKS));
                     lastBarracksRequestTime = Clock.getRoundNum();
                     return true;
                 }
@@ -288,7 +295,7 @@ public class Headquarters extends Structure {
                 // If we've waited enough since we last tried for a tank factory
                 if(lastFactoryRequestTime + waitTimeForSpawn(TANKFACTORY) <= Clock.getRoundNum()) {
                     // queue a new tank factory
-                    taskQueue.add(new Task(Task.TANKFACTORY));
+                    buildQueue.add(new Task(Task.TANKFACTORY));
                     lastFactoryRequestTime = Clock.getRoundNum();
                     return true;
                 }

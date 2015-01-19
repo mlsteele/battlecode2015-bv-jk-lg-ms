@@ -15,16 +15,13 @@ public class TankFactory extends Structure {
         while (true) {
             callForHelp();
 
-            requestResupplyIfLow(TANKFACTORY_LOW_SUPPLY, TANKFACTORY_RESUPPLY_AMT);
+            requestResupplyIfLow(
+                    Strategy.initialSupply(TANK),
+                    2*Strategy.initialSupply(TANK));
 
-            // Tanks take so long to build that we should build
-            // them even if we don't have the supply to fuel them.
-            if (rc.isCoreReady() && rf.limitproduction.shouldBuild(TANK) &&
-                    rc.getTeamOre() > rf.beavertasks.getReservedOre())
+            if (shouldSpawn(TANK))
                 spawn(TANK);
 
-            if (rc.getSupplyLevel() < initialSupply(TANK))
-                if (Analyze.ON) Analyze.aggregate("tankfactory_supplyblock", 1);
             supplyNearbyEmpty(null, TANK, initialSupply(TANK));
 
             rc.yield();

@@ -13,6 +13,7 @@ public class TechnologyInstitute extends Structure {
 
         // Main loop
         while (true) {
+            callForHelp();
 
             // We arent using computers so dont do anything
             rc.yield();

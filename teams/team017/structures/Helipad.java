@@ -16,12 +16,16 @@ public class Helipad extends Structure {
 
             callForHelp();
 
-            if (rc.isCoreReady() && rc.getSupplyLevel() >= Strategy.initialSupply(DRONE)) {
+            requestResupplyIfLow(
+                    Strategy.initialSupply(DRONE),
+                    2*Strategy.initialSupply(DRONE));
+
+            if (shouldSpawn(DRONE)) {
                 unitCounts = getUnitCounts();
                 int unitsExist = unitCounts[DRONE.ordinal()];
                 int unitsRequested = rf.xunits.get(DRONE);
                 rc.setIndicatorString(0, "units "+unitsExist+"/"+unitsRequested);
-                if (unitsExist < unitsRequested || rf.limitproduction.shouldBuild(DRONE))
+                if (unitsExist < unitsRequested)
                     spawn(DRONE);
             }
 

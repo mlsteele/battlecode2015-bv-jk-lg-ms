@@ -15,7 +15,9 @@ public class MinerFactory extends Structure {
         while (true) {
             callForHelp();
 
-            requestResupplyIfLow(MINERFACTORY_LOW_SUPPLY, MINERFACTORY_RESUPPLY_AMT);
+            requestResupplyIfLow(
+                    Strategy.initialSupply(MINER),
+                    2*Strategy.initialSupply(MINER));
 
             if (rc.isCoreReady() && rc.getSupplyLevel() >= Strategy.initialSupply(MINER)) {
                 unitCounts = getUnitCounts();

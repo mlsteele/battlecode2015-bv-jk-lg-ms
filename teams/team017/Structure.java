@@ -6,8 +6,10 @@ import battlecode.common.*;
 // Subclass for units that move and shoot and stuff.
 public abstract class Structure extends Robot {
     // Whether a resupply has requested and not fulfilled.
-    // TODO(miles): add a round timeout as well in case something goes wrong.
     private boolean resupplyInbound = false;
+    // When a resupply was requested. Used to reissue requests if the HQ somehow forgot.
+    private int resupplyRequestedAtRound = 0;
+    private static final int RESUPPLY_REQUEST_TIMEOUT = 200;
 
     public Structure(RobotController rc) { super(rc); }
 
@@ -150,16 +152,35 @@ public abstract class Structure extends Robot {
     // Requests enough to fill up to `desiredSupply`.
     // Makes sure not to have multiple outstanding requests.
     protected void requestResupplyIfLow(int lowSupplyThreshold, int desiredSupply) {
+
         final double supply = rc.getSupplyLevel();
         if (supply <= lowSupplyThreshold) {
-            if (!resupplyInbound) {
+            // Low on supply, consider requesting.
+            if (!resupplyInbound || (Clock.getRoundNum() - resupplyRequestedAtRound) > RESUPPLY_REQUEST_TIMEOUT) {
                 if (rf.resupply.request((int)(desiredSupply - supply))) {
                     resupplyInbound = true;
+                    resupplyRequestedAtRound = Clock.getRoundNum();
                 }
             }
         } else {
             resupplyInbound = false;
         }
+    }
+
+    // Whether it would be wise to spawn a robot right now.
+    // Considers:
+    // - core status
+    // - supply level
+    // - rf.limitproduction
+    // - reserved ore
+    // Does NOT Consider:
+    // - rf.xunits
+    protected boolean shouldSpawn(RobotType rtype) {
+        return
+            rc.isCoreReady() &&
+            rc.getSupplyLevel() >= Strategy.initialSupply(rtype) &&
+            rf.limitproduction.shouldBuild(rtype) &&
+            rc.getTeamOre() > rf.beavertasks.getReservedOre();
     }
 
 }

@@ -15,6 +15,11 @@ public class TrainingField extends Structure {
 
         // Main loop
         while (true) {
+            callForHelp();
+
+            requestResupplyIfLow(
+                    Strategy.initialSupply(COMMANDER),
+                    2*Strategy.initialSupply(COMMANDER));
 
             // lets make sure we only spawn the commander at most MAX_COMMANDER_SPAWN_COUNT
             // times
