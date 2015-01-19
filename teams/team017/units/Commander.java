@@ -88,9 +88,6 @@ public class Commander extends Unit {
 
             for (int distance = 2; distance > 1; distance--) {
                 MapLocation target = myLoc.add(toHq, distance);
-                System.out.println("this is my location: " + myLoc.toString());
-                System.out.println("This is my target: " + target.toString());
-                System.out.println("This is the distance: " + myLoc.distanceSquaredTo(target));
 
                 // attempt to jump the furthest
                 if (rc.isPathable(COMMANDER, target)) {
