@@ -34,7 +34,7 @@ public enum Bugging {;
     // Returns whether a move occurred.
     // Assumes CoreReady
     public static boolean move() {
-        S.rc.setIndicatorString(0, "move");
+        S.rc.setIndicatorString(2, "move");
         if (target == null) {
             System.err.println("ERROR: tried to move without target");
             return false;
@@ -45,14 +45,14 @@ public enum Bugging {;
         if (distanceSqToTarget <= thresholdDistanceSq) {
             // Stop bugging.
             start = null;
-            S.rc.setIndicatorString(0, "close enough");
+            S.rc.setIndicatorString(2, "close enough");
             return moveCloserToTarget();
         }
 
         if (start == null) {
             // Not currently bugging.
             forward = S.rc.getLocation().directionTo(target);
-            S.rc.setIndicatorString(0, "not buggin");
+            S.rc.setIndicatorString(2, "not buggin");
             if (moveForwardish()) return true;
             // Start bugging.
             start = S.rc.getLocation();
@@ -71,12 +71,11 @@ public enum Bugging {;
             if (canMove(forward.rotateLeft().rotateLeft().rotateLeft())) {
                 start = null;
                 forward = S.rc.getLocation().directionTo(target);
-                S.rc.setIndicatorString(0, "back left clear");
-                S.rc.setIndicatorString(1, "forward " + forward);
+                S.rc.setIndicatorString(2, "back left clear, forward " + forward);
                 return moveForwardish();
             }
 
-            S.rc.setIndicatorString(0, "scan circle");
+            S.rc.setIndicatorString(2, "scan circle");
             forward = forward.rotateLeft().rotateLeft();
             // Try moving left, and try every direction in a circle from there.
             for (int i = 0; i < 8; i++) {
