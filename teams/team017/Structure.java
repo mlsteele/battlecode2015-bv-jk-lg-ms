@@ -16,8 +16,7 @@ public abstract class Structure extends Robot {
     // Attacking for structures.
     // Does not block.
     protected void shootBaddies() {
-        // TODO(miles): attackRadiusSquared is not good for the HQ, must account for range buf
-        int range = rc.getType().attackRadiusSquared;
+        int range = Strategy.attackRadiusSquared(true, rc.getType());
         Team enemy = rc.getTeam().opponent();
 
         RobotInfo[] enemies = rc.senseNearbyRobots(range, enemy);

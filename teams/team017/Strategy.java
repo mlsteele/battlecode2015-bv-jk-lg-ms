@@ -113,4 +113,18 @@ public enum Strategy {;
         if (round <= ATTACK_GROUP_1 - 10) return 0;
         else                              return 1;
     }
+
+    // Get the attack radius of a robot.
+    // Factor in HQ range buf.
+    // `friendly` is whether the robot is on our team or not.
+    public static int attackRadiusSquared(boolean friendly, RobotType rtype) {
+        if (rtype == HQ) {
+            if (friendly && S.rc.senseTowerLocations().length >= 2) {
+                return GameConstants.HQ_BUFFED_ATTACK_RADIUS_SQUARED;
+            } else if (S.rc.senseEnemyTowerLocations().length >= 2) {
+                return GameConstants.HQ_BUFFED_ATTACK_RADIUS_SQUARED;
+            }
+        }
+        return rtype.attackRadiusSquared;
+    }
 }

@@ -27,7 +27,7 @@ public abstract class Unit extends Robot {
     // Attacking for units.
     // Blocks until no enemies are seen.
     protected void shootBaddies(int health) {
-        int range = rc.getType().attackRadiusSquared;
+        int range = Strategy.attackRadiusSquared(true, rc.getType());
         Team enemy = rc.getTeam().opponent();
 
         // Keep scanning until either a hit or no enemies in sight.
@@ -287,8 +287,7 @@ public abstract class Unit extends Robot {
         MapLocation   evilHqLoc  = S.rc.senseEnemyHQLocation();
 
         // Consider HQ
-        // TODO(miles): consider HQ boost radius.
-        if (loc.distanceSquaredTo(evilHqLoc) <= HQ.attackRadiusSquared)
+        if (loc.distanceSquaredTo(evilHqLoc) <= Strategy.attackRadiusSquared(false, HQ))
             return evilHqLoc;
 
         // Consider Towers
@@ -300,9 +299,12 @@ public abstract class Unit extends Robot {
         // Consider Enemies
         if (enemies.length == 0) return null;
         for (RobotInfo r : enemies) {
+            // Special case: ignore structures because we've already considered attacking structures.
+            if (r.type.isBuilding) continue;
             // Special case: ignore beavers and miners because they're weaklings.
             if (r.type == BEAVER || r.type == MINER) continue;
 
+            // We don't need to use attackRadiusSquared(bool, type) because r is definitely not the HQ.
             if (loc.distanceSquaredTo(r.location) <= r.type.attackRadiusSquared)
                 return r.location;
         }

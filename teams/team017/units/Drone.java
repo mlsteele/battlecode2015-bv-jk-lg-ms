@@ -109,27 +109,6 @@ public class Drone extends Unit {
             return false;
     }
 
-    // Drones work differently from most units, so this is overridden.
-    // This was written before the drone nerf, so it incorrectly assumes
-    // that drones can move 'while' shooting.
-    protected void shootBaddies2() {
-        // Abort if no weapon
-        if (!rc.isWeaponReady()) return;
-
-        int range = rc.getType().attackRadiusSquared;
-        Team enemy = rc.getTeam().opponent();
-        RobotInfo[] enemies = rc.senseNearbyRobots(range, enemy);
-
-        // Abort if no enemies in sight.
-        if (enemies.length == 0) return;
-
-        try {
-            rc.attackLocation(chooseTarget(enemies).location);
-        } catch (GameActionException e) {
-            e.printStackTrace();
-        }
-    }
-
     // Chooses which robot to attack.
     @Override
     protected RobotInfo chooseTarget(RobotInfo[] enemies) {
@@ -138,7 +117,7 @@ public class Drone extends Unit {
         for (RobotInfo r : enemies) {
             double score = 0;
             // Fight back
-            if (rc.getLocation().distanceSquaredTo(r.location) <= r.type.attackRadiusSquared)
+            if (rc.getLocation().distanceSquaredTo(r.location) <= Strategy.attackRadiusSquared(false, r.type))
                 score = 200;
             // Shoot miners
             if (r.type == MINER)
