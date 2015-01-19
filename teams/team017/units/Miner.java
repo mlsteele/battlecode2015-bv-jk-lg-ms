@@ -89,7 +89,7 @@ public class Miner extends Unit {
         if (oreHere > awesomeOreAmount) awesomeOreAmount = oreHere;
         if (oreHere > bestOreInAWhile) bestOreInAWhile = oreHere;
         int roundsSinceLastMine = Clock.getRoundNum() - roundLastMined;
-        if (oreHere >= 12 || roundsSinceLastMine >= ITS_BEEN_A_WHILE || oreHere >= awesomeOreAmount) {
+        if (oreHere >= 12 || (oreHere > 0 && (roundsSinceLastMine >= ITS_BEEN_A_WHILE || oreHere >= awesomeOreAmount))) {
             rc.setIndicatorString(1, "mining here");
             bestOreInAWhile = oreHere;
             mineHere();
