@@ -19,7 +19,8 @@ public class Task {
     public static final int AEROSPACELAB = 7;
     public static final int TECHNOLOGYINSTITUTE = 8;
     public static final int TRAININGFIELD = 9;
-    public static final int RESUPPLY_STRUCTURE = 10;
+    public static final int HANDWASHSTATION = 10;
+    public static final int RESUPPLY_STRUCTURE = 11;
 
     public final int taskNum;
     public final MapLocation loc;
@@ -60,6 +61,7 @@ public class Task {
             case AEROSPACELAB:        return RobotType.AEROSPACELAB.oreCost;
             case TECHNOLOGYINSTITUTE: return RobotType.TECHNOLOGYINSTITUTE.oreCost;
             case TRAININGFIELD:       return RobotType.TRAININGFIELD.oreCost;
+            case HANDWASHSTATION:     return RobotType.HANDWASHSTATION.oreCost;
             default:                  return 0;
         }
     }
