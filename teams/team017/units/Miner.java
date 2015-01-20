@@ -159,8 +159,8 @@ public class Miner extends Unit {
     private void kamikaze() {
         while (true) {
             shootBaddies();
-            Bugging.setParams(rc.senseEnemyHQLocation(), 0, false);
-            if (rc.isCoreReady()) moveTowardBugging(rc.senseEnemyHQLocation(), true);
+            Bugging.setParams(rc.senseEnemyHQLocation(), 0, true);
+            if (rc.isCoreReady()) Bugging.move();
             rc.setIndicatorString(1, "ATTACKKK");
         }
     }
