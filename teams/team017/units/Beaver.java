@@ -10,14 +10,14 @@ public class Beaver extends Unit {
     private static final int LOW_SUPPLY = 50;
 
     // Require this distance free space around buildings
-    private static final int BUILDING_PADDING = 5;
+    private static final int BUILDING_PADDING = 2;
+    private static final int BUILDING_PADDING_SENSE = 10;
 
     // Don't build farther away than this
     private static final int MAX_DISTANCE_FROM_HQ = 100;
 
     private int myTaskSlot;
     private Task currentTask;
-    private boolean requestedOre = false;
 
     @Override
     public void run() {
@@ -74,41 +74,53 @@ public class Beaver extends Unit {
     }
 
     private void buildStructureMission() {
+        rc.setIndicatorString(1, "finding place to build");
+
+        // Reserve ore for the structure.
+        rf.beavertasks.incReservedOre(currentTask.requiredOre());
+
+        // Travel in a spiral-kinda-thing.
+        Direction startAxis = randomDirection();
+        Direction axis = startAxis;
+        int radius = 2;
         while (true) {
             callForHelp();
 
-            int distanceFromHQ = rc.getLocation().distanceSquaredTo(hqLoc);
-
-            rc.setIndicatorString(1, "finding place to build");
-            if (rc.isCoreReady()) {
-                if (distanceFromHQ > MAX_DISTANCE_FROM_HQ) {
-                    rc.setIndicatorString(1, "too far from hq");
-                    Bugging.setParams(hqLoc, 0, true);
-                    Bugging.move();
-                } else {
-                    if (isClearToBuild()) {
-                        rc.setIndicatorString(1, "found place to build");
-                        if (buildThenSupplyForCode(currentTask.taskNum)) {
-                            return;
-                        }
-                    } else {
-                        rc.setIndicatorString(1, "wandering to find place to build");
-                        wander();
-                    }
-                }
+            if (!rc.isCoreReady()) {
+                rc.yield();
+                continue;
             }
+
+            if (!rc.hasBuildRequirements(currentTask.structureType())) {
+                rc.yield();
+                continue;
+            }
+
+            if (buildStructure(currentTask.structureType())) {
+                // Structure successfully built, clear reserved ore.
+                rf.beavertasks.lowerReservedOre(currentTask.requiredOre());
+                return;
+            }
+
+            // Move
+            MapLocation target = hqLoc.add(axis, radius);
+            Bugging.setParams(target, 4, false);
+            Bugging.move();
+
+            // Safety.
+            if (radius > 15) {
+                radius = 2;
+            }
+
+            // Advance spiral.
+            if (target.distanceSquaredTo(rc.getLocation()) <= 4) {
+                axis = axis.rotateLeft();
+                if (axis.equals(startAxis))
+                    radius += 1;
+            }
+
             rc.yield();
         }
-    }
-
-    private boolean isClearToBuild() {
-        RobotInfo[] nearby = rc.senseNearbyRobots(BUILDING_PADDING);
-        for (RobotInfo r : nearby) {
-            if (r.type.isBuilding || r.team == rc.getTeam().opponent()) {
-                return false;
-            }
-        }
-        return true;
     }
 
     private void resupplyMission() {
@@ -137,30 +149,36 @@ public class Beaver extends Unit {
 
     }
 
-    private boolean buildThenSupplyForCode(int orderCode) {
-        switch (orderCode) {
-            case Task.MINERFACTORY:
-                return buildThenSupply(MINERFACTORY);
-            case Task.SUPPLYDEPOT:
-                return buildThenSupply(SUPPLYDEPOT);
-            case Task.BARRACKS:
-                return buildThenSupply(BARRACKS);
-            case Task.TANKFACTORY:
-                return buildThenSupply(TANKFACTORY);
-            case Task.HELIPAD:
-                return buildThenSupply(HELIPAD);
-            case Task.AEROSPACELAB:
-                return buildThenSupply(AEROSPACELAB);
-            case Task.TECHNOLOGYINSTITUTE:
-                return buildThenSupply(TECHNOLOGYINSTITUTE);
-            case Task.TRAININGFIELD:
-                return buildThenSupply(TRAININGFIELD);
-            case Task.HANDWASHSTATION:
-                return buildThenSupply(HANDWASHSTATION);
-            default:
-                System.err.println("ERROR: invalid building code " + orderCode);
+    // Attempt to build a structure anywhere adjacent.
+    // Assumes CoreReady
+    private boolean buildStructure(RobotType rob) {
+        Direction dir = randomDirection();
+        RobotInfo[] nearby = rc.senseNearbyRobots(BUILDING_PADDING_SENSE);
+
+        // Try building in each direction.
+        for (int i = 0; i < 8; i++) {
+            if (rc.canBuild(dir, rob) && isClearToBuild(nearby, rc.getLocation().add(dir))) {
+                try {
+                    rc.build(dir, rob);
+                    return true;
+                } catch (GameActionException e) {
+                    e.printStackTrace();
+                }
+            }
+            dir = dir.rotateLeft();
+        }
+        return false;
+    }
+
+    // `nearby` is all nearby robots to factor into clearness.
+    private boolean isClearToBuild(RobotInfo[] nearby, MapLocation place) {
+        for (RobotInfo r : nearby) {
+            if (place.distanceSquaredTo(r.location) > BUILDING_PADDING)
+                continue;
+            if (r.type.isBuilding || r.team == rc.getTeam().opponent())
                 return false;
         }
+        return true;
     }
 
     // Attempt to mine.
@@ -176,52 +194,6 @@ public class Beaver extends Unit {
             }
         }
         return false;
-    }
-
-    // Attempt to build and then supply a building
-    private boolean buildThenSupply(RobotType rob) {
-        Direction dir = randomDirection();
-        if (!requestedOre) {
-            rf.beavertasks.incReservedOre(rob.oreCost);
-            requestedOre = true;
-        }
-        if (rc.canBuild(dir, rob)) {
-            try {
-                rc.build(dir, rob);
-                // We have built the structure, lets clear the requested ore
-                rf.beavertasks.lowerReservedOre(rob.oreCost);
-                requestedOre = false;
-
-                MapLocation buildLoc = rc.getLocation().add(dir);
-                rc.yield(); // Wait one turn for the building to spawn.
-                rc.transferSupplies(Strategy.initialSupply(rob), buildLoc);
-                waitForBuildCompletion(buildLoc);
-                return true;
-            } catch (GameActionException e) {
-                e.printStackTrace();
-            }
-        }
-        return false;
-    }
-
-    // Wait (blocking) for a structure to finish being built by this robot.
-    // If the building dies, that counts too.
-    private void waitForBuildCompletion(MapLocation loc) {
-        RobotInfo ri = null;
-        do {
-            callForHelp();
-
-            try {
-                ri = rc.senseRobotAtLocation(loc);
-            } catch (GameActionException e) {
-                e.printStackTrace();
-            }
-            // Poll the building's builder field.
-            if (ri != null && ri.builder == null) {
-                return;
-            }
-            rc.yield();
-        } while (true);
     }
 
     // Requests a task from HQ.

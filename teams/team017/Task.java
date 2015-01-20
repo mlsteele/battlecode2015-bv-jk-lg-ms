@@ -51,6 +51,23 @@ public class Task {
         this(taskNum, loc, 0);
     }
 
+    public RobotType structureType() {
+        switch (taskNum) {
+            case MINERFACTORY:        return RobotType.MINERFACTORY;
+            case SUPPLYDEPOT:         return RobotType.SUPPLYDEPOT;
+            case BARRACKS:            return RobotType.BARRACKS;
+            case TANKFACTORY:         return RobotType.TANKFACTORY;
+            case HELIPAD:             return RobotType.HELIPAD;
+            case AEROSPACELAB:        return RobotType.AEROSPACELAB;
+            case TECHNOLOGYINSTITUTE: return RobotType.TECHNOLOGYINSTITUTE;
+            case TRAININGFIELD:       return RobotType.TRAININGFIELD;
+            case HANDWASHSTATION:     return RobotType.HANDWASHSTATION;
+            default:
+                System.err.println("ERROR: tried to get buildingType for bad task number " + taskNum);
+                return RobotType.SUPPLYDEPOT;
+        }
+    }
+
     public int requiredOre() {
         switch (taskNum) {
             case MINERFACTORY:        return RobotType.MINERFACTORY.oreCost;
