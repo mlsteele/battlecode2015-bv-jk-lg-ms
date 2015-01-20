@@ -8,7 +8,7 @@ public class Miner extends Unit {
     public Miner(RobotController rc) { super(rc); }
 
     private MapLocation lastSeen = rc.getLocation();
-    private final double ORE_CUTOFF = 12;
+    private final double ORE_CUTOFF = 10;
     private double awesomeOreAmount = 0; // best seen so far
 
     private final int ITS_BEEN_A_WHILE = 100; // num turns till give up on dreams
@@ -91,7 +91,7 @@ public class Miner extends Unit {
         if (oreHere > awesomeOreAmount) awesomeOreAmount = oreHere;
         if (oreHere > bestOreInAWhile) bestOreInAWhile = oreHere;
         int roundsSinceLastMine = Clock.getRoundNum() - roundLastMined;
-        if (oreHere >= 12 || (oreHere > 0 && (roundsSinceLastMine >= ITS_BEEN_A_WHILE || oreHere >= awesomeOreAmount))) {
+        if (oreHere >= ORE_CUTOFF || (oreHere > 0 && (roundsSinceLastMine >= ITS_BEEN_A_WHILE || oreHere >= awesomeOreAmount))) {
             rc.setIndicatorString(1, "mining here");
             bestOreInAWhile = oreHere;
             mineHere();
