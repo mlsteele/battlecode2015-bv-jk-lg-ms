@@ -14,6 +14,8 @@ public abstract class Unit extends Robot {
 
     Direction cameFrom;
     boolean buggingDirection;
+    
+    protected int bestSeenOre = 0;
 
     public Unit(RobotController rc) {
             super(rc);
@@ -340,5 +342,11 @@ public abstract class Unit extends Robot {
         forward = rc.getLocation().directionTo(threatener).opposite();
         moveForwardBugging();
         return false;
+    }
+    
+    protected void reportOreHere() {
+        int amt = (int) rc.senseOre(rc.getLocation());
+        if (amt > bestSeenOre)
+            bestSeenOre = rf.orelocations.foundSweetOre(rc.getLocation(), amt);
     }
 }

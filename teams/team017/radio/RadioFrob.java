@@ -12,6 +12,7 @@ public class RadioFrob {
     public MinerResupply minerresupply;
     public FloatSlot miningrate;
     public LimitProduction limitproduction;
+    public OreLocations orelocations;
 
     public RadioFrob(RobotController rc) {
         int nextSlot = 0;
@@ -38,6 +39,9 @@ public class RadioFrob {
 
         limitproduction = new LimitProduction(rc, nextSlot);
         nextSlot += limitproduction.slotsRequired();
+
+        orelocations = new OreLocations(rc, nextSlot);
+        nextSlot += orelocations.slotsRequired();
 
         if (rc.getType() == HQ) {
             System.out.println("RadioFrob claimed " + nextSlot + " of " + GameConstants.BROADCAST_MAX_CHANNELS + " channels");

@@ -17,7 +17,6 @@ public class Miner extends Unit {
     private int supplyRequest = 0;
     private boolean resupplying = false;
     private int resupplyStartRound = 0;
-    private boolean kamikaze = false;
 
     @Override
     public void run() {
@@ -26,14 +25,9 @@ public class Miner extends Unit {
         while (true) {
             if (Analyze.ON) Analyze.aggregate("miners_supply", rc.getSupplyLevel());
 
-            if (Math.abs(Clock.getRoundNum() - Strategy.ATTACK_GROUP_2) <= 1) kamikaze = true;
+            if (Math.abs(Clock.getRoundNum() - Strategy.ATTACK_GROUP_2) <= 1) kamikaze();
 
-            while (kamikaze) {
-                shootBaddies();
-                Bugging.setParams(rc.senseEnemyHQLocation(), 0, false);
-                if (rc.isCoreReady()) moveTowardBugging(rc.senseEnemyHQLocation(), true);
-                rc.setIndicatorString(1, "ATTACKKK");
-            }
+            reportOreHere();
 
             // Top priority is don't get shot.
             if (rc.isCoreReady()) runAway();
@@ -91,7 +85,8 @@ public class Miner extends Unit {
         if (oreHere > awesomeOreAmount) awesomeOreAmount = oreHere;
         if (oreHere > bestOreInAWhile) bestOreInAWhile = oreHere;
         int roundsSinceLastMine = Clock.getRoundNum() - roundLastMined;
-        if (oreHere >= ORE_CUTOFF || (oreHere > 0 && (roundsSinceLastMine >= ITS_BEEN_A_WHILE || oreHere >= awesomeOreAmount))) {
+        if (oreHere < ORE_CUTOFF && rf.orelocations.getAmount() > ORE_CUTOFF) moveTowardBugging(rf.orelocations.getLocation(), true);
+        else if (oreHere >= ORE_CUTOFF || (oreHere > 0 && (roundsSinceLastMine >= ITS_BEEN_A_WHILE || oreHere >= awesomeOreAmount))) {
             rc.setIndicatorString(1, "mining here");
             bestOreInAWhile = oreHere;
             mineHere();
@@ -156,5 +151,14 @@ public class Miner extends Unit {
         }
 
         return bestDirection;
+    }
+    
+    private void kamikaze() {
+        while (true) {
+            shootBaddies();
+            Bugging.setParams(rc.senseEnemyHQLocation(), 0, false);
+            if (rc.isCoreReady()) moveTowardBugging(rc.senseEnemyHQLocation(), true);
+            rc.setIndicatorString(1, "ATTACKKK");
+        }
     }
 }

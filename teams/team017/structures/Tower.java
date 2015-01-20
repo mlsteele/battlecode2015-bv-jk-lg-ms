@@ -8,12 +8,15 @@ public class Tower extends Structure {
 
     @Override
     public void run() {
+
+        // Report ore here
+        rf.orelocations.foundSweetOre(rc.getLocation(), (int) rc.senseOre(rc.getLocation()));
+
         while (true) {
             callForHelp();
             shootBaddies();
             rc.yield();
         }
     }
-
 
 }

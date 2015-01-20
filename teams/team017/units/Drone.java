@@ -21,6 +21,8 @@ public class Drone extends Unit {
         while (true) {
             rc.setIndicatorString(2, null);
 
+            reportOreHere();
+
             shootBaddies();
 
             if (rc.isCoreReady()) {

@@ -21,6 +21,8 @@ public class Tank extends Unit {
 
         // Main loop
         while (true) {
+            reportOreHere();
+
             shootBaddies();
 
             if (rc.isCoreReady()) {
