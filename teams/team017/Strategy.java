@@ -37,8 +37,6 @@ public enum Strategy {;
     // Maximum times we will build a commander
     public static final int MAX_COMMANDER_SPAWN_COUNT = 3;
 
-    public static final int RALLY_ARMY = 0;
-
     // How close must be to target point. (sqrads)
     public static final int MOVEMENT_CLUMP_DEFAULT = 25;
 
