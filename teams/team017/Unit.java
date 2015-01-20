@@ -123,10 +123,12 @@ public abstract class Unit extends Robot {
     // Returns whether movement occurred.
     // Assumes CoreReady
     // TOOD(miles): If this gets used, please avoid walking into the line of fire.
-    protected boolean wander() {
+    protected boolean wander() { return wander(false); }
+    
+    protected boolean wander(boolean beSafe) {
         // MapLocation target = rc.getLocation().add(forward);
         for (int i = 0; i < 4; i++) {
-            if (moveForwardBugging()) {
+            if (moveForwardBugging(beSafe)) {
                 return true;
             } else {
                 forward = forward.rotateRight().rotateRight();

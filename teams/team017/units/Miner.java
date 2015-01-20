@@ -102,7 +102,7 @@ public class Miner extends Unit {
                 if (rf.orelocations.getAmount() > ORE_CUTOFF) moveTowardBugging(rf.orelocations.getLocation(), true);
                 else {
                     rc.setIndicatorString(1, "mining but wandering");
-                    wander();
+                    wander(true);
                 }
             }
         }
