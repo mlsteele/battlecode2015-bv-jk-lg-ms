@@ -21,7 +21,8 @@ public class Drone extends Unit {
         while (true) {
             rc.setIndicatorString(2, null);
 
-            reportOreHere();
+            // No. drones live in the danger zone. no place for poor little miners.
+            //reportOreHere();
 
             shootBaddies();
 
