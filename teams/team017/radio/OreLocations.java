@@ -26,11 +26,12 @@ public class OreLocations extends RadioModule {
      * Returns the final sweet amount of ore
      */
     public int foundSweetOre(MapLocation loc, int amount) {
+        //System.out.println("beep " + amount);
         int currentBestOre = getAmount();
-        if (loc.distanceSquaredTo(enemyHQ) > loc.distanceSquaredTo(hQ)) return currentBestOre;
+        if (loc.distanceSquaredTo(enemyHQ) < loc.distanceSquaredTo(hQ))  return currentBestOre;
         if (amount < currentBestOre) return currentBestOre;
         if (amount > 0xFFFF) amount = 0xFFFF; // don't overrun your space
-        
+
         tx(lowestSlot, (encodeLocation(loc) << 16) | amount);
         return amount;
     }

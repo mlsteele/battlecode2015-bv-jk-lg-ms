@@ -67,6 +67,8 @@ public class Headquarters extends Structure {
             callForHelp();
 
             rc.setIndicatorString(1, "Ore requested is: " + rf.beavertasks.getReservedOre());
+            if (rf.orelocations.getLocation() != null)
+                rc.setIndicatorDot(rf.orelocations.getLocation(), 255, 255, 0);
 
             miningRate = rf.miningrate.getAveraged();
             rf.miningrate.set(0);
