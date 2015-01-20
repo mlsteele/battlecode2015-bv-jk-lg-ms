@@ -8,7 +8,8 @@ public class Miner extends Unit {
     public Miner(RobotController rc) { super(rc); }
 
     private MapLocation lastSeen = rc.getLocation();
-    private final double ORE_CUTOFF = 10;
+    // TODO(miles): this should be 10, but I'm having lots of issues :(
+    private final double ORE_CUTOFF = 12;
     private double awesomeOreAmount = 0; // best seen so far
 
     private final int ITS_BEEN_A_WHILE = 100; // num turns till give up on dreams
