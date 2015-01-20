@@ -21,8 +21,6 @@ public class Miner extends Unit {
 
     @Override
     public void run() {
-        waitForSupplies();
-
         while (true) {
             if (Analyze.ON) Analyze.aggregate("miners_supply", rc.getSupplyLevel());
 

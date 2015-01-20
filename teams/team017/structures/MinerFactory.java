@@ -15,11 +15,12 @@ public class MinerFactory extends Structure {
         while (true) {
             callForHelp();
 
-            requestResupplyIfLow(
-                    Strategy.initialSupply(MINER),
-                    2*Strategy.initialSupply(MINER));
+            // requestResupplyIfLow(
+                    // Strategy.initialSupply(MINER),
+                    // 2*Strategy.initialSupply(MINER));
 
-            if (rc.isCoreReady() && rc.getSupplyLevel() >= Strategy.initialSupply(MINER)) {
+            // if (rc.isCoreReady() && rc.getSupplyLevel() >= Strategy.initialSupply(MINER)) {
+            if (rc.isCoreReady()) {
                 unitCounts = getUnitCounts();
                 if(unitCounts[MINER.ordinal()] < rf.xunits.get(MINER)) {
                     spawn(MINER);
