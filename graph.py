@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 """Graph some analysis.
 Usage:
   graph.py <quantity> <logfile>...
