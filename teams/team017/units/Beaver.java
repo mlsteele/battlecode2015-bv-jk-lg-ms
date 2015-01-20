@@ -112,8 +112,6 @@ public class Beaver extends Unit {
     }
 
     private void resupplyMission() {
-        int amt = Strategy.TANKFACTORY_RESUPPLY_AMT;
-
         while (true) {
             callForHelp();
 
@@ -124,7 +122,7 @@ public class Beaver extends Unit {
                     continue;
                 } else {
                     try {
-                        rc.transferSupplies(amt, currentTask.loc);
+                        rc.transferSupplies(currentTask.amount, currentTask.loc);
                         rc.yield();
                         return;
                     } catch (GameActionException e) {
