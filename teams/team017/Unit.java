@@ -345,8 +345,11 @@ public abstract class Unit extends Robot {
     }
     
     protected void reportOreHere() {
-        int amt = (int) rc.senseOre(rc.getLocation());
-        if (amt > bestSeenOre)
-            bestSeenOre = rf.orelocations.foundSweetOre(rc.getLocation(), amt);
+        reportOreHere(rc.getLocation(), (int) rc.senseOre(rc.getLocation()));
+    }
+    
+    protected void reportOreHere(MapLocation loc, int amt) {
+        if (amt >= bestSeenOre)
+            bestSeenOre = rf.orelocations.foundSweetOre(loc, amt);
     }
 }

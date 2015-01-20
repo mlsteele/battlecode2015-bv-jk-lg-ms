@@ -27,8 +27,6 @@ public class Miner extends Unit {
 
             if (Math.abs(Clock.getRoundNum() - Strategy.ATTACK_GROUP_2) <= 1) kamikaze();
 
-            reportOreHere();
-
             // Top priority is don't get shot.
             if (rc.isCoreReady()) runAway();
 
@@ -85,8 +83,7 @@ public class Miner extends Unit {
         if (oreHere > awesomeOreAmount) awesomeOreAmount = oreHere;
         if (oreHere > bestOreInAWhile) bestOreInAWhile = oreHere;
         int roundsSinceLastMine = Clock.getRoundNum() - roundLastMined;
-        if (oreHere < ORE_CUTOFF && rf.orelocations.getAmount() > ORE_CUTOFF) moveTowardBugging(rf.orelocations.getLocation(), true);
-        else if (oreHere >= ORE_CUTOFF || (oreHere > 0 && (roundsSinceLastMine >= ITS_BEEN_A_WHILE || oreHere >= awesomeOreAmount))) {
+        if (oreHere >= ORE_CUTOFF || (oreHere > 0 && (roundsSinceLastMine >= ITS_BEEN_A_WHILE || oreHere >= awesomeOreAmount))) {
             rc.setIndicatorString(1, "mining here");
             bestOreInAWhile = oreHere;
             mineHere();
@@ -102,8 +99,11 @@ public class Miner extends Unit {
                     e.printStackTrace();
                 }
             } else {
-                rc.setIndicatorString(1, "mining but wandering");
-                wander();
+                if (rf.orelocations.getAmount() > ORE_CUTOFF) moveTowardBugging(rf.orelocations.getLocation(), true);
+                else {
+                    rc.setIndicatorString(1, "mining but wandering");
+                    wander();
+                }
             }
         }
     }
@@ -149,6 +149,8 @@ public class Miner extends Unit {
                 bestDirection = d;
             }
         }
+
+        if (bestDirection != null) reportOreHere(rc.getLocation().add(bestDirection), (int) bestOre);
 
         return bestDirection;
     }
