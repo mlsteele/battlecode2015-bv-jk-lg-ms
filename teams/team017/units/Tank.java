@@ -25,6 +25,12 @@ public class Tank extends Unit {
 
             if (rc.isCoreReady()) {
                 MapLocation helpTarget = rf.rallypoints.get(RALLY_HELP_DEFEND);
+
+                // Stop helping after turn
+                if (Clock.getRoundNum() > Strategy.ATTACK_GROUP_1 - 100) {
+                    helpTarget = null;
+                }
+
                 if (helpTarget == null) {
                     // Not in help mode, follow rally point.
                     MapLocation target = rf.rallypoints.get(rallyGroup);
