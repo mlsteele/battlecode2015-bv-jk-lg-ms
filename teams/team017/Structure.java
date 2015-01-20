@@ -28,7 +28,12 @@ public abstract class Structure extends Robot {
         if (rc.isWeaponReady()) {
             try {
                 // Note: canAttackLocation seems useless (see engine source)
-                rc.attackLocation(chooseTarget(enemies).location);
+                if (rc.canAttackLocation(chooseTarget(enemies).location))
+                    rc.attackLocation(chooseTarget(enemies).location);
+                else
+                    System.out.println("WARNING: Chose target out of range in shootBaddies\n"
+                            + S.rc.senseTowerLocations().length + " towers, calculated attack radius is " 
+                            + Strategy.attackRadiusSquared(true, rc.getType()));
             } catch (GameActionException e) {
                 e.printStackTrace();
             }

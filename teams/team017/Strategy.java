@@ -119,7 +119,7 @@ public enum Strategy {;
         if (rtype == HQ) {
             if (friendly && S.rc.senseTowerLocations().length >= 2) {
                 return GameConstants.HQ_BUFFED_ATTACK_RADIUS_SQUARED;
-            } else if (S.rc.senseEnemyTowerLocations().length >= 2) {
+            } else if (!friendly && S.rc.senseEnemyTowerLocations().length >= 2) {
                 return GameConstants.HQ_BUFFED_ATTACK_RADIUS_SQUARED;
             }
         }
