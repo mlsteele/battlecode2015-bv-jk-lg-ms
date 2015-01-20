@@ -64,6 +64,8 @@ public class Headquarters extends Structure {
         rf.xunits.set(DRONE, DRONE_HARASS_N);
 
         while (true) {
+            rc.setIndicatorString(2, "resup q " + resupplyQueue.size());
+
             callForHelp();
 
             rc.setIndicatorString(1, "Ore requested is: " + rf.beavertasks.getReservedOre());
@@ -84,8 +86,9 @@ public class Headquarters extends Structure {
             strategyUpdate();
 
             if (rc.isCoreReady() && unitCounts[BEAVER.ordinal()] < BEAVER_POOL_SIZE) {
-                // Hardcode limit for now to only build 1 beaver early on.
+                // Hardcode limit for now to only build 1 early on.
                 // This gets us our first building faster.
+                // if (Clock.getRoundNum() / 100 <= unitCounts[BEAVER.ordinal()]) {
                 if (unitCounts[BEAVER.ordinal()] == 0 || Clock.getRoundNum() > 100) {
                     spawnBeaver();
                 }
@@ -106,8 +109,8 @@ public class Headquarters extends Structure {
 
             // Assign tasks from queues.
             boolean taskAssigned = false;
-            taskAssigned = taskAssigned ? true : assignTaskFromQueue(buildQueue);
             taskAssigned = taskAssigned ? true : assignTaskFromQueue(resupplyQueue);
+            taskAssigned = taskAssigned ? true : assignTaskFromQueue(buildQueue);
 
             // Collect resupply tasks.
             if (rf.resupply.isRequested()) {

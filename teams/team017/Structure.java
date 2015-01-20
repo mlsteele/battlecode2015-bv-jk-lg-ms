@@ -6,10 +6,11 @@ import battlecode.common.*;
 // Subclass for units that move and shoot and stuff.
 public abstract class Structure extends Robot {
     // Whether a resupply has requested and not fulfilled.
-    private boolean resupplyInbound = false;
-    // When a resupply was requested. Used to reissue requests if the HQ somehow forgot.
+    private boolean resupplyRequested = false;
+    // When a resupply was requested.
     private int resupplyRequestedAtRound = 0;
-    private static final int RESUPPLY_REQUEST_TIMEOUT = 200;
+    // Reissue requests after this timeout.
+    private static final int RESUPPLY_REQUEST_TIMEOUT = 100;
 
     public Structure(RobotController rc) { super(rc); }
 
@@ -156,18 +157,24 @@ public abstract class Structure extends Robot {
     // Requests enough to fill up to `desiredSupply`.
     // Makes sure not to have multiple outstanding requests.
     protected void requestResupplyIfLow(int lowSupplyThreshold, int desiredSupply) {
-
         final double supply = rc.getSupplyLevel();
         if (supply <= lowSupplyThreshold) {
             // Low on supply, consider requesting.
-            if (!resupplyInbound || (Clock.getRoundNum() - resupplyRequestedAtRound) > RESUPPLY_REQUEST_TIMEOUT) {
+            boolean timedOut = (Clock.getRoundNum() - resupplyRequestedAtRound) > RESUPPLY_REQUEST_TIMEOUT;
+            if (!resupplyRequested || timedOut) {
                 if (rf.resupply.request((int)(desiredSupply - supply))) {
-                    resupplyInbound = true;
+                    rc.setIndicatorString(2, "sent request. repeat:" + resupplyRequested);
+                    resupplyRequested = true;
                     resupplyRequestedAtRound = Clock.getRoundNum();
                 }
+            } else {
+                rc.setIndicatorString(2, "waiting patiently for resupply");
+                // Keep waiting for resupply to arrive.
             }
         } else {
-            resupplyInbound = false;
+            // All set, forget previous requests.
+            rc.setIndicatorString(2, "no resupply required");
+            resupplyRequested = false;
         }
     }
 

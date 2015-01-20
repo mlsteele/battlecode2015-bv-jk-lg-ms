@@ -124,23 +124,26 @@ public class Beaver extends Unit {
     }
 
     private void resupplyMission() {
+        Bugging.setParams(currentTask.loc, 0, false);
+
         while (true) {
             callForHelp();
 
             if (rc.isCoreReady()) {
                 if (rc.getLocation().distanceSquaredTo(currentTask.loc) > GameConstants.SUPPLY_TRANSFER_RADIUS_SQUARED) {
-                    moveTowardBugging(currentTask.loc);
+                    // Too far away.
+                    Bugging.move();
                     rc.yield();
-                    continue;
                 } else {
+                    // Close enough to transfer supplies.
                     try {
                         rc.transferSupplies(currentTask.amount, currentTask.loc);
                         rc.yield();
-                        return;
                     } catch (GameActionException e) {
                         e.printStackTrace();
-                        return;
                     }
+                    // Declare task done no matter what.
+                    return;
                 }
             }
 
@@ -160,6 +163,7 @@ public class Beaver extends Unit {
             if (rc.canBuild(dir, rob) && isClearToBuild(nearby, rc.getLocation().add(dir))) {
                 try {
                     rc.build(dir, rob);
+                    waitForStructureBuilt();
                     return true;
                 } catch (GameActionException e) {
                     e.printStackTrace();
@@ -168,6 +172,15 @@ public class Beaver extends Unit {
             dir = dir.rotateLeft();
         }
         return false;
+    }
+
+    // Wait until a structure is finished building.
+    // Actually just wait for CoreDelay to come down.
+    private void waitForStructureBuilt() {
+        while (!rc.isCoreReady()) {
+            callForHelp();
+            rc.yield();
+        }
     }
 
     // `nearby` is all nearby robots to factor into clearness.
