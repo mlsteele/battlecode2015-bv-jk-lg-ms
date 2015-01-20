@@ -1,0 +1,10 @@
+#!/usr/bin/env octave
+# min(x, max(0.2, min(2.5, x / 4)))
+
+oreMax = 20;
+# axis ([x_lo x_hi y_lo y_hi])
+x = linspace(0, oreMax, 10000);
+f = @(x) min(x, max(0.2, min(2.5, x / 4)));
+plot(x, f(x));
+axis([0 oreMax 0 3]);
+input("press enter to close");
