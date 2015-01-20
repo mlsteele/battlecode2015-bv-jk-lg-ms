@@ -81,7 +81,7 @@ public class Beaver extends Unit {
 
             if (rc.isCoreReady()) {
                 if (distanceFromHQ > MAX_DISTANCE_FROM_HQ) {
-                    Bugging.setParams(hqLoc, MAX_DISTANCE_FROM_HQ, true);
+                    Bugging.setParams(hqLoc, 0, true);
                 } else {
                     if (isClearToBuild()) {
                         if (buildThenSupplyForCode(currentTask.taskNum)) {
