@@ -79,15 +79,20 @@ public class Beaver extends Unit {
 
             int distanceFromHQ = rc.getLocation().distanceSquaredTo(hqLoc);
 
+            rc.setIndicatorString(1, "finding place to build");
             if (rc.isCoreReady()) {
                 if (distanceFromHQ > MAX_DISTANCE_FROM_HQ) {
+                    rc.setIndicatorString(1, "too far from hq");
                     Bugging.setParams(hqLoc, 0, true);
+                    Bugging.move();
                 } else {
                     if (isClearToBuild()) {
+                        rc.setIndicatorString(1, "found place to build");
                         if (buildThenSupplyForCode(currentTask.taskNum)) {
                             return;
                         }
                     } else {
+                        rc.setIndicatorString(1, "wandering to find place to build");
                         wander();
                     }
                 }
