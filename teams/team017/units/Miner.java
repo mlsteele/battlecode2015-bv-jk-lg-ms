@@ -27,6 +27,11 @@ public class Miner extends Unit {
             if (Analyze.ON) Analyze.aggregate("miners_supply", rc.getSupplyLevel());
 
             if (Math.abs(Clock.getRoundNum() - Strategy.ATTACK_GROUP_2) <= 1) kamikaze();
+            
+            MapLocation targetLoc = rf.orelocations.getLocation();
+            if (targetLoc != null && rc.getLocation().distanceSquaredTo(targetLoc) <= RobotType.MINER.sensorRadiusSquared) {
+                rf.orelocations.updateLocation((int) rc.senseOre(targetLoc));
+            }
 
             // Top priority is don't get shot.
             if (rc.isCoreReady()) runAway();
@@ -100,7 +105,9 @@ public class Miner extends Unit {
                     e.printStackTrace();
                 }
             } else {
-                if (rf.orelocations.getAmount() > ORE_CUTOFF) moveTowardBugging(rf.orelocations.getLocation(), true);
+                if (rf.orelocations.getAmount() > ORE_CUTOFF 
+                        && rc.getLocation().distanceSquaredTo(rf.orelocations.getLocation()) < 12*12) 
+                        moveTowardBugging(rf.orelocations.getLocation(), true);
                 else {
                     rc.setIndicatorString(1, "mining but wandering");
                     wander(true);

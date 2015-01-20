@@ -43,5 +43,11 @@ public class OreLocations extends RadioModule {
     public MapLocation getLocation() {
         return decodeLocation(rx(lowestSlot) >>> 16);
     }
+    
+    /** New intel received about the location currently reported **/
+    public void updateLocation(int amt) {
+        if (amt > 0xFFFF) amt = 0xFFFF;
+        tx(lowestSlot, (rx(lowestSlot) & ~0xFFFF) | amt);
+    }
 
 }

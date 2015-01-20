@@ -21,7 +21,7 @@ public class Tank extends Unit {
 
         // Main loop
         while (true) {
-            reportOreHere();
+            //reportOreHere();
 
             shootBaddies();
 
