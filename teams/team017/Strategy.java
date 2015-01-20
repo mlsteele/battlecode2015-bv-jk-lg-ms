@@ -106,6 +106,7 @@ public enum Strategy {;
     public static final int EARLY_RALLY_GROUP_1 = 500;
     public static final int ATTACK_GROUP_1 = 1000;
     public static final int ATTACK_GROUP_2 = 1700;
+    public static final int KAMIKAZE = 1850;
 
     public static final int armyGroupFromRound(int round) {
         if (round <= ATTACK_GROUP_1 - 10) return 0;

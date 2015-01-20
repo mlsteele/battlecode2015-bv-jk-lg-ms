@@ -24,7 +24,7 @@ public class Miner extends Unit {
         while (true) {
             if (Analyze.ON) Analyze.aggregate("miners_supply", rc.getSupplyLevel());
 
-            if (Math.abs(Clock.getRoundNum() - Strategy.ATTACK_GROUP_2) <= 1) kamikaze();
+            if (Math.abs(Clock.getRoundNum() - Strategy.KAMIKAZE) <= 1) kamikaze();
             
             MapLocation targetLoc = rf.orelocations.getLocation();
             if (targetLoc != null && rc.getLocation().distanceSquaredTo(targetLoc) <= RobotType.MINER.sensorRadiusSquared) {
@@ -164,7 +164,7 @@ public class Miner extends Unit {
     private void kamikaze() {
         while (true) {
             shootBaddies();
-            Bugging.setParams(rc.senseEnemyHQLocation(), 0, true);
+            Bugging.setParams(rc.senseEnemyHQLocation(), 0, false);
             if (rc.isCoreReady()) Bugging.move();
             rc.setIndicatorString(1, "ATTACKKK");
         }
